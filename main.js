@@ -37,8 +37,8 @@ let addSuns = 0.01;
     if (isLoadingReady && score >= 500) {
         isLoadingReady = false;
         MUSIC['Grasswalk.mp3'].play();
-    }
-};
+    };
+
 
 function getScore(n) {
     score += n;
