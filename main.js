@@ -41,15 +41,7 @@ let addSuns = 0.01;
 
 
 
-button.onclick = function() {
-    if (isBonusActive) {
-        getScore(addPerClick * 10);
-        isBonusActive = false;
-    } else {
-        getScore(addPerClick);
-    }
-    getSuns(addSuns);
-    checkBGImage();
+
     
     if (isLoadingReady && score >= 500) {
         isLoadingReady = false;
