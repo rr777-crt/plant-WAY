@@ -5,7 +5,6 @@ const addText = document.getElementById("add");
 const button = document.getElementById("button");
 const sunsDiv = document.getElementById("suns");
 
-
 let isLoadingReady = false;
 console.log('v', '001');
 
@@ -33,28 +32,45 @@ let addPerSecond = 0;
 let suns = 0;
 let addSuns = 0.01;
 
-    
-    if (isLoadingReady && score >= 500) {
-        isLoadingReady = false;
-        MUSIC['Grasswalk.mp3'].play();
-    };
+// Простая функция покупки улучшений
+function buyUpgrade(addAmount, price, buttonElement) {
+    if (score >= price) {
+        // Покупка улучшения
+        getScore(-price);
+        addPerClick += addAmount;
+        
+        // Обновляем отображение
+        addText.innerText = addPerClick;
+        
+        // Увеличиваем цену на 17% для следующей покупки
+        const newPrice = Math.floor(price * 1.17);
+        
+        // Обновляем кнопку
+        buttonElement.innerHTML = `<span>+${addAmount} на клик<br>${newPrice} капель</span>`;
+        buttonElement.onclick = function() { buyUpgrade(addAmount, newPrice, this); };
+        
+        console.log(`Куплено +${addAmount} за клик! След. цена: ${newPrice}`);
+    } else {
+        console.log("Недостаточно капель!");
+    }
+}
 
+// Старая функция для совместимости
+function getClickAdd(n, price) {
+    // Создаем временную кнопку для совместимости со старым кодом
+    const tempButton = document.createElement('button');
+    buyUpgrade(n, price, tempButton);
+}
 
 function getScore(n) {
     score += n;
-    scoreText.innerText = score;
+    scoreText.innerText = Math.floor(score);
+    checkBGImage();
 }
 
 function getSuns(n) {
     suns += n;
     sunsDiv.innerText = suns.toFixed(2);
-}
-
-function getClickAdd(n, price) {
-    if (score < price) return;
-    getScore(-price);
-    addPerClick = n;
-    addText.innerText = addPerClick;
 }
 
 function mining(scorePerSec, price) {
@@ -92,5 +108,15 @@ function checkBGImage() {
         button.style.backgroundImage = 'url(https://png.klev.club/uploads/posts/2024-04/png-klev-club-f8lu-p-gorokhostrel-png-20.png)';
     }
 }
+
+// Обработчик клика по основной кнопке
+button.onclick = function() {
+    getScore(addPerClick);
+    
+    if (isLoadingReady && score >= 500) {
+        isLoadingReady = false;
+        MUSIC['Grasswalk.mp3'].play();
+    }
+};
 
 
