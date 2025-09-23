@@ -33,15 +33,6 @@ let addPerSecond = 0;
 let suns = 0;
 let addSuns = 0.01;
 
-
-
-
-
-
-
-
-
-
     
     if (isLoadingReady && score >= 500) {
         isLoadingReady = false;
