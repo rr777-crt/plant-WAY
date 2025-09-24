@@ -1,34 +1,39 @@
-<body>
-    <!-- Зелёный хедер -->
-    <header>...</header>
-
-    <!-- Основная кнопка -->
-    <main>...</main>
-
-    <!-- Магазин - теперь слева и занимает половину экрана -->
-    <div id="shop" class="shop-panel">
-        <div class="shop-header">
-            <h3>Магазин улучшений</h3>
-        </div>
-        <div class="shop-content">
-            <!-- Большие кнопки, как в начальной версии -->
-            <button class="shop-item" onclick="buyUpgrade(1, 100, this)">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
+        <link rel="stylesheet" href="./style.css" type="text/css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    </head>
+    <body>
+        <header>
+            <div>капель: <b id="score">0</b></div>
+            <div>За клик +<b id="add">1</b></div>
+            <div>Авто-клик: <b id="autoClick">0</b>/сек</div>
+        </header>
+        
+        <main>
+            <div id="button"></div>
+        </main>
+        
+        <div class="shop-panel">
+            <div class="shop-item" onclick="buyUpgrade(1, 100, this)">
                 <span>+1 на клик<br>100 капель</span>
-            </button>
-            <button class="shop-item" onclick="buyAutoClicker(1, 50, this)">
+            </div>
+            
+            <div class="shop-item" onclick="buyAutoClicker(1, 50, this)">
                 <span>Авто-клик +1/сек<br>50 капель</span>
-            </button>
+            </div>
         </div>
-    </div>
 
-    <!-- Зелёный подвал -->
-    <div class="green-footer">
-        <button class="shop-btn" onclick="toggleShop()">🏪 Магазин</button>
-    </div>
+        <footer>
+            <button class="shop-btn" onclick="toggleShop()">Магазин</button>
+        </footer>
 
-    <!-- Блок обновлений - ниже подвала, виден при прокрутке -->
-    <div class="updates">
-        <h2>ОБНОВЛЕНИЕ 1.0.0</h2>
-        <p>- ВЫХОД</p>
-    </div>
-</body>
+        <div class="updates">
+            ОБНОВЛЕНИЕ 1.0.0 - ВЫХОД
+        </div>
+
+    </body>
+    <script src="./main.js"></script>
+</html>
