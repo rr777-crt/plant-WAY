@@ -16,6 +16,10 @@
             <div>
                 Авто-клик: <b id="autoClick">0</b>/сек
             </div>
+            <!-- Кнопка магазина в правом углу -->
+            <button class="shop-btn" onclick="toggleShop()">
+                🏪 Магазин
+            </button>
         </header>
         
         <main>
@@ -23,13 +27,14 @@
         </main>
         
         <footer>
-            <!-- Только кнопка магазина -->
-            <button class="shop-btn" onclick="toggleShop()">
-                🏪 Магазин
-            </button>
+            <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
+            <p> - БАЗОВАЯ ВЕРСИЯ</p>
+            <p> - ПРОСТЫЕ УЛУЧШЕНИЯ</p>
+            <p> - АВТО-КЛИКЕРЫ</p>
+            <p> - ЗАПУСК ИГРЫ</p>
         </footer>
 
-        <!-- Магазин с улучшениями -->
+        <!-- Магазин с правой стороны -->
         <div id="shopOverlay" class="overlay" onclick="toggleShop()"></div>
         <div id="shop" class="shop-window">
             <div class="shop-header">
@@ -38,7 +43,6 @@
             </div>
             
             <div class="shop-items">
-                <!-- Улучшения как раньше -->
                 <button class="shop-item" onclick="buyUpgrade(1, 100, this)">
                     <span>+1 на клик<br>100 капель</span>
                 </button>
@@ -47,10 +51,6 @@
                     <span>Авто-клик +1/сек<br>50 капель</span>
                 </button>
             </div>
-        </div>
-
-        <div class="version">
-            <p>V:1.0.0 - БАЗОВАЯ ВЕРСИЯ</p>
         </div>
 
     </body>
