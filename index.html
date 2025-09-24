@@ -2,68 +2,68 @@
     <head>
         <meta charset="UTF-8">
         <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
-        <meta name="description" content="грохострел">
         <link rel="stylesheet" href="./style.css" type="text/css">
-        <!-- viewport -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     </head>
     <body>
         <header>
-            <div class = "menu">
-                капель (воды): <b id="score">0</b>
+            <div class="menu">
+                капель: <b id="score">0</b>
             </div>
             <div>
                 За клик +<b id="add">1</b>
             </div>
-             <div>
-                солнцы: <b id="suns">0</b>
+            <div>
+                Авто-клик: <b id="autoClick">0</b>/сек
             </div>
         </header>
-        <main>
-            <div id="button">
-            </div>
-            <div id = "buton">
-            </div>
-        </main>
-            <footer>
-          
-        <!-- Базовые улучшения -->
-<button onclick="buyUpgrade(1, 100, this)">
-    <span>+1 на клик<br>100 капель</span>
-</button>
-
-<button onclick="buyUpgrade(5, 1000, this)">
-    <span>+5 на клик<br>1000 капель</span>
-</button>
-
-<!-- Улучшения для поздней игры -->
-<button onclick="buyUpgrade(50, 12500, this)">
-    <span>+50 на клик<br>12500 капель</span>
-</button>
-
-<button onclick="buyUpgrade(100, 50000, this)">
-    <span>+100 на клик<br>50000 капель</span>
-</button>
-            
-           
-              
-            
-    <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
-        <p> - ВЫХОД</p>
-        <p> -  </p>
-        <p> -  </p>
-        <p> - 
-        </p>
-
-       <h1 class ="gg">ИНФО ЛИСТ</h1>
-<p></p>
-            <p></p>
-            <p></p>
-             
-
         
+        <main>
+            <div id="button"></div>
+        </main>
+        
+        <footer>
+            <!-- Всего 2 улучшения как в старом стиле -->
+            <button onclick="buyUpgrade(1, 100, this)">
+                <span>+1 на клик<br>100 капель</span>
+            </button>
+            
+            <button onclick="buyAutoClicker(1, 50, this)">
+                <span>Авто-клик +1/сек<br>50 капель</span>
+            </button>
         </footer>
 
+        <!-- Красивый магазин (только визуал) -->
+        <div id="shop" class="shop-window hidden">
+            <div class="shop-header">
+                <h2>🏪 Магазин Гороха</h2>
+                <button class="close-btn" onclick="toggleShop()">×</button>
+            </div>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <h3> клик</h3>
+                    <p>+... на клик</p>
+                    <div class="item-stats">
+                        <span class="price">100 капель</span>
+                        <span class="owned">Куплено: 0</span>
+                    </div>
+                </div>
+                
+                <div class="shop-item">
+                    <h3> авто </h3>
+                    <p> авто клик </p>
+                    <div class="item-stats">
+                        <span class="price">50 капель</span>
+                        <span class="owned">Куплено: 0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="version">
+            <p>V:1.0.0 - БАЗОВАЯ ВЕРСИЯ</p>
+        </div>
+
+    </body>
     <script src="./main.js"></script>
-   
 </html>
