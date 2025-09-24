@@ -7,15 +7,13 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: #f0f0f0;
-    font-family: 'Arial', sans-serif;
+    background: white;
+    font-family: Arial;
 }
 
 header {
     background: #4CAF50;
-    height: 60px;
-    text-align: center;
-    font-size: 18px;
+    height: 50px;
     position: fixed;
     top: 0;
     left: 0;
@@ -24,16 +22,15 @@ header {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    z-index: 10;
+    font-size: 16px;
 }
 
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 140px); /* Учтены хедер и подвал */
+    height: 100vh;
     width: 100vw;
-    margin-top: 60px; /* Для отступа от фиксированного хедера */
 }
 
 #button {
@@ -44,105 +41,67 @@ main {
     background-position: center;
     background-size: 80%;
     background-repeat: no-repeat;
-    border: 10px solid #4CAF50;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+    border: 5px solid #4CAF50;
     cursor: pointer;
-    transition: all 0.1s ease;
 }
 
 #button:active {
     transform: scale(0.95);
 }
 
-/* Зелёный подвал */
-.green-footer {
-    background: #4CAF50;
-    height: 60px;
+/* Магазин - простая панель справа */
+.shop-panel {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    width: 300px;
+    height: calc(100vh - 100px);
+    background: #f0f0f0;
+    border-left: 2px solid #ccc;
+    padding: 10px;
+}
+
+.shop-item {
+    background: white;
+    border: 1px solid #4CAF50;
+    padding: 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    text-align: center;
+    font-size: 16px;
+}
+
+.shop-item:active {
+    background: #f0f0f0;
+}
+
+footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
+    height: 50px;
+    background: #4CAF50;
     display: flex;
     align-items: center;
     padding-left: 20px;
 }
 
-/* Кнопка магазина в подвале (голубая) */
 .shop-btn {
-    background: #87CEEB; /* Голубой цвет */
-    color: #333;
+    background: #87CEEB;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 8px 15px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background 0.2s;
+    font-size: 14px;
 }
 
-.shop-btn:hover {
-    background: #6cb8d6; /* Более темный оттенок голубого при наведении */
-}
-
-/* Блок обновлений ниже подвала */
 .updates {
-    background: #333;
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-    margin-top: 60px; /* Отступ от зеленого подвала */
-}
-
-.updates h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-.updates p {
-    font-size: 20px;
-    margin: 10px 0;
-}
-
-/* Стили для магазина */
-.shop-panel {
     position: fixed;
-    top: 60px; /* Под хедером */
-    right: 0;
-    width: 50%; /* Занимает половину экрана */
-    height: calc(100vh - 60px);
-    background: #f8f9fa;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    overflow-y: auto; /* На случай, если улучшений много */
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-/* Большие кнопки улучшений в магазине, как в начальной версии */
-.shop-item {
-    background: #e9f7ef;
-    border: 2px solid #4CAF50;
-    padding: 20px;
-    margin: 15px 0;
-    border-radius: 10px;
-    cursor: pointer;
+    bottom: 60px;
+    left: 0;
+    width: 100%;
     text-align: center;
     font-size: 18px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: all 0.2s;
-}
-
-.shop-item:hover {
-    background: #d4edda;
-}
-
-.shop-item:active {
-    transform: scale(0.98);
-}
-
-.shop-item span {
-    display: block;
-    font-size: 14px;
-    margin-top: 5px;
+    color: #333;
+    padding: 10px;
 }
