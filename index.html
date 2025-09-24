@@ -16,39 +16,48 @@
             <div>
                 Авто-клик: <b id="autoClick">0</b>/сек
             </div>
-            <!-- Кнопка магазина в правом углу -->
-            <button class="shop-btn" onclick="toggleShop()">
-                🏪 Магазин
-            </button>
         </header>
         
         <main>
             <div id="button"></div>
         </main>
         
-        <footer>
+        <!-- Зелёный подвал с кнопкой магазина -->
+        <div class="green-footer">
+            <button class="shop-btn" onclick="toggleShop()">
+                🏪 Магазин
+            </button>
+        </div>
+
+        <!-- Блок обновлений ниже подвала -->
+        <div class="updates">
             <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
             <p> - БАЗОВАЯ ВЕРСИЯ</p>
             <p> - ПРОСТЫЕ УЛУЧШЕНИЯ</p>
             <p> - АВТО-КЛИКЕРЫ</p>
             <p> - ЗАПУСК ИГРЫ</p>
-        </footer>
+        </div>
 
-        <!-- Магазин с правой стороны -->
-        <div id="shopOverlay" class="overlay" onclick="toggleShop()"></div>
-        <div id="shop" class="shop-window">
+        <!-- Магазин как в Cookie Clicker -->
+        <div id="shop" class="shop-panel">
             <div class="shop-header">
-                <h2>🏪 Магазин улучшений</h2>
+                <h3>Улучшения</h3>
                 <button class="close-btn" onclick="toggleShop()">×</button>
             </div>
             
-            <div class="shop-items">
-                <button class="shop-item" onclick="buyUpgrade(1, 100, this)">
-                    <span>+1 на клик<br>100 капель</span>
+            <div class="shop-content">
+                <button class="upgrade-btn" onclick="buyUpgrade(1, 100, this)">
+                    <div class="upgrade-info">
+                        <span class="upgrade-name">+1 за клик</span>
+                        <span class="upgrade-price">100 капель</span>
+                    </div>
                 </button>
                 
-                <button class="shop-item" onclick="buyAutoClicker(1, 50, this)">
-                    <span>Авто-клик +1/сек<br>50 капель</span>
+                <button class="upgrade-btn" onclick="buyAutoClicker(1, 50, this)">
+                    <div class="upgrade-info">
+                        <span class="upgrade-name">Авто-клик +1/сек</span>
+                        <span class="upgrade-price">50 капель</span>
+                    </div>
                 </button>
             </div>
         </div>
