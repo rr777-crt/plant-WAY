@@ -5,7 +5,6 @@ const addText = document.getElementById("add");
 const button = document.getElementById("button");
 const autoClickText = document.getElementById("autoClick");
 const shop = document.getElementById("shop");
-const shopOverlay = document.getElementById("shopOverlay");
 
 // Игровые переменные
 let score = 0;
@@ -26,7 +25,7 @@ function buyUpgrade(addAmount, price, buttonElement) {
         addPerClick += addAmount;
         
         const newPrice = Math.floor(price * 1.17);
-        buttonElement.innerHTML = `<span>+${addAmount} на клик<br>${newPrice} капель</span>`;
+        buttonElement.querySelector('.upgrade-price').textContent = newPrice + ' капель';
         buttonElement.onclick = function() { buyUpgrade(addAmount, newPrice, this); };
         
         updateDisplay();
@@ -40,7 +39,7 @@ function buyAutoClicker(addAmount, price, buttonElement) {
         autoClickers += addAmount;
         
         const newPrice = Math.floor(price * 1.17);
-        buttonElement.innerHTML = `<span>Авто-клик +${addAmount}/сек<br>${newPrice} капель</span>`;
+        buttonElement.querySelector('.upgrade-price').textContent = newPrice + ' капель';
         buttonElement.onclick = function() { buyAutoClicker(addAmount, newPrice, this); };
         
         updateDisplay();
@@ -59,7 +58,6 @@ setInterval(function() {
 // Функция открытия/закрытия магазина
 function toggleShop() {
     shop.classList.toggle('active');
-    shopOverlay.classList.toggle('active');
 }
 
 // Смена картинки по количеству капель
