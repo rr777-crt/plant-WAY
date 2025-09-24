@@ -92,5 +92,10 @@ function updateDisplay() {
     autoClickText.textContent = autoClickers;
 }
 
+function toggleShop() {
+    const shop = document.getElementById('shop');
+    shop.classList.toggle('active');
+}
+
 // Старт игры
 updateDisplay();
