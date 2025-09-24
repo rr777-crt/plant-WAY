@@ -5,6 +5,7 @@ const addText = document.getElementById("add");
 const button = document.getElementById("button");
 const autoClickText = document.getElementById("autoClick");
 const shop = document.getElementById("shop");
+const shopOverlay = document.getElementById("shopOverlay");
 
 // Игровые переменные
 let score = 0;
@@ -15,9 +16,10 @@ let autoClickers = 0;
 button.onclick = function() {
     score += addPerClick;
     updateDisplay();
+    checkBGImage();
 };
 
-// Функция покупки улучшения клика (старая добрая система)
+// Функция покупки улучшения клика (старая механика)
 function buyUpgrade(addAmount, price, buttonElement) {
     if (score >= price) {
         score -= price;
@@ -26,7 +28,7 @@ function buyUpgrade(addAmount, price, buttonElement) {
         // Увеличиваем цену на 17%
         const newPrice = Math.floor(price * 1.17);
         
-        // Обновляем кнопку
+        // Обновляем кнопку в магазине
         buttonElement.innerHTML = `<span>+${addAmount} на клик<br>${newPrice} капель</span>`;
         buttonElement.onclick = function() { buyUpgrade(addAmount, newPrice, this); };
         
@@ -43,7 +45,7 @@ function buyAutoClicker(addAmount, price, buttonElement) {
         // Увеличиваем цену на 17%
         const newPrice = Math.floor(price * 1.17);
         
-        // Обновляем кнопку
+        // Обновляем кнопку в магазине
         buttonElement.innerHTML = `<span>Авто-клик +${addAmount}/сек<br>${newPrice} капель</span>`;
         buttonElement.onclick = function() { buyAutoClicker(addAmount, newPrice, this); };
         
@@ -56,12 +58,39 @@ setInterval(function() {
     if (autoClickers > 0) {
         score += autoClickers;
         updateDisplay();
+        checkBGImage();
     }
 }, 1000);
 
-// Функция открытия/закрытия магазина (только визуал)
+// Функция открытия/закрытия магазина
 function toggleShop() {
-    shop.classList.toggle('hidden');
+    shop.classList.toggle('active');
+    shopOverlay.classList.toggle('active');
+}
+
+// Смена картинки по количеству капель
+function checkBGImage() {
+    if (score > 1000) {
+        button.style.backgroundImage = 'url(https://klev.club/uploads/posts/2023-11/1698878136_klev-club-p-arti-gorokhostrel-zombi-43.jpg)';
+    }
+    if (score > 10000) {
+        button.style.backgroundImage = 'url(https://pvsz2.ru/statics/plants-big/31.png)';
+    }
+    if (score > 1000000) {
+        button.style.backgroundImage = 'url(https://avatars.mds.yandex.net/i?id=69a2b4239be746c0863ff1d2bf2c2a75_l-8972142-images-thumbs&n=13)';
+    }
+    if (score > 100000000) {
+        button.style.backgroundImage = 'url(https://i.pinimg.com/originals/8e/0f/57/8e0f5777b6643cdc67dcfce5db6c1d70.jpg)';
+    }
+    if (score > 1000000000) {
+        button.style.backgroundImage = 'url(https://files.vgtimes.ru/download/posts/2020-04/thumbs/1587903142_gxxpmj5u6ke3vkxewf1y0g.jpg)';
+    }
+    if (score > 100000000000) {
+        button.style.backgroundImage = 'url(https://img.razrisyika.ru/kart/14/1200/53948-gorohostrel-13.jpg)';
+    }
+    if (score > 1000000000000) {
+        button.style.backgroundImage = 'url(https://png.klev.club/uploads/posts/2024-04/png-klev-club-f8lu-p-gorokhostrel-png-20.png)';
+    }
 }
 
 // Обновление отображения
@@ -73,4 +102,3 @@ function updateDisplay() {
 
 // Старт игры
 updateDisplay();
-
