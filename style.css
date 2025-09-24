@@ -185,3 +185,46 @@ main {
     color: #e74c3c;
     font-weight: bold;
 }
+.shop-panel {
+    position: fixed;
+    top: 60px; /* Высота хедера */
+    left: -50%; /* Сначала скрыта за левым краем */
+    width: 50%; /* Занимает половину экрана */
+    height: calc(100vh - 140px);
+    background: #87CEEB; /* Голубой цвет */
+    box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+.shop-panel.active {
+    left: 0; /* Появляется при открытии */
+}
+
+/* Большие кнопки в магазине */
+.shop-item {
+    width: 90%;
+    padding: 20px;
+    margin: 15px auto;
+    font-size: 18px;
+}
+
+/* Блок обновлений внизу страницы */
+.updates {
+    background: #333;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    min-height: 200px;
+}
+
+.updates h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.updates p {
+    font-size: 20px;
+    margin: 10px 0;
+}
