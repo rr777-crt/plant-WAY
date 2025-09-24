@@ -19,16 +19,13 @@ button.onclick = function() {
     checkBGImage();
 };
 
-// Функция покупки улучшения клика (старая механика)
+// Функция покупки улучшения клика
 function buyUpgrade(addAmount, price, buttonElement) {
     if (score >= price) {
         score -= price;
         addPerClick += addAmount;
         
-        // Увеличиваем цену на 17%
         const newPrice = Math.floor(price * 1.17);
-        
-        // Обновляем кнопку в магазине
         buttonElement.innerHTML = `<span>+${addAmount} на клик<br>${newPrice} капель</span>`;
         buttonElement.onclick = function() { buyUpgrade(addAmount, newPrice, this); };
         
@@ -42,10 +39,7 @@ function buyAutoClicker(addAmount, price, buttonElement) {
         score -= price;
         autoClickers += addAmount;
         
-        // Увеличиваем цену на 17%
         const newPrice = Math.floor(price * 1.17);
-        
-        // Обновляем кнопку в магазине
         buttonElement.innerHTML = `<span>Авто-клик +${addAmount}/сек<br>${newPrice} капель</span>`;
         buttonElement.onclick = function() { buyAutoClicker(addAmount, newPrice, this); };
         
