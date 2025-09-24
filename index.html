@@ -23,40 +23,29 @@
         </main>
         
         <footer>
-            <!-- Всего 2 улучшения как в старом стиле -->
-            <button onclick="buyUpgrade(1, 100, this)">
-                <span>+1 на клик<br>100 капель</span>
-            </button>
-            
-            <button onclick="buyAutoClicker(1, 50, this)">
-                <span>Авто-клик +1/сек<br>50 капель</span>
+            <!-- Только кнопка магазина -->
+            <button class="shop-btn" onclick="toggleShop()">
+                🏪 Магазин
             </button>
         </footer>
 
-        <!-- Красивый магазин (только визуал) -->
-        <div id="shop" class="shop-window hidden">
+        <!-- Магазин с улучшениями -->
+        <div id="shopOverlay" class="overlay" onclick="toggleShop()"></div>
+        <div id="shop" class="shop-window">
             <div class="shop-header">
-                <h2>🏪 Магазин Гороха</h2>
+                <h2>🏪 Магазин улучшений</h2>
                 <button class="close-btn" onclick="toggleShop()">×</button>
             </div>
+            
             <div class="shop-items">
-                <div class="shop-item">
-                    <h3> клик</h3>
-                    <p>+... на клик</p>
-                    <div class="item-stats">
-                        <span class="price">100 капель</span>
-                        <span class="owned">Куплено: 0</span>
-                    </div>
-                </div>
+                <!-- Улучшения как раньше -->
+                <button class="shop-item" onclick="buyUpgrade(1, 100, this)">
+                    <span>+1 на клик<br>100 капель</span>
+                </button>
                 
-                <div class="shop-item">
-                    <h3> авто </h3>
-                    <p> авто клик </p>
-                    <div class="item-stats">
-                        <span class="price">50 капель</span>
-                        <span class="owned">Куплено: 0</span>
-                    </div>
-                </div>
+                <button class="shop-item" onclick="buyAutoClicker(1, 50, this)">
+                    <span>Авто-клик +1/сек<br>50 капель</span>
+                </button>
             </div>
         </div>
 
