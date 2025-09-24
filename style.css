@@ -12,8 +12,8 @@ body {
 }
 
 header {
-    background: linear-gradient(45deg, #4CAF50, #45a049);
-    height: 50px;
+    background: #4CAF50;
+    height: 60px;
     text-align: center;
     font-size: 18px;
     position: fixed;
@@ -27,13 +27,31 @@ header {
     align-items: center;
 }
 
+/* Кнопка магазина в правом углу */
+.shop-btn {
+    background: #45a049;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: 20px;
+    transition: background 0.2s;
+}
+
+.shop-btn:hover {
+    background: #3d8b40;
+}
+
 main {
     display: flex;
     justify-content: center;
     align-items: center;
     height: calc(100vh - 200px);
     width: 100vw;
-    margin-top: 50px;
+    margin-top: 60px;
 }
 
 #button {
@@ -56,61 +74,48 @@ main {
 }
 
 footer {
-    background: linear-gradient(45deg, #2196F3, #1976D2);
-    padding: 20px 0;
+    background: #333;
+    color: white;
+    padding: 20px;
     text-align: center;
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 
-.shop-btn {
-    background: linear-gradient(45deg, #FF9800, #F57C00);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 20px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+footer p {
+    margin: 5px 0;
 }
 
-.shop-btn:active {
-    transform: scale(0.95);
-}
-
-/* Магазин */
+/* Магазин с правой стороны */
 .shop-window {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    width: 90%;
-    max-width: 400px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
     z-index: 1000;
-    overflow: hidden;
-    transition: all 0.3s ease;
+    transition: right 0.3s ease;
+    border-left: 3px solid #4CAF50;
 }
 
 .shop-window.active {
-    transform: translate(-50%, -50%) scale(1);
+    right: 0;
 }
 
 .shop-header {
-    background: rgba(0,0,0,0.2);
+    background: #4CAF50;
     padding: 20px;
     text-align: center;
-    border-bottom: 2px solid rgba(255,255,255,0.2);
+    border-bottom: 2px solid #45a049;
 }
 
 .shop-header h2 {
     margin: 0;
     color: white;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .close-btn {
@@ -132,27 +137,33 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: calc(100% - 80px);
+    overflow-y: auto;
 }
 
 .shop-item {
-    background: rgba(255,255,255,0.95);
-    border: none;
-    padding: 20px;
-    border-radius: 15px;
+    background: #f8f9fa;
+    border: 2px solid #4CAF50;
+    padding: 15px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    font-size: 16px;
+    text-align: center;
+}
+
+.shop-item:hover {
+    background: #e9f7ef;
 }
 
 .shop-item:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
 }
 
 .shop-item span {
     display: block;
     font-size: 14px;
     margin-top: 5px;
+    color: #333;
 }
 
 .overlay {
@@ -171,13 +182,4 @@ footer {
 .overlay.active {
     opacity: 1;
     pointer-events: all;
-}
-
-.version {
-    text-align: center;
-    padding: 10px;
-    color: #666;
-    margin-bottom: 80px;
-}active {
-    display: block;
 }
