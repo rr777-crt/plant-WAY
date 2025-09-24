@@ -24,15 +24,16 @@ header {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    z-index: 10;
 }
 
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 140px); /* Учтены хедер и подвал */
     width: 100vw;
-    margin-top: 60px;
+    margin-top: 60px; /* Для отступа от фиксированного хедера */
 }
 
 #button {
@@ -58,7 +59,7 @@ main {
     background: #4CAF50;
     height: 60px;
     position: fixed;
-    bottom: 80px;
+    bottom: 0;
     left: 0;
     width: 100%;
     display: flex;
@@ -66,157 +67,30 @@ main {
     padding-left: 20px;
 }
 
-/* Кнопка магазина в подвале */
+/* Кнопка магазина в подвале (голубая) */
 .shop-btn {
-    background: #45a049;
-    color: white;
+    background: #87CEEB; /* Голубой цвет */
+    color: #333;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    font-weight: bold;
     transition: background 0.2s;
 }
 
 .shop-btn:hover {
-    background: #3d8b40;
+    background: #6cb8d6; /* Более темный оттенок голубого при наведении */
 }
 
-/* Блок обновлений */
-.updates {
-    background: #333;
-    color: white;
-    padding: 15px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.updates p {
-    margin: 2px 0;
-    font-size: 14px;
-}
-
-/* Магазин как в Cookie Clicker */
-.shop-panel {
-    position: fixed;
-    bottom: 140px;
-    left: 20px;
-    background: #4CAF50;
-    width: 250px;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    z-index: 1000;
-    display: none;
-}
-
-.shop-panel.active {
-    display: block;
-}
-
-.shop-header {
-    background: #45a049;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #3d8b40;
-}
-
-.shop-header h3 {
-    margin: 0;
-    color: white;
-    font-size: 16px;
-}
-
-.close-btn {
-    background: #ff4757;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.shop-content {
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.upgrade-btn {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 3px;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    transition: background 0.2s;
-}
-
-.upgrade-btn:hover {
-    background: #e9f7ef;
-}
-
-.upgrade-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-
-.upgrade-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.upgrade-name {
-    font-size: 14px;
-    color: #333;
-}
-
-.upgrade-price {
-    font-size: 12px;
-    color: #e74c3c;
-    font-weight: bold;
-}
-.shop-panel {
-    position: fixed;
-    top: 60px; /* Высота хедера */
-    left: -50%; /* Сначала скрыта за левым краем */
-    width: 50%; /* Занимает половину экрана */
-    height: calc(100vh - 140px);
-    background: #87CEEB; /* Голубой цвет */
-    box-shadow: 5px 0 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    transition: left 0.3s ease;
-    overflow-y: auto;
-}
-
-.shop-panel.active {
-    left: 0; /* Появляется при открытии */
-}
-
-/* Большие кнопки в магазине */
-.shop-item {
-    width: 90%;
-    padding: 20px;
-    margin: 15px auto;
-    font-size: 18px;
-}
-
-/* Блок обновлений внизу страницы */
+/* Блок обновлений ниже подвала */
 .updates {
     background: #333;
     color: white;
     padding: 40px 20px;
     text-align: center;
-    min-height: 200px;
+    margin-top: 60px; /* Отступ от зеленого подвала */
 }
 
 .updates h2 {
@@ -227,4 +101,48 @@ main {
 .updates p {
     font-size: 20px;
     margin: 10px 0;
+}
+
+/* Стили для магазина */
+.shop-panel {
+    position: fixed;
+    top: 60px; /* Под хедером */
+    right: 0;
+    width: 50%; /* Занимает половину экрана */
+    height: calc(100vh - 60px);
+    background: #f8f9fa;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    overflow-y: auto; /* На случай, если улучшений много */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Большие кнопки улучшений в магазине, как в начальной версии */
+.shop-item {
+    background: #e9f7ef;
+    border: 2px solid #4CAF50;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s;
+}
+
+.shop-item:hover {
+    background: #d4edda;
+}
+
+.shop-item:active {
+    transform: scale(0.98);
+}
+
+.shop-item span {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
 }
