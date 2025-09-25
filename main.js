@@ -2,16 +2,12 @@
 
 const scoreText = document.getElementById("score");
 const addText = document.getElementById("add");
-const levelText = document.getElementById("level");
 const button = document.getElementById("button");
-const skinsContainer = document.getElementById("skins-container");
-
-// Элементы цен
-const clickPriceElem = document.getElementById("click-price");
-const autoPriceElem = document.getElementById("auto-price");
-const shopClickPriceElem = document.getElementById("shop-click-price");
-const shopAutoPriceElem = document.getElementById("shop-auto-price");
-const shopBigPriceElem = document.getElementById("shop-big-price");
+const levelText = document.getElementById("level");
+const expText = document.getElementById("exp");
+const maxExpText = document.getElementById("max-exp");
+const clickPriceText = document.getElementById("price-click");
+const autoPriceText = document.getElementById("price-auto");
 
 let score = 0;
 let addPerClick = 1;
@@ -19,176 +15,124 @@ let addPerSecond = 0;
 let exp = 0;
 let level = 1;
 let maxExp = 100;
+let totalClicks = 0;
 
 // Цены улучшений
-let upgradePrices = {
-    'click': 100,
-    'auto': 50,
-    'big': 1000
-};
+let clickUpgradePrice = 100;
+let autoUpgradePrice = 50;
 
-// Скины
+// Скины и условия их разблокировки
 const skins = [
-    { id: 1, name: "Обычный", url: "https://pvsz2.ru/statics/plants-big/68.png", unlocked: true },
-    { id: 2, name: "Золотой", url: "https://klev.club/uploads/posts/2023-11/1698878136_klev-club-p-arti-gorokhostrel-zombi-43.jpg", unlocked: false },
-    { id: 3, name: "Эпический", url: "https://pvsz2.ru/statics/plants-big/31.png", unlocked: false },
-    { id: 4, name: "Легендарный", url: "https://avatars.mds.yandex.net/i?id=69a2b4239be746c0863ff1d2bf2c2a75_l-8972142-images-thumbs&n=13", unlocked: false }
+    { url: "https://pvsz2.ru/statics/plants-big/68.png", clicksRequired: 0 }, // Стартовый
+    { url: "https://klev.club/uploads/posts/2023-11/1698878136_klev-club-p-arti-gorokhostrel-zombi-43.jpg", clicksRequired: 1000 }, // За 1000 кликов
+    { url: "https://pvsz2.ru/statics/plants-big/31.png", clicksRequired: 5000 } // За 5000 кликов
 ];
+let currentSkinIndex = 0;
 
-let currentSkin = skins[0];
+function getScore(n) {
+    score += n;
+    scoreText.innerText = Math.floor(score);
+}
 
-// Опыт за клик
-function addExp() {
-    exp += 1;
+function addExperience() {
+    exp += 1; // Даем 1 опыт за клик
+    totalClicks += 1; // Считаем общее количество кликов
+
+    // Проверяем, нужно ли повысить уровень
     if (exp >= maxExp) {
-        level++;
+        level += 1;
         exp = 0;
-        maxExp = Math.floor(maxExp * 1.05);
-        alert(`Уровень UP! Теперь уровень ${level}`);
-        updateLevel();
+        maxExp = Math.floor(maxExp * 1.05); // Увеличиваем требуемый опыт на 5%
+        alert("Уровень UP! Теперь уровень " + level);
+        updateLevelDisplay();
     }
+
+    // Проверяем, разблокирован ли новый скин
+    checkSkinUnlock();
+
+    // Обновляем полоску опыта
+    updateExpDisplay();
 }
 
-function updateLevel() {
+function updateLevelDisplay() {
     levelText.textContent = level;
+    maxExpText.textContent = maxExp;
 }
 
-function toggleUpgradeShop() {
-    const shop = document.getElementById('upgrade-shop');
-    const overlay = document.getElementById('overlay');
-    shop.classList.toggle('active');
-    overlay.classList.toggle('active');
+function updateExpDisplay() {
+    expText.textContent = exp;
 }
 
-function toggleInventory() {
-    const inventory = document.getElementById('inventory');
-    const overlay = document.getElementById('overlay');
-    loadSkins();
-    inventory.classList.toggle('active');
-    overlay.classList.toggle('active');
-}
-
-function closeAllShops() {
-    document.getElementById('upgrade-shop').classList.remove('active');
-    document.getElementById('inventory').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-}
-
-function openTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-    
-    event.target.classList.add('active');
-    document.getElementById(tabName).classList.add('active');
-}
-
-function buyUpgrade(addValue, basePrice, requiredLevel) {
-    if (level < requiredLevel) {
-        alert(`Требуется уровень ${requiredLevel}!`);
-        return;
+function checkSkinUnlock() {
+    // Проверяем, достигли ли мы количества кликов для нового скина
+    for (let i = 0; i < skins.length; i++) {
+        if (totalClicks >= skins[i].clicksRequired && currentSkinIndex < i) {
+            currentSkinIndex = i; // Разблокируем скин
+            button.style.backgroundImage = `url(${skins[i].url})`; // Меняем картинку
+            alert("Поздравляем! Вы получили новый скин за " + skins[i].clicksRequired + " кликов!");
+        }
     }
-    
-    let priceKey = '';
-    if (addValue === 1) priceKey = 'click';
-    else if (addValue === 0.2) priceKey = 'auto';
-    else if (addValue === 5) priceKey = 'big';
-    
-    const currentPrice = upgradePrices[priceKey];
-    
+}
+
+function buyUpgrade(addValue, basePrice) {
+    // Определяем, какое улучшение покупается, и проверяем цену
+    let currentPrice;
+    if (addValue === 1) {
+        currentPrice = clickUpgradePrice;
+    } else if (addValue === 0.2) {
+        currentPrice = autoUpgradePrice;
+    }
+
     if (score >= currentPrice) {
-        score -= currentPrice;
-        
-        if (addValue === 1 || addValue === 5) {
+        getScore(-currentPrice);
+
+        // Увеличиваем характеристику
+        if (addValue === 1) {
             addPerClick += addValue;
+            addText.innerText = addPerClick;
+            // Повышаем цену для следующей покупки на 20%
+            clickUpgradePrice = Math.floor(currentPrice * 1.2);
+            clickPriceText.innerText = clickUpgradePrice;
         } else {
             addPerSecond += addValue;
+            autoUpgradePrice = Math.floor(currentPrice * 1.2);
+            autoPriceText.innerText = autoUpgradePrice;
         }
-        
-        // +20% к цене
-        upgradePrices[priceKey] = Math.floor(currentPrice * 1.2);
-        
-        // Обновляем цены везде
-        updatePrices();
-        updateDisplay();
     }
-}
-
-function updatePrices() {
-    clickPriceElem.textContent = upgradePrices.click;
-    autoPriceElem.textContent = upgradePrices.auto;
-    shopClickPriceElem.textContent = upgradePrices.click;
-    shopAutoPriceElem.textContent = upgradePrices.auto;
-    shopBigPriceElem.textContent = upgradePrices.big;
 }
 
 function buyCase() {
-    if (score >= 1250) {
-        score -= 1250;
-        
+    const casePrice = 1250;
+    if (score >= casePrice) {
+        getScore(-casePrice);
+
+        // Простой пример логики кейса со шансами
         const random = Math.random() * 100;
-        let skinQuality;
-        
-        if (random < 1) skinQuality = 4;
-        else if (random < 10) skinQuality = 3;
-        else if (random < 40) skinQuality = 2;
-        else skinQuality = 1;
-        
-        const availableSkins = skins.filter(skin => !skin.unlocked && skin.id === skinQuality);
-        if (availableSkins.length > 0) {
-            const skin = availableSkins[0];
-            skin.unlocked = true;
-            alert(`Вы получили скин: ${skin.name}!`);
+        if (random < 1) {
+            alert("Вам выпал ЛЕГЕНДАРНЫЙ скин! (Шанс 1%)");
+        } else if (random < 10) {
+            alert("Вам выпал ЭПИЧЕСКИЙ скин! (Шанс 9%)");
+        } else if (random < 40) {
+            alert("Вам выпал РЕДКИЙ скин! (Шанс 30%)");
         } else {
-            alert("Все скины этого качества уже получены!");
+            alert("Вам выпал ОБЫЧНЫЙ скин. (Шанс 60%)");
         }
-        
-        updateDisplay();
+        // Здесь можно добавить логику добавления скина в инвентарь
     }
 }
 
-function loadSkins() {
-    skinsContainer.innerHTML = '';
-    skins.forEach(skin => {
-        if (skin.unlocked) {
-            const skinElement = document.createElement('div');
-            skinElement.className = `skin-item ${currentSkin.id === skin.id ? 'active' : ''}`;
-            skinElement.innerHTML = `
-                <img src="${skin.url}" alt="${skin.name}">
-                <div>${skin.name}</div>
-            `;
-            skinElement.onclick = () => selectSkin(skin);
-            skinsContainer.appendChild(skinElement);
-        }
-    });
-}
-
-function selectSkin(skin) {
-    currentSkin = skin;
-    button.style.backgroundImage = `url(${skin.url})`;
-    loadSkins();
-}
-
-function updateDisplay() {
-    scoreText.textContent = Math.floor(score);
-    addText.textContent = addPerClick;
-}
-
-// Клик по основной кнопке
 button.onclick = function() {
-    score += addPerClick;
-    addExp();
-    updateDisplay();
+    getScore(addPerClick);
+    addExperience(); // Добавляем опыт за клик
 };
 
 // Авто-кликер
 setInterval(() => {
     if (addPerSecond > 0) {
-        score += addPerSecond;
-        updateDisplay();
+        getScore(addPerSecond);
     }
 }, 1000);
 
-// Инициализация
-updateDisplay();
-updateLevel();
-updatePrices();
+// Инициализация при загрузке
+updateLevelDisplay();
+updateExpDisplay();
