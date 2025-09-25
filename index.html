@@ -9,48 +9,90 @@
     <body>
         <header>
             <div class="menu">
-                капель (воды): <b id="score">0</b>
+                капель (воды): <b id="score" style="color: green;">0</b>
             </div>
             <div>
-                За клик +<b id="add">1</b>
+                За клик +<b id="add" style="color: green;">1</b>
             </div>
-             <div>
-                Уровень: <b id="level">1</b> | EXP: <b id="exp">0</b>/<b id="max-exp">100</b>
+            <div>
+                солнцы: <b id="suns">0</b>
             </div>
         </header>
-        <main>
-            <div id="button">
+
+        <div id="side-menu">
+            <button class="menu-btn level-btn" onclick="toggleSection('level')">
+                <div>Уровень: <span id="current-level">1</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="level-progress"></div>
+                </div>
+            </button>
+            <button class="menu-btn skins-btn" onclick="toggleSection('skins')">Скины</button>
+            <button class="menu-btn upgrades-btn" onclick="toggleSection('upgrades')">Улучшения</button>
+            <button class="menu-btn cases-btn" onclick="toggleSection('cases')">Кейсы</button>
+        </div>
+
+        <div id="upgrades-section" class="shop-section">
+            <div class="shop-header">
+                <h2>Улучшения</h2>
+                <button class="close-shop" onclick="closeAllSections()">×</button>
             </div>
+            <div id="upgrades-tab" class="tab-pane active">
+                <button onclick="buyUpgrade(1, 100)">
+                    <span>+1 на клик<br>100 капель</span>
+                </button>
+                <button onclick="buyUpgrade(0.2, 50)">
+                    <span>+0.2/сек<br>50 капель</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="skins-section" class="shop-section">
+            <div class="shop-header">
+                <h2>Инвентарь скинов</h2>
+                <button class="close-shop" onclick="closeAllSections()">×</button>
+            </div>
+            <div class="skins-container" id="skins-container">
+                <div class="skin-item active" onclick="selectSkin('default')">
+                    <img src="https://pvsz2.ru/statics/plants-big/68.png" alt="Стандартный">
+                    <div class="skin-name">Стандартный</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cases-section" class="shop-section">
+            <div class="shop-header">
+                <h2>Кейсы</h2>
+                <button class="close-shop" onclick="closeAllSections()">×</button>
+            </div>
+            <div class="shop-items">
+                <button onclick="buyCase()">
+                    <span>Обычный кейс<br>1250 капель</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="level-section" class="shop-section">
+            <div class="shop-header">
+                <h2>Уровень</h2>
+                <button class="close-shop" onclick="closeAllSections()">×</button>
+            </div>
+            <div class="level-details">
+                <p>Текущий уровень: <span id="detail-level">1</span></p>
+                <p>Опыт: <span id="detail-exp">0</span>/<span id="detail-required">100</span></p>
+            </div>
+        </div>
+
+        <div id="overlay" class="overlay" onclick="closeAllSections()"></div>
+
+        <main>
+            <div id="button"></div>
         </main>
-            <footer>
-          
-            <button onclick="buyUpgrade(1, 100)">
-                <span>+1 на клик
-                <span id="price-click">100</span> капель </span>
-            </button>
-
-            <button onclick="buyUpgrade(0.2, 50)">
-                <span>+0.2 в секунду
-                <span id="price-auto">50</span> капель </span>
-            </button>
-
-            <button onclick="buyCase()">
-                <span>Открыть кейс
-                1250 капель </span>
-            </button>
-            
-    <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
-        <p> - ВЫХОД</p>
-        <p> -  </p>
-        <p> -  </p>
-        <p> - 
-        </p>
-
-       <h1 class ="gg">ИНФО ЛИСТ</h1>
-<p></p>
-            <p></p>
-            <p></p>
+        <footer>
+            <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
+            <p> - ВЫХОД</p>
+            <h1 class="gg">ИНФО ЛИСТ</h1>
         </footer>
 
-    <script src="./main.js"></script>
+        <script src="./main.js"></script>
+    </body>
 </html>
