@@ -2,38 +2,65 @@
     <head>
         <meta charset="UTF-8">
         <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
+        <meta name="description" content="грохострел">
         <link rel="stylesheet" href="./style.css" type="text/css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     </head>
     <body>
+        <div id="shop-sidebar" class="shop-sidebar">
+            <div class="sidebar-header">
+                <h2>Магазин</h2>
+                <button class="close-sidebar" onclick="toggleShop()">×</button>
+            </div>
+            
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" onclick="openTab('upgrades-tab')">Улучшения</button>
+                <button class="tab-btn" onclick="openTab('cases-tab')">Кейсы</button>
+            </div>
+            
+            <div class="tab-content">
+                <div id="upgrades-tab" class="tab-pane active">
+                    <button onclick="buyUpgrade(1, 100)">
+                        <span>+1 на клик<br>100 капель</span>
+                    </button>
+                    
+                    <button onclick="buyUpgrade(0.2, 50)">
+                        <span>+0.2 в секунду<br>50 капель</span>
+                    </button>
+                </div>
+                
+                <div id="cases-tab" class="tab-pane">
+                    <!-- Пока пусто -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleShop()"></div>
+
         <header>
-            <div>капель: <b id="score">0</b></div>
-            <div>За клик +<b id="add">1</b></div>
-            <div>Авто-клик: <b id="autoClick">0</b>/сек</div>
+            <div class="menu">
+                капель (воды): <b id="score">0</b>
+            </div>
+            <div>
+                За клик +<b id="add">1</b>
+            </div>
         </header>
         
         <main>
-            <div id="button"></div>
+            <div id="button">
+            </div>
         </main>
         
-        <div class="shop-panel">
-            <div class="shop-item" onclick="buyUpgrade(1, 100, this)">
-                <span>+1 на клик<br>100 капель</span>
-            </div>
-            
-            <div class="shop-item" onclick="buyAutoClicker(1, 50, this)">
-                <span>Авто-клик +1/сек<br>50 капель</span>
-            </div>
-        </div>
-
         <footer>
             <button class="shop-btn" onclick="toggleShop()">Магазин</button>
+            
+            <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
+            <p> - ВЫХОД</p>
+            <p> -  </p>
+            <p> -  </p>
+            <p> - </p>
         </footer>
 
-        <div class="updates">
-            ОБНОВЛЕНИЕ 1.0.0 - ВЫХОД
-        </div>
-
+        <script src="./main.js"></script>
     </body>
-    <script src="./main.js"></script>
 </html>
