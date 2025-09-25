@@ -12,32 +12,62 @@ body {
 
 header {
     background-color: white;
-    height: 40px;
-    text-align: center;
-    font-size: 24px;
+    height: 60px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    border-bottom: 2px solid #ccc;
 }
 
 .menu {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 100%;
 }
 
-.stat {
-    display: inline-block;
-    margin: 15px 25px;
+.level-bar {
+    font-size: 20px;
+}
+
+.stats {
+    font-size: 20px;
+    margin: 0 15px;
+}
+
+.shop-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.shop-btn {
+    background-color: yellow;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.inventory-btn {
+    background-color: lightblue;
+    color: black;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 100px);
-    margin-top: 40px;
+    height: calc(100vh - 200px);
+    margin-top: 60px;
 }
 
 #button {
@@ -89,24 +119,27 @@ footer button span {
     font-size: 20px;
 }
 
-/* Магазин и инвентарь */
+.gg {
+    color: black;
+}
+
+/* Магазин и инвентарь - ПРАВЕЕ */
 .shop-container {
     position: fixed;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
+    right: -400px;
+    transform: translate(0, -50%) scale(0);
     background: white;
     padding: 20px;
     border-radius: 15px;
     z-index: 1000;
-    width: 80%;
-    max-width: 400px;
+    width: 350px;
     border: 3px solid green;
     transition: all 0.3s ease;
 }
 
 .shop-container.active {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-400px, -50%) scale(1);
 }
 
 .shop-header {
@@ -146,7 +179,36 @@ footer button span {
 
 .shop-content button span {
     display: block;
-    font-size: 20px;
+    font-size: 18px;
+}
+
+/* Табы магазина */
+.shop-tabs {
+    display: flex;
+    margin-top: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+.tab-btn {
+    flex: 1;
+    background: #f0f0f0;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tab-btn.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.tab-pane {
+    display: none;
+    padding: 10px 0;
+}
+
+.tab-pane.active {
+    display: block;
 }
 
 /* Скины */
