@@ -7,105 +7,158 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    background: linear-gradient(135deg, #1a2f1a 0%, #2d5a2d 100%);
+    color: white;
+    font-family: Arial, sans-serif;
 }
 
+/* Header */
 header {
-    background-color: white;
-    height: 40px;
-    text-align: center;
-    font-size: 24px;
+    background-color: rgba(0, 0, 0, 0.8);
+    height: 60px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 100;
 }
 
-header div {
-    display: inline-block;
-    margin: 15px 25px;
+.header-left, .header-center, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
+.stat {
+    font-size: 18px;
+}
+
+.green-text {
+    color: lightgreen;
+}
+
+/* Level Bar */
+.level-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.level-info {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 150px;
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.exp-progress {
+    height: 100%;
+    background: lightgreen;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Buttons */
+.shop-btn {
+    background-color: yellow;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.inventory-btn {
+    background-color: lightblue;
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Main */
 main {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    align-content: center;
     height: calc(100vh - 100px);
-    width: 100vw;
+    margin-top: 60px;
 }
 
-#button {
+.clicker-button {
     width: 250px;
     height: 250px;
-    border-radius: 91%;
+    border-radius: 50%;
     background-image: url(https://pvsz2.ru/statics/plants-big/68.png);
     background-position: center;
     background-size: 82%;
     background-repeat: no-repeat;
-    filter: hue-rotate(10deg);
     border: 12px solid rgb(170, 233, 0);
     box-shadow: 0 12px 12px black;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-#button:active {
+.clicker-button:active {
     filter: hue-rotate(49deg);
     transform: translateY(-7px);
 }
 
-footer {
-    background-color: green;
-    height: auto;
-    text-align: center;
-    font-size: 100px;
-    padding: 20px 0;
-}
-
-footer button {
-    background-color: #FFD700;
-    margin-top: 20px;
-    border-radius: 52px;
-    transition: transform 0.2s;
-}
-
-footer button:active {
-    transform: scale(0.95);
-}
-
-footer button span {
-    display: block;
-    font-size: 30px;
-}
-
+/* Shop Sidebar */
 .shop-sidebar {
     position: fixed;
     top: 0;
-    left: -320px;
-    width: 320px;
+    right: -400px;
+    width: 400px;
     height: 100vh;
     background: #2d5a2d;
-    border-right: 3px solid #FFD700;
+    border-left: 3px solid yellow;
     z-index: 1000;
-    transition: left 0.3s ease;
+    transition: right 0.3s ease;
 }
 
 .shop-sidebar.active {
-    left: 0;
+    right: 0;
 }
 
 .sidebar-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
+    justify-content: flex-end;
+    padding: 15px;
     background: #1a2f1a;
-    border-bottom: 2px solid #FFD700;
+}
+
+.close-sidebar {
+    background: red;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar-tabs {
     display: flex;
+    background: #1a2f1a;
 }
 
 .tab-btn {
@@ -115,6 +168,7 @@ footer button span {
     color: white;
     padding: 15px;
     cursor: pointer;
+    transition: background 0.3s;
 }
 
 .tab-btn.active {
@@ -123,6 +177,8 @@ footer button span {
 
 .tab-content {
     padding: 20px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
 }
 
 .tab-pane {
@@ -135,8 +191,11 @@ footer button span {
 
 .tab-pane button {
     background-color: lightblue;
-    margin-top: 20px;
-    border-radius: 52px;
+    border: none;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    cursor: pointer;
     width: 100%;
     transition: transform 0.2s;
 }
@@ -147,9 +206,38 @@ footer button span {
 
 .tab-pane button span {
     display: block;
-    font-size: 30px;
+    font-size: 16px;
+    line-height: 1.4;
 }
 
+/* Skins */
+.skins-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.skin-item {
+    background: #1a2f1a;
+    border: 2px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.skin-item.active {
+    border-color: yellow;
+}
+
+.skin-item img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+/* Overlay */
 .sidebar-overlay {
     position: fixed;
     top: 0;
@@ -168,12 +256,12 @@ footer button span {
     pointer-events: all;
 }
 
-.shop-btn {
-    background-color: #FFD700;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+/* Footer */
+footer {
+    background-color: green;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
