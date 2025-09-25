@@ -7,101 +7,173 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: white;
-    font-family: Arial;
 }
 
 header {
-    background: #4CAF50;
-    height: 50px;
+    background-color: white;
+    height: 40px;
+    text-align: center;
+    font-size: 24px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 16px;
+}
+
+header div {
+    display: inline-block;
+    margin: 15px 25px;
 }
 
 main {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    align-content: center;
+    height: calc(100vh - 100px);
     width: 100vw;
 }
 
 #button {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    border-radius: 91%;
     background-image: url(https://pvsz2.ru/statics/plants-big/68.png);
     background-position: center;
-    background-size: 80%;
+    background-size: 82%;
     background-repeat: no-repeat;
-    border: 5px solid #4CAF50;
+    filter: hue-rotate(10deg);
+    border: 12px solid rgb(170, 233, 0);
+    box-shadow: 0 12px 12px black;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 #button:active {
-    transform: scale(0.95);
-}
-
-/* Магазин - простая панель справа */
-.shop-panel {
-    position: fixed;
-    top: 50px;
-    right: 0;
-    width: 300px;
-    height: calc(100vh - 100px);
-    background: #f0f0f0;
-    border-left: 2px solid #ccc;
-    padding: 10px;
-}
-
-.shop-item {
-    background: white;
-    border: 1px solid #4CAF50;
-    padding: 15px;
-    margin: 10px 0;
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-}
-
-.shop-item:active {
-    background: #f0f0f0;
+    filter: hue-rotate(49deg);
+    transform: translateY(-7px);
 }
 
 footer {
+    background-color: green;
+    height: auto;
+    text-align: center;
+    font-size: 100px;
+    padding: 20px 0;
+}
+
+footer button {
+    background-color: #FFD700;
+    margin-top: 20px;
+    border-radius: 52px;
+    transition: transform 0.2s;
+}
+
+footer button:active {
+    transform: scale(0.95);
+}
+
+footer button span {
+    display: block;
+    font-size: 30px;
+}
+
+.shop-sidebar {
     position: fixed;
-    bottom: 0;
+    top: 0;
+    left: -320px;
+    width: 320px;
+    height: 100vh;
+    background: #2d5a2d;
+    border-right: 3px solid #FFD700;
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+.shop-sidebar.active {
+    left: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #1a2f1a;
+    border-bottom: 2px solid #FFD700;
+}
+
+.sidebar-tabs {
+    display: flex;
+}
+
+.tab-btn {
+    flex: 1;
+    background: #1a2f1a;
+    border: none;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.tab-btn.active {
+    background: #4CAF50;
+}
+
+.tab-content {
+    padding: 20px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.tab-pane button {
+    background-color: lightblue;
+    margin-top: 20px;
+    border-radius: 52px;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.tab-pane button:active {
+    transform: scale(0.95);
+}
+
+.tab-pane button span {
+    display: block;
+    font-size: 30px;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 50px;
-    background: #4CAF50;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .shop-btn {
-    background: #87CEEB;
+    background-color: #FFD700;
+    color: black;
     border: none;
-    padding: 8px 15px;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
-}
-
-.updates {
-    position: fixed;
-    bottom: 60px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 18px;
-    color: #333;
-    padding: 10px;
+    font-size: 16px;
 }
