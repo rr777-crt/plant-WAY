@@ -7,67 +7,33 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: white;
+    background: white; /* Зеленый фон убран */
 }
 
 header {
-    background-color: white;
-    height: 60px;
+    background-color: white; /* Фон хедера белый */
+    height: 40px;
+    text-align: center;
+    font-size: 24px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    border-bottom: 2px solid #ccc;
 }
 
-.menu {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    height: 100%;
-}
-
-.level-bar {
-    font-size: 20px;
-}
-
-.stats {
-    font-size: 20px;
-    margin: 0 15px;
-}
-
-.shop-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.shop-btn {
-    background-color: yellow;
-    color: black;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.inventory-btn {
-    background-color: lightblue;
-    color: black;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+header div {
+    display: inline-block;
+    margin: 15px 25px;
 }
 
 main {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 200px);
-    margin-top: 60px;
+    align-content: center;
+    height: calc(100vh - 100px);
+    width: 100vw;
 }
 
 #button {
@@ -94,20 +60,15 @@ footer {
     background-color: green;
     height: auto;
     text-align: center;
+    font-size: 100px;
     padding: 20px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
 }
 
 footer button {
     background-color: lightblue;
-    margin: 0 10px;
+    margin-top: 20px;
     border-radius: 52px;
     transition: transform 0.2s;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
 }
 
 footer button:active {
@@ -116,137 +77,5 @@ footer button:active {
 
 footer button span {
     display: block;
-    font-size: 20px;
-}
-
-.gg {
-    color: black;
-}
-
-/* Магазин и инвентарь - ПРАВЕЕ */
-.shop-container {
-    position: fixed;
-    top: 50%;
-    right: -400px;
-    transform: translate(0, -50%) scale(0);
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    z-index: 1000;
-    width: 350px;
-    border: 3px solid green;
-    transition: all 0.3s ease;
-}
-
-.shop-container.active {
-    transform: translate(-400px, -50%) scale(1);
-}
-
-.shop-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    border-bottom: 2px solid green;
-    padding-bottom: 10px;
-}
-
-.close-shop {
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.shop-content button {
-    background-color: lightblue;
-    margin: 10px 0;
-    border-radius: 52px;
-    width: 100%;
-    border: none;
-    cursor: pointer;
-    padding: 15px;
-    transition: transform 0.2s;
-}
-
-.shop-content button:active {
-    transform: scale(0.95);
-}
-
-.shop-content button span {
-    display: block;
-    font-size: 18px;
-}
-
-/* Табы магазина */
-.shop-tabs {
-    display: flex;
-    margin-top: 15px;
-    border-bottom: 1px solid #ccc;
-}
-
-.tab-btn {
-    flex: 1;
-    background: #f0f0f0;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-}
-
-.tab-btn.active {
-    background: #4CAF50;
-    color: white;
-}
-
-.tab-pane {
-    display: none;
-    padding: 10px 0;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-/* Скины */
-.skin-item {
-    background: #f0f0f0;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    border: 2px solid #ccc;
-}
-
-.skin-item.active {
-    border: 2px solid yellow;
-}
-
-.skin-item img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.overlay.active {
-    opacity: 1;
-    pointer-events: all;
+    font-size: 30px;
 }
