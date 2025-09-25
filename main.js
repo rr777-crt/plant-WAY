@@ -6,12 +6,26 @@ const levelText = document.getElementById("level");
 const button = document.getElementById("button");
 const skinsContainer = document.getElementById("skins-container");
 
+// Элементы цен
+const clickPriceElem = document.getElementById("click-price");
+const autoPriceElem = document.getElementById("auto-price");
+const shopClickPriceElem = document.getElementById("shop-click-price");
+const shopAutoPriceElem = document.getElementById("shop-auto-price");
+const shopBigPriceElem = document.getElementById("shop-big-price");
+
 let score = 0;
 let addPerClick = 1;
 let addPerSecond = 0;
 let exp = 0;
 let level = 1;
 let maxExp = 100;
+
+// Цены улучшений
+let upgradePrices = {
+    'click': 100,
+    'auto': 50,
+    'big': 1000
+};
 
 // Скины
 const skins = [
@@ -22,7 +36,6 @@ const skins = [
 ];
 
 let currentSkin = skins[0];
-let upgradePrices = {};
 
 // Опыт за клик
 function addExp() {
@@ -61,14 +74,26 @@ function closeAllShops() {
     document.getElementById('overlay').classList.remove('active');
 }
 
+function openTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+}
+
 function buyUpgrade(addValue, basePrice, requiredLevel) {
     if (level < requiredLevel) {
         alert(`Требуется уровень ${requiredLevel}!`);
         return;
     }
     
-    const key = `${addValue}_${basePrice}`;
-    const currentPrice = upgradePrices[key] || basePrice;
+    let priceKey = '';
+    if (addValue === 1) priceKey = 'click';
+    else if (addValue === 0.2) priceKey = 'auto';
+    else if (addValue === 5) priceKey = 'big';
+    
+    const currentPrice = upgradePrices[priceKey];
     
     if (score >= currentPrice) {
         score -= currentPrice;
@@ -79,9 +104,21 @@ function buyUpgrade(addValue, basePrice, requiredLevel) {
             addPerSecond += addValue;
         }
         
-        upgradePrices[key] = Math.floor(currentPrice * 1.2);
+        // +20% к цене
+        upgradePrices[priceKey] = Math.floor(currentPrice * 1.2);
+        
+        // Обновляем цены везде
+        updatePrices();
         updateDisplay();
     }
+}
+
+function updatePrices() {
+    clickPriceElem.textContent = upgradePrices.click;
+    autoPriceElem.textContent = upgradePrices.auto;
+    shopClickPriceElem.textContent = upgradePrices.click;
+    shopAutoPriceElem.textContent = upgradePrices.auto;
+    shopBigPriceElem.textContent = upgradePrices.big;
 }
 
 function buyCase() {
@@ -154,10 +191,4 @@ setInterval(() => {
 // Инициализация
 updateDisplay();
 updateLevel();
-
-// Загрузка скинов при открытии инвентаря
-document.getElementById('inventory').addEventListener('click', function(e) {
-    if (e.target.classList.contains('close-shop') || e.target === this) {
-        loadSkins();
-    }
-});
+updatePrices();
