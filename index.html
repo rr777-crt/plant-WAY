@@ -1,36 +1,49 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
+        <title>грохострел кликер: ПУТЬ! v:1.1.0</title>
         <meta name="description" content="грохострел">
         <link rel="stylesheet" href="./style.css" type="text/css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     </head>
     <body>
+        <!-- Боковая панель магазина -->
         <div id="shop-sidebar" class="shop-sidebar">
             <div class="sidebar-header">
-                <h2>Магазин</h2>
                 <button class="close-sidebar" onclick="toggleShop()">×</button>
             </div>
             
             <div class="sidebar-tabs">
                 <button class="tab-btn active" onclick="openTab('upgrades-tab')">Улучшения</button>
                 <button class="tab-btn" onclick="openTab('cases-tab')">Кейсы</button>
+                <button class="tab-btn" onclick="openTab('inventory-tab')">Инвентарь</button>
             </div>
             
             <div class="tab-content">
                 <div id="upgrades-tab" class="tab-pane active">
-                    <button onclick="buyUpgrade(1, 100)">
-                        <span>+1 на клик<br>100 капель</span>
+                    <button onclick="buyUpgrade(1, 100, 1)">
+                        <span>+1 на клик<br>100 капель<br>Требует уровень: 1</span>
                     </button>
                     
-                    <button onclick="buyUpgrade(0.2, 50)">
-                        <span>+0.2 в секунду<br>50 капель</span>
+                    <button onclick="buyUpgrade(0.2, 50, 1)">
+                        <span>+0.2 в секунду<br>50 капель<br>Требует уровень: 1</span>
+                    </button>
+                    
+                    <button onclick="buyUpgrade(5, 1000, 5)">
+                        <span>+5 на клик<br>1000 капель<br>Требует уровень: 5</span>
                     </button>
                 </div>
                 
                 <div id="cases-tab" class="tab-pane">
-                    <!-- Пока пусто -->
+                    <button onclick="buyCase()">
+                        <span>Открыть кейс<br>1250 капель<br>Шансы: 60%⚪ 30%🔵 9%🟣 1%🟡</span>
+                    </button>
+                </div>
+                
+                <div id="inventory-tab" class="tab-pane">
+                    <div id="skins-container" class="skins-container">
+                        <!-- Скины будут добавляться здесь -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,27 +51,45 @@
         <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleShop()"></div>
 
         <header>
-            <div class="menu">
-                капель (воды): <b id="score">0</b>
+            <div class="header-left">
+                <div class="level-bar">
+                    <div class="level-info">
+                        <span>Уровень: <b id="level">1</b></span>
+                        <span>EXP: <b id="exp">0</b>/<b id="max-exp">100</b></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="exp-progress" class="exp-progress"></div>
+                    </div>
+                </div>
+                
+                <button class="inventory-btn" onclick="openInventory()">Скины</button>
             </div>
-            <div>
-                За клик +<b id="add">1</b>
+            
+            <div class="header-center">
+                <div class="stat green-text">
+                    капель: <b id="score">0</b>
+                </div>
+                <div class="stat green-text">
+                    За клик +<b id="add">1</b>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button class="shop-btn" onclick="toggleShop()">Магазин</button>
             </div>
         </header>
         
         <main>
-            <div id="button">
+            <div id="button" class="clicker-button">
             </div>
         </main>
         
         <footer>
-            <button class="shop-btn" onclick="toggleShop()">Магазин</button>
-            
-            <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
-            <p> - ВЫХОД</p>
-            <p> -  </p>
-            <p> -  </p>
-            <p> - </p>
+            <p>V:ОБНОВЛЕНИЕ 1.1.0</p>
+            <p> - СИСТЕМА УРОВНЕЙ</p>
+            <p> - ИНВЕНТАРЬ СКИНОВ</p>
+            <p> - КЕЙСЫ С ШАНСАМИ</p>
+            <p> - НОВЫЙ ИНТЕРФЕЙС</p>
         </footer>
 
         <script src="./main.js"></script>
