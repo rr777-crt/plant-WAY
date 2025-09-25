@@ -9,14 +9,18 @@
     <body>
         <header>
             <div class="menu">
-                <div class="stat">
+                <div class="level-bar">
+                    Уровень: <b id="level">1</b>
+                </div>
+                <div class="stats">
                     капель (воды): <b id="score">0</b>
                 </div>
-                <div class="stat">
+                <div class="stats">
                     За клик +<b id="add">1</b>
                 </div>
-                <div class="stat">
-                    Уровень: <b id="level">1</b>
+                <div class="shop-buttons">
+                    <button class="shop-btn" onclick="toggleUpgradeShop()">Магазин</button>
+                    <button class="inventory-btn" onclick="toggleInventory()">Инвентарь</button>
                 </div>
             </div>
         </header>
@@ -26,24 +30,25 @@
             </div>
         </main>
         
-        <footer>
-            <button onclick="toggleUpgradeShop()">
-                <span>Улучшения</span>
+        <footer>          
+            <button onclick="buyUpgrade(1, 100, 1)">
+                <span>+1 на клик<br><span id="click-price">100</span> капель</span>
             </button>
             
-            <button onclick="toggleInventory()">
-                <span>Инвентарь</span>
+            <button onclick="buyUpgrade(0.2, 50, 1)">
+                <span>+0.2 в секунду<br><span id="auto-price">50</span> капель</span>
             </button>
-            
-            <button onclick="buyCase()">
-                <span>Кейс 1250</span>
-            </button>
-            
+
             <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
             <p> - ВЫХОД</p>
             <p> -  </p>
             <p> -  </p>
             <p> - </p>
+
+            <h1 class="gg">ИНФО ЛИСТ</h1>
+            <p></p>
+            <p></p>
+            <p></p>
         </footer>
 
         <!-- Магазин улучшений -->
@@ -54,14 +59,27 @@
             </div>
             <div class="shop-content">
                 <button onclick="buyUpgrade(1, 100, 1)">
-                    <span>+1 на клик<br>100 капель<br>Ур. 1</span>
+                    <span>+1 на клик<br><span id="shop-click-price">100</span> капель<br>Ур. 1</span>
                 </button>
                 <button onclick="buyUpgrade(0.2, 50, 1)">
-                    <span>+0.2 в секунду<br>50 капель<br>Ур. 1</span>
+                    <span>+0.2 в секунду<br><span id="shop-auto-price">50</span> капель<br>Ур. 1</span>
                 </button>
                 <button onclick="buyUpgrade(5, 1000, 5)">
-                    <span>+5 на клик<br>1000 капель<br>Ур. 5</span>
+                    <span>+5 на клик<br><span id="shop-big-price">1000</span> капель<br>Ур. 5</span>
                 </button>
+            </div>
+
+            <div class="shop-tabs">
+                <button class="tab-btn active" onclick="openTab('upgrades-tab')">Улучшения</button>
+                <button class="tab-btn" onclick="openTab('cases-tab')">Кейсы</button>
+            </div>
+
+            <div class="tab-content">
+                <div id="cases-tab" class="tab-pane">
+                    <button onclick="buyCase()">
+                        <span>Открыть кейс<br>1250 капель<br>Шансы: 60%⚪ 30%🔵 9%🟣 1%🟡</span>
+                    </button>
+                </div>
             </div>
         </div>
 
