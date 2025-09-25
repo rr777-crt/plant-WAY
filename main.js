@@ -1,205 +1,175 @@
-'use strict';
-
-const scoreText = document.getElementById("score");
-const addText = document.getElementById("add");
-const button = document.getElementById("button");
-const levelText = document.getElementById("level");
-const expText = document.getElementById("exp");
-const maxExpText = document.getElementById("max-exp");
-const expProgress = document.getElementById("exp-progress");
-const skinsContainer = document.getElementById("skins-container");
-
-let score = 0;
-let addPerClick = 1;
-let addPerSecond = 0;
-let exp = 0;
-let level = 1;
-let maxExp = 100;
-let totalClicks = 0;
-
-// Скины и их условия разблокировки
-const skins = [
-    { id: 1, name: "Обычный", url: "https://pvsz2.ru/statics/plants-big/68.png", unlocked: true, clicksRequired: 0 },
-    { id: 2, name: "Золотой", url: "https://klev.club/uploads/posts/2023-11/1698878136_klev-club-p-arti-gorokhostrel-zombi-43.jpg", unlocked: false, clicksRequired: 100 },
-    { id: 3, name: "Эпический", url: "https://pvsz2.ru/statics/plants-big/31.png", unlocked: false, clicksRequired: 500 },
-    { id: 4, name: "Легендарный", url: "https://avatars.mds.yandex.net/i?id=69a2b4239be746c0863ff1d2bf2c2a75_l-8972142-images-thumbs&n=13", unlocked: false, clicksRequired: 1000 }
-];
-
-let currentSkin = skins[0];
-
-// Цены улучшений
-let upgradePrices = {};
-
-function toggleShop() {
-    const sidebar = document.getElementById('shop-sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    sidebar.classList.toggle('active');
-    overlay.classList.toggle('active');
+body {
+    margin: 0;
+    padding: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-function openTab(tabName) {
-    const tabPanes = document.querySelectorAll('.tab-pane');
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    
-    tabPanes.forEach(pane => pane.classList.remove('active'));
-    tabBtns.forEach(btn => btn.classList.remove('active'));
-    
-    document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
-    
-    if (tabName === 'inventory-tab') {
-        loadSkins();
-    }
+header {
+    background-color: white;
+    height: 40px;
+    text-align: center;
+    font-size: 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
 }
 
-function openInventory() {
-    toggleShop();
-    setTimeout(() => openTab('inventory-tab'), 100);
+header div {
+    display: inline-block;
+    margin: 15px 25px;
 }
 
-function buyUpgrade(addValue, basePrice, requiredLevel) {
-    if (level < requiredLevel) {
-        alert(`Требуется уровень ${requiredLevel}!`);
-        return;
-    }
-    
-    const key = `${addValue}_${basePrice}`;
-    const currentPrice = upgradePrices[key] || basePrice;
-    
-    if (score >= currentPrice) {
-        score -= currentPrice;
-        
-        if (addValue === 1 || addValue === 5) {
-            addPerClick += addValue;
-        } else {
-            addPerSecond += addValue;
-        }
-        
-        upgradePrices[key] = Math.floor(currentPrice * 1.2);
-        updateButtonText(addValue, basePrice, upgradePrices[key], requiredLevel);
-        updateDisplay();
-    }
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: calc(100vh - 100px);
+    width: 100vw;
 }
 
-function buyCase() {
-    if (score >= 1250) {
-        score -= 1250;
-        
-        const random = Math.random() * 100;
-        let skin;
-        
-        if (random < 1) {
-            skin = getRandomSkin(4); // 1% - легендарный
-        } else if (random < 10) {
-            skin = getRandomSkin(3); // 9% - эпический
-        } else if (random < 40) {
-            skin = getRandomSkin(2); // 30% - редкий
-        } else {
-            skin = getRandomSkin(1); // 60% - обычный
-        }
-        
-        unlockSkin(skin);
-        updateDisplay();
-        alert(`Вы получили скин: ${skin.name}!`);
-    }
+#button {
+    width: 250px;
+    height: 250px;
+    border-radius: 91%;
+    background-image: url(https://pvsz2.ru/statics/plants-big/68.png);
+    background-position: center;
+    background-size: 82%;
+    background-repeat: no-repeat;
+    filter: hue-rotate(10deg);
+    border: 12px solid rgb(170, 233, 0);
+    box-shadow: 0 12px 12px black;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-function getRandomSkin(quality) {
-    const availableSkins = skins.filter(skin => !skin.unlocked && skin.id === quality);
-    return availableSkins[Math.floor(Math.random() * availableSkins.length)] || skins[0];
+#button:active {
+    filter: hue-rotate(49deg);
+    transform: translateY(-7px);
 }
 
-function unlockSkin(skin) {
-    skin.unlocked = true;
-    showNotification(`Новый скин разблокирован: ${skin.name}!`);
+footer {
+    background-color: green;
+    height: auto;
+    text-align: center;
+    font-size: 100px;
+    padding: 20px 0;
 }
 
-function loadSkins() {
-    skinsContainer.innerHTML = '';
-    skins.forEach(skin => {
-        if (skin.unlocked) {
-            const skinElement = document.createElement('div');
-            skinElement.className = `skin-item ${currentSkin.id === skin.id ? 'active' : ''}`;
-            skinElement.innerHTML = `
-                <img src="${skin.url}" alt="${skin.name}">
-                <div>${skin.name}</div>
-            `;
-            skinElement.onclick = () => selectSkin(skin);
-            skinsContainer.appendChild(skinElement);
-        }
-    });
+footer button {
+    background-color: lightblue;
+    margin-top: 20px;
+    border-radius: 52px;
+    transition: transform 0.2s;
 }
 
-function selectSkin(skin) {
-    currentSkin = skin;
-    button.style.backgroundImage = `url(${skin.url})`;
-    loadSkins();
-    showNotification(`Скин изменен: ${skin.name}`);
+footer button:active {
+    transform: scale(0.95);
 }
 
-function addExp(amount) {
-    exp += amount;
-    if (exp >= maxExp) {
-        level++;
-        exp = exp - maxExp;
-        maxExp = Math.floor(maxExp * 1.05);
-        showNotification(`Поздравляем! Вы достигли уровня ${level}!`);
-    }
-    updateExpBar();
+footer button span {
+    display: block;
+    font-size: 30px;
 }
 
-function updateExpBar() {
-    expText.textContent = exp;
-    maxExpText.textContent = maxExp;
-    levelText.textContent = level;
-    expProgress.style.width = `${(exp / maxExp) * 100}%`;
+/* Магазин и инвентарь */
+.shop-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 1000;
+    width: 80%;
+    max-width: 500px;
+    transition: all 0.3s ease;
 }
 
-function updateButtonText(addValue, basePrice, newPrice, requiredLevel) {
-    const buttons = document.querySelectorAll('button[onclick*="buyUpgrade"]');
-    buttons.forEach(button => {
-        if (button.getAttribute('onclick').includes(`buyUpgrade(${addValue}, ${basePrice}, ${requiredLevel})`)) {
-            button.innerHTML = `<span>+${addValue} ${addValue === 1 || addValue === 5 ? 'на клик' : 'в секунду'}<br>${newPrice} капель<br>Требует уровень: ${requiredLevel}</span>`;
-        }
-    });
+.shop-container.active {
+    transform: translate(-50%, -50%) scale(1);
 }
 
-function updateDisplay() {
-    scoreText.textContent = Math.floor(score);
-    addText.textContent = addPerClick;
+.shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid green;
+    padding-bottom: 10px;
 }
 
-function showNotification(message) {
-    // Можно добавить красивые уведомления
-    console.log(message);
+.close-shop {
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    cursor: pointer;
 }
 
-function checkSkinUnlocks() {
-    skins.forEach(skin => {
-        if (!skin.unlocked && totalClicks >= skin.clicksRequired) {
-            unlockSkin(skin);
-        }
-    });
+.shop-content button {
+    background-color: lightblue;
+    margin: 10px 0;
+    border-radius: 52px;
+    width: 100%;
+    transition: transform 0.2s;
 }
 
-// Клик по основной кнопке
-button.onclick = function() {
-    score += addPerClick;
-    totalClicks++;
-    addExp(1);
-    checkSkinUnlocks();
-    updateDisplay();
-};
+.shop-content button:active {
+    transform: scale(0.95);
+}
 
-// Авто-кликер
-setInterval(() => {
-    if (addPerSecond > 0) {
-        score += addPerSecond;
-        updateDisplay();
-    }
-}, 1000);
+.shop-content button span {
+    display: block;
+    font-size: 24px;
+}
 
-// Инициализация
-updateDisplay();
-updateExpBar();
-loadSkins();
+/* Скины */
+.skin-item {
+    background: #333;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.skin-item.active {
+    border: 2px solid yellow;
+}
+
+.skin-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
