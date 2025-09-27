@@ -3,96 +3,115 @@
         <meta charset="UTF-8">
         <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
         <meta name="description" content="грохострел">
-        <link rel="stylesheet" href="./style.css" type="text/css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <header>
-            <div class="menu">
-                капель (воды): <b id="score" style="color: green;">0</b>
-            </div>
-            <div>
-                За клик +<b id="add" style="color: green;">1</b>
-            </div>
-            <div>
-                солнцы: <b id="suns">0</b>
-            </div>
-        </header>
-
-        <div id="side-menu">
-            <button class="menu-btn level-btn" onclick="toggleSection('level')">
-                <div>Уровень: <span id="current-level">1</span></div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="level-progress"></div>
+        <!-- Основной контент -->
+        <div class="main-content" id="main-content">
+            <header>
+                <div class="menu">
+                    капель (воды): <b id="score">0</b>
                 </div>
-            </button>
-            <button class="menu-btn skins-btn" onclick="toggleSection('skins')">Скины</button>
-            <button class="menu-btn upgrades-btn" onclick="toggleSection('upgrades')">Улучшения</button>
-            <button class="menu-btn cases-btn" onclick="toggleSection('cases')">Кейсы</button>
-        </div>
+                <div>
+                    За клик +<b id="add">1</b>
+                </div>
+            </header>
 
-        <div id="upgrades-section" class="shop-section">
-            <div class="shop-header">
-                <h2>Улучшения</h2>
-                <button class="close-shop" onclick="closeAllSections()">×</button>
-            </div>
-            <div id="upgrades-tab" class="tab-pane active">
-                <button onclick="buyUpgrade(1, 100)">
-                    <span>+1 на клик<br>100 капель</span>
-                </button>
-                <button onclick="buyUpgrade(0.2, 50)">
-                    <span>+0.2/сек<br>50 капель</span>
-                </button>
-            </div>
-        </div>
+            <main>
+                <div id="button"></div>
+            </main>
 
-        <div id="skins-section" class="shop-section">
-            <div class="shop-header">
-                <h2>Инвентарь скинов</h2>
-                <button class="close-shop" onclick="closeAllSections()">×</button>
-            </div>
-            <div class="skins-container" id="skins-container">
-                <div class="skin-item active" onclick="selectSkin('default')">
-                    <img src="https://pvsz2.ru/statics/plants-big/68.png" alt="Стандартный">
-                    <div class="skin-name">Стандартный</div>
+            <!-- Секция ОБНОВЛЕНИЕ с кнопками интерфейса -->
+            <div class="update-section">
+                <div class="update-content">
+                    <h1>ОБНОВЛЕНИЕ</h1>
+                    <p>ВЫХОД</p>
+                    
+                    <!-- Контейнер для кнопок интерфейса -->
+                    <div class="interface-container">
+                        <div class="level-info">
+                            <div>Уровень: <span id="level">1</span></div>
+                            <div id="level-bar">
+                                <div id="level-progress"></div>
+                            </div>
+                            <div>EXP: <span id="exp">0</span>/<span id="max-exp">100</span></div>
+                        </div>
+                        
+                        <div class="interface-buttons">
+                            <button id="inventory-btn" class="interface-btn" onclick="toggleInventory()">Инвентарь</button>
+                            <button id="shop-btn" class="interface-btn" onclick="toggleShop()">Магазин</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Инфо лист -->
+            <div class="info-section">
+                <div class="info-content">
+                    <h1>ИНФО ЛИСТ</h1>
+                    <p>Добро пожаловать в игру "Грохострел кликер: ПУТЬ!"</p>
+                    <p>Кликайте по главной кнопке, чтобы зарабатывать капли.</p>
+                    <p>Покупайте улучшения в магазине для увеличения дохода.</p>
+                    <p>Открывайте кейсы для получения новых скинов.</p>
+                    <p>Повышайте уровень для разблокировки новых возможностей.</p>
+                    <p>Удачи в игре!</p>
+                </div>
+            </div>
         </div>
 
-        <div id="cases-section" class="shop-section">
+        <!-- Магазин (вне основного контента) -->
+        <div id="shop-panel">
             <div class="shop-header">
-                <h2>Кейсы</h2>
-                <button class="close-shop" onclick="closeAllSections()">×</button>
+                <div></div>
+                <button class="close-btn" onclick="closeShop()">×</button>
             </div>
-            <div class="shop-items">
-                <button onclick="buyCase()">
-                    <span>Обычный кейс<br>1250 капель</span>
+            
+            <div class="shop-tabs">
+                <button class="shop-tab active" onclick="openShopTab('upgrades')">Улучшения</button>
+                <button class="shop-tab" onclick="openShopTab('cases')">Кейсы</button>
+            </div>
+
+            <div id="upgrades-tab" class="shop-content active">
+                <button class="upgrade-item" onclick="buyUpgrade('click', 1, 100)" data-level="1">
+                    <strong>+1 на клик</strong><br>
+                    Цена: <span id="click-price">100</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 1</span>
+                </button>
+                <button class="upgrade-item" onclick="buyUpgrade('autoclick', 0.2, 50)" data-level="1">
+                    <strong>+0.2/сек авто-клик</strong><br>
+                    Цена: <span id="autoclick-price">50</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 1</span>
+                </button>
+            </div>
+
+            <div id="cases-tab" class="shop-content">
+                <button class="upgrade-item" onclick="buyCase()">
+                    <strong>Обычный кейс</strong><br>
+                    Цена: 1250 капель<br>
+                    Шансы: 60% обычный, 30% редкий, 9% эпический, 1% легендарный
                 </button>
             </div>
         </div>
 
-        <div id="level-section" class="shop-section">
+        <!-- Инвентарь -->
+        <div id="inventory-panel">
             <div class="shop-header">
-                <h2>Уровень</h2>
-                <button class="close-shop" onclick="closeAllSections()">×</button>
+                <h2 style="color: white; margin: 0;">Инвентарь скинов</h2>
+                <button class="close-btn" onclick="closeInventory()">×</button>
             </div>
-            <div class="level-details">
-                <p>Текущий уровень: <span id="detail-level">1</span></p>
-                <p>Опыт: <span id="detail-exp">0</span>/<span id="detail-required">100</span></p>
+            <div id="skins-container" class="skins-grid">
+                <!-- Скины будут добавляться сюда -->
             </div>
         </div>
 
-        <div id="overlay" class="overlay" onclick="closeAllSections()"></div>
+        <!-- Уведомление (изначально скрыто) -->
+        <div id="notification" class="notification">
+            Новый скин получен! Проверьте инвентарь.
+        </div>
 
-        <main>
-            <div id="button"></div>
-        </main>
-        <footer>
-            <p>V:ОБНОВЛЕНИЕ 1.0.0</p>
-            <p> - ВЫХОД</p>
-            <h1 class="gg">ИНФО ЛИСТ</h1>
-        </footer>
+        <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
 
-        <script src="./main.js"></script>
+        <script src="main.js"></script>
     </body>
 </html>
