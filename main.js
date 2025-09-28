@@ -10,17 +10,7 @@ let maxExp = 100;
 let totalClicks = 0;
 
 // Цены улучшений
-let upgradePrices = {
-    click1: 100,
-    click2: 1000,
-    click3: 5000,
-    click4: 15000,
-    click5: 30000,
-    autoclick1: 50,
-    autoclick2: 250,
-    autoclick3: 750,
-    autoclick4: 2500
-};
+
 
 // Статус покупки улучшений
 let boughtUpgrades = {
@@ -60,7 +50,7 @@ const skins = {
         rarity: 'epic'
     },
     'legendary1': { 
-        name: 'КОРОЛЬ ГОРОХ', 
+        name: 'УЛЬТРА ИНСТИНКТ ГОРОХ', 
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtVQyQTbYoKxhSByfHMhQF4zmNxkH6Vm0vPQ&s',
         rarity: 'legendary'
     },
@@ -97,11 +87,17 @@ const clickSkins = {
 // Текста для меняющихся слов
 const changingTexts = [
     "Кликай быстрее!",
-    "Зарабатывай капли!",
-    "Открывай кейсы!",
-    "Прокачивай уровень!",
-    "Собирай все скины!",
-    "Стань легендой!"
+    "Вау! ты играешь в скучный кликер?",
+    "абграбабара - Дейв",
+    "Зомби отдыхают... лол",
+    "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!!",
+    "Стань НАКЛИКНУТЫМ КЛИКОМ КЛИКАМИ КЛИКОСИКИАМ!",
+     "попробуй также в Coockie Clicker!",
+     "ты нищий?",
+     "Кликай медленее!",
+     "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
+     "витамин D",
+    
 ];
 
 // Элементы DOM
@@ -223,10 +219,7 @@ function buyUpgrade(type, power, price) {
         return;
     }
     
-    if (boughtUpgrades[type]) {
-        showNotification("Уже куплено!");
-        return;
-    }
+   
     
     // Совершаем покупку
     score -= currentPrice;
