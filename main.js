@@ -8,10 +8,9 @@ let level = 1;
 let exp = 0;
 let maxExp = 100;
 let totalClicks = 0;
+let casePrice = 1250; // Добавляем переменную для цены кейса
 
-// УБИРАЕМ upgradePrices - используем данные из HTML
-
-// Скины (остаются без изменений)
+// Скины
 let unlockedSkins = ['default'];
 let currentSkin = 'default';
 const skins = {
@@ -82,7 +81,13 @@ const changingTexts = [
     "ты нищий?",
     "Кликай медленее!",
     "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
-    "витамин D"
+    "витамин D",
+      "...",
+      "попытай удачи и иди в казик! ой то-есть открой кейс!",
+      "витамин C ой.. фотосинтез... ой да пошло",
+      "cool... so what the tung sahur - cringe",
+      "долго сидишь",
+      "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в туалет. стоп я это уже говорил?"
 ];
 
 // Элементы DOM
@@ -121,7 +126,8 @@ function saveGame() {
         maxExp: maxExp,
         totalClicks: totalClicks,
         unlockedSkins: unlockedSkins,
-        currentSkin: currentSkin
+        currentSkin: currentSkin,
+        casePrice: casePrice
     };
     localStorage.setItem('gorohostrelSave', JSON.stringify(gameData));
 }
@@ -142,6 +148,7 @@ function loadGame() {
             totalClicks = gameData.totalClicks || 0;
             unlockedSkins = gameData.unlockedSkins || ['default'];
             currentSkin = gameData.currentSkin || 'default';
+            casePrice = gameData.casePrice || 1250;
             
             return true;
         } catch (e) {
@@ -158,6 +165,7 @@ function initGame() {
     
     updateDisplay();
     updateLevelDisplay();
+    updateCasePriceDisplay(); // Обновляем отображение цены кейса
     checkUpgradesAvailability();
     loadSkins();
     startChangingText();
@@ -179,12 +187,15 @@ buttonEl.onclick = function() {
     updateDisplay();
     checkLevelUp();
     checkSkinUnlocks();
+    checkUpgradesAvailability(); // Проверяем доступность улучшений после клика
     saveGame();
 };
 
-// Упрощенная функция покупки улучшения (берем цену из HTML)
+// Функция покупки улучшения
 function buyUpgrade(type, power, basePrice) {
-    const button = event.target;
+    const button = event.target.closest('.upgrade-item');
+    if (!button) return;
+    
     const priceElement = button.querySelector('span');
     const currentPrice = parseInt(priceElement.textContent);
     const requiredLevel = parseInt(button.getAttribute('data-level'));
@@ -220,14 +231,18 @@ function buyUpgrade(type, power, basePrice) {
     showNotification("Улучшение куплено!");
 }
 
-// Функция покупки кейса (без изменений)
+// Функция покупки кейса с увеличением цены
 function buyCase() {
-    if (score < 1250) {
+    if (score < casePrice) {
         showNotification("Недостаточно капель для кейса!");
         return;
     }
     
-    score -= 1250;
+    score -= casePrice;
+    
+    // Увеличиваем цену кейса на 50%
+    casePrice = Math.round(casePrice * 1.5);
+    updateCasePriceDisplay();
     
     const random = Math.random();
     let wonSkin = null;
@@ -264,7 +279,19 @@ function buyCase() {
     }
     
     updateDisplay();
+    checkUpgradesAvailability();
     saveGame();
+}
+
+// Обновление отображения цены кейса
+function updateCasePriceDisplay() {
+    const caseButton = document.querySelector('#cases-tab .upgrade-item');
+    if (caseButton) {
+        const priceText = caseButton.querySelector('strong').nextSibling;
+        if (priceText) {
+            priceText.textContent = `Цена: ${casePrice} капель`;
+        }
+    }
 }
 
 // Проверка разблокировки скинов за клики
@@ -332,13 +359,13 @@ function showNotification(message) {
 
 // Проверка повышения уровня
 function checkLevelUp() {
-    if (exp >= maxExp) {
+    while (exp >= maxExp) {
         level++;
-        exp = 0;
+        exp -= maxExp; // Вычитаем использованный EXP
         maxExp = Math.round(maxExp * 1.5);
-        updateLevelDisplay();
         showNotification(`🎉 Уровень ${level} достигнут!`);
     }
+    updateLevelDisplay();
 }
 
 // Обновление отображения
@@ -356,31 +383,45 @@ function updateLevelDisplay() {
     progressBar.style.width = `${progressPercent}%`;
 }
 
-// УБИРАЕМ updatePricesDisplay - не нужна
-
-// Проверка доступности улучшений (упрощенная)
+// Проверка доступности улучшений
 function checkUpgradesAvailability() {
     const upgradeButtons = document.querySelectorAll('.upgrade-item');
     upgradeButtons.forEach(button => {
         const priceElement = button.querySelector('span');
-        const price = priceElement ? parseInt(priceElement.textContent) : 0;
-        const requiredLevel = parseInt(button.getAttribute('data-level'));
+        let price = 0;
+        
+        if (priceElement) {
+            price = parseInt(priceElement.textContent) || 0;
+        } else {
+            // Для кейса используем переменную casePrice
+            if (button.querySelector('strong').textContent === 'Обычный кейс') {
+                price = casePrice;
+            }
+        }
+        
+        const requiredLevel = parseInt(button.getAttribute('data-level')) || 1;
         
         if (score >= price && level >= requiredLevel) {
             button.disabled = false;
             button.style.background = 'lightblue';
+            button.style.cursor = 'pointer';
         } else {
             button.disabled = true;
             button.style.background = '#7f8c8d';
+            button.style.cursor = 'not-allowed';
         }
     });
 }
 
-// Управление панелями (без изменений)
+// Управление панелями
 function toggleShop() {
     document.getElementById('shop-panel').classList.toggle('active');
     document.getElementById('overlay').classList.toggle('active');
     mainContent.classList.toggle('shop-open');
+    // При открытии магазина проверяем доступность улучшений
+    if (document.getElementById('shop-panel').classList.contains('active')) {
+        checkUpgradesAvailability();
+    }
 }
 
 function closeShop() {
@@ -420,6 +461,9 @@ function openShopTab(tabName) {
     
     // Активировать кнопку выбранной вкладки
     event.target.classList.add('active');
+    
+    // Проверить доступность улучшений при переключении вкладок
+    checkUpgradesAvailability();
 }
 
 // Автосохранение
@@ -434,6 +478,7 @@ setInterval(() => {
     if (addPerSecond > 0) {
         score += addPerSecond;
         updateDisplay();
+        checkUpgradesAvailability(); // Проверяем доступность после авто-клика
         saveGame();
     }
 }, 1000);
