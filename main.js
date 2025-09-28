@@ -9,20 +9,17 @@ let exp = 0;
 let maxExp = 100;
 let totalClicks = 0;
 
-// Цены улучшений
-
-
-// Статус покупки улучшений
-let boughtUpgrades = {
-    click1: false,
-    click2: false,
-    click3: false,
-    click4: false,
-    click5: false,
-    autoclick1: false,
-    autoclick2: false,
-    autoclick3: false,
-    autoclick4: false
+// Цены улучшений (ДОБАВЬТЕ ЭТО!)
+let upgradePrices = {
+    click1: 100,
+    click2: 1000,
+    click3: 5000,
+    click4: 15000,
+    click5: 30000,
+    autoclick1: 50,
+    autoclick2: 250,
+    autoclick3: 750,
+    autoclick4: 2500
 };
 
 // Скины
@@ -92,12 +89,11 @@ const changingTexts = [
     "Зомби отдыхают... лол",
     "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!!",
     "Стань НАКЛИКНУТЫМ КЛИКОМ КЛИКАМИ КЛИКОСИКИАМ!",
-     "попробуй также в Coockie Clicker!",
-     "ты нищий?",
-     "Кликай медленее!",
-     "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
-     "витамин D"
-    
+    "попробуй также в Coockie Clicker!",
+    "ты нищий?",
+    "Кликай медленее!",
+    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
+    "витамин D"
 ];
 
 // Элементы DOM
@@ -117,13 +113,12 @@ const changingTextEl = document.getElementById('changing-text');
 function startChangingText() {
     let currentIndex = 0;
     
-    // Показываем первый текст сразу
     changingTextEl.textContent = changingTexts[currentIndex];
     
     setInterval(() => {
         currentIndex = (currentIndex + 1) % changingTexts.length;
         changingTextEl.textContent = changingTexts[currentIndex];
-    }, 10000); // Меняем каждые 10 секунд
+    }, 10000);
 }
 
 // Сохранение игры
@@ -137,7 +132,6 @@ function saveGame() {
         maxExp: maxExp,
         totalClicks: totalClicks,
         upgradePrices: upgradePrices,
-        boughtUpgrades: boughtUpgrades,
         unlockedSkins: unlockedSkins,
         currentSkin: currentSkin
     };
@@ -159,7 +153,6 @@ function loadGame() {
             maxExp = gameData.maxExp || 100;
             totalClicks = gameData.totalClicks || 0;
             upgradePrices = gameData.upgradePrices || upgradePrices;
-            boughtUpgrades = gameData.boughtUpgrades || boughtUpgrades;
             unlockedSkins = gameData.unlockedSkins || ['default'];
             currentSkin = gameData.currentSkin || 'default';
             
@@ -181,7 +174,7 @@ function initGame() {
     updatePricesDisplay();
     checkUpgradesAvailability();
     loadSkins();
-    startChangingText(); // Запускаем меняющийся текст
+    startChangingText();
     
     // Применяем текущий скин
     const allSkins = {...skins, ...clickSkins};
@@ -203,8 +196,8 @@ buttonEl.onclick = function() {
     saveGame();
 };
 
-// Исправленная функция покупки улучшения
-function buyUpgrade(type, power, price) {
+// Исправленная функция покупки улучшения (МНОГОРАЗОВАЯ покупка)
+function buyUpgrade(type, power, basePrice) {
     const requiredLevel = parseInt(event.target.getAttribute('data-level'));
     const currentPrice = upgradePrices[type];
     
@@ -219,8 +212,6 @@ function buyUpgrade(type, power, price) {
         return;
     }
     
-   
-    
     // Совершаем покупку
     score -= currentPrice;
     
@@ -233,7 +224,6 @@ function buyUpgrade(type, power, price) {
     
     // Увеличиваем цену на 17% для этого улучшения
     upgradePrices[type] = Math.round(currentPrice * 1.17);
-    boughtUpgrades[type] = true;
     
     updateDisplay();
     updatePricesDisplay();
@@ -242,7 +232,7 @@ function buyUpgrade(type, power, price) {
     showNotification("Улучшение куплено!");
 }
 
-// Исправленная функция покупки кейса
+// Функция покупки кейса
 function buyCase() {
     if (score < 1250) {
         showNotification("Недостаточно капель для кейса!");
@@ -255,7 +245,6 @@ function buyCase() {
     let wonSkin = null;
     let rarity = '';
     
-    // Определяем редкость по шансам
     if (random < 0.01) {
         rarity = 'legendary';
     } else if (random < 0.1) {
@@ -266,7 +255,6 @@ function buyCase() {
         rarity = 'common';
     }
     
-    // Получаем случайный скин выпавшей редкости
     const availableSkins = Object.keys(skins).filter(skinId => 
         skins[skinId].rarity === rarity && 
         skinId !== 'default' && 
@@ -282,7 +270,6 @@ function buyCase() {
         showNotification(`🎉 Получен ${rarity} скин: ${skins[wonSkin].name}!`);
         loadSkins();
     } else {
-        // Компенсация если скинов нет или все уже есть
         const compensation = 250;
         score += compensation;
         showNotification(`Все скины ${rarity} редкости уже есть! +${compensation} капель`);
@@ -292,8 +279,167 @@ function buyCase() {
     saveGame();
 }
 
-// Остальные функции без изменений...
-// (checkSkinUnlocks, loadSkins, selectSkin, showNotification, checkLevelUp, updateDisplay, updateLevelDisplay, checkUpgradesAvailability, управление панелями)
+// Проверка разблокировки скинов за клики
+function checkSkinUnlocks() {
+    const allSkins = {...clickSkins};
+    let unlockedNew = false;
+    
+    for (const skinId in allSkins) {
+        if (!unlockedSkins.includes(skinId) && totalClicks >= allSkins[skinId].requiredClicks) {
+            unlockedSkins.push(skinId);
+            showNotification(`🎉 Разблокирован скин: ${allSkins[skinId].name}!`);
+            unlockedNew = true;
+        }
+    }
+    
+    if (unlockedNew) {
+        loadSkins();
+        saveGame();
+    }
+}
+
+// Загрузка скинов в инвентарь
+function loadSkins() {
+    skinsContainer.innerHTML = '';
+    const allSkins = {...skins, ...clickSkins};
+    
+    unlockedSkins.forEach(skinId => {
+        if (allSkins[skinId]) {
+            const skin = allSkins[skinId];
+            const skinItem = document.createElement('button');
+            skinItem.className = `skin-item ${currentSkin === skinId ? 'active' : ''}`;
+            skinItem.onclick = () => selectSkin(skinId);
+            
+            skinItem.innerHTML = `
+                <img src="${skin.url}" alt="${skin.name}" onerror="this.src='https://pvsz2.ru/statics/plants-big/68.png'">
+                <div>${skin.name}</div>
+                <small>${skin.rarity}</small>
+            `;
+            
+            skinsContainer.appendChild(skinItem);
+        }
+    });
+}
+
+// Выбор скина
+function selectSkin(skinId) {
+    const allSkins = {...skins, ...clickSkins};
+    if (allSkins[skinId]) {
+        currentSkin = skinId;
+        buttonEl.style.backgroundImage = `url(${allSkins[skinId].url})`;
+        loadSkins();
+        saveGame();
+    }
+}
+
+// Показать уведомление
+function showNotification(message) {
+    notification.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+// Проверка повышения уровня
+function checkLevelUp() {
+    if (exp >= maxExp) {
+        level++;
+        exp = 0;
+        maxExp = Math.round(maxExp * 1.5);
+        updateLevelDisplay();
+        showNotification(`🎉 Уровень ${level} достигнут!`);
+    }
+}
+
+// Обновление отображения
+function updateDisplay() {
+    scoreEl.textContent = Math.floor(score);
+    addEl.textContent = addPerClick;
+}
+
+// Обновление уровня
+function updateLevelDisplay() {
+    levelEl.textContent = level;
+    expEl.textContent = exp;
+    maxExpEl.textContent = maxExp;
+    const progressPercent = (exp / maxExp) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+}
+
+// Обновление цен
+function updatePricesDisplay() {
+    for (const type in upgradePrices) {
+        const priceElement = document.getElementById(`${type}-price`);
+        if (priceElement) {
+            priceElement.textContent = upgradePrices[type];
+        }
+    }
+}
+
+// Проверка доступности улучшений
+function checkUpgradesAvailability() {
+    const upgradeButtons = document.querySelectorAll('.upgrade-item');
+    upgradeButtons.forEach(button => {
+        const price = parseInt(button.querySelector('span').textContent);
+        const requiredLevel = parseInt(button.getAttribute('data-level'));
+        
+        if (score >= price && level >= requiredLevel) {
+            button.disabled = false;
+            button.style.background = 'lightblue';
+        } else {
+            button.disabled = true;
+            button.style.background = '#7f8c8d';
+        }
+    });
+}
+
+// Управление панелями
+function toggleShop() {
+    document.getElementById('shop-panel').classList.toggle('active');
+    document.getElementById('overlay').classList.toggle('active');
+    mainContent.classList.toggle('shop-open');
+}
+
+function closeShop() {
+    document.getElementById('shop-panel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    mainContent.classList.remove('shop-open');
+}
+
+function toggleInventory() {
+    document.getElementById('inventory-panel').classList.toggle('active');
+    document.getElementById('overlay').classList.toggle('active');
+}
+
+function closeInventory() {
+    document.getElementById('inventory-panel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+}
+
+function closeAllPanels() {
+    closeShop();
+    closeInventory();
+}
+
+function openShopTab(tabName) {
+    // Скрыть все вкладки
+    document.querySelectorAll('.shop-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Убрать активный класс со всех кнопок вкладок
+    document.querySelectorAll('.shop-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Показать выбранную вкладку
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Активировать кнопку выбранной вкладки
+    event.target.classList.add('active');
+}
 
 // Автосохранение
 function startAutosave() {
