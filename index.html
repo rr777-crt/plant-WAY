@@ -16,19 +16,20 @@
                 <div>
                     За клик +<b id="add">1</b>
                 </div>
+                <!-- Блок для меняющихся слов -->
+                <div id="changing-text" class="changing-text"></div>
             </header>
 
             <main>
                 <div id="button"></div>
             </main>
 
-            <!-- Секция ОБНОВЛЕНИЕ с кнопками интерфейса -->
+            <!-- Остальной код без изменений -->
             <div class="update-section">
                 <div class="update-content">
                     <h1>ОБНОВЛЕНИЕ</h1>
                     <p>ВЫХОД</p>
                     
-                    <!-- Контейнер для кнопок интерфейса -->
                     <div class="interface-container">
                         <div class="level-info">
                             <div>Уровень: <span id="level">1</span></div>
@@ -46,21 +47,20 @@
                 </div>
             </div>
 
-            <!-- Инфо лист -->
             <div class="info-section">
                 <div class="info-content">
                     <h1>ИНФО ЛИСТ</h1>
-                    <p>Добро пожаловать в игру "Грохострел кликер: ПУТЬ!"</p>
-                    <p>Кликайте по главной кнопке, чтобы зарабатывать капли.</p>
-                    <p>Покупайте улучшения в магазине для увеличения дохода.</p>
-                    <p>Открывайте кейсы для получения новых скинов.</p>
-                    <p>Повышайте уровень для разблокировки новых возможностей.</p>
-                    <p>Удачи в игре!</p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
+                    <p></p>
                 </div>
             </div>
         </div>
 
-        <!-- Магазин (вне основного контента) -->
+        <!-- Магазин -->
         <div id="shop-panel">
             <div class="shop-header">
                 <div></div>
@@ -136,22 +136,16 @@
             </div>
         </div>
 
-        <!-- Инвентарь -->
+        <!-- Инвентарь и остальные элементы -->
         <div id="inventory-panel">
             <div class="shop-header">
                 <h2 style="color: white; margin: 0;">Инвентарь скинов</h2>
                 <button class="close-btn" onclick="closeInventory()">×</button>
             </div>
-            <div id="skins-container" class="skins-grid">
-                <!-- Скины будут добавляться сюда -->
-            </div>
+            <div id="skins-container" class="skins-grid"></div>
         </div>
 
-        <!-- Уведомление (изначально скрыто) -->
-        <div id="notification" class="notification">
-            Новый скин получен! Проверьте инвентарь.
-        </div>
-
+        <div id="notification" class="notification"></div>
         <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
 
         <script src="main.js"></script>
