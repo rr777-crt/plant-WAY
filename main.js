@@ -9,20 +9,9 @@ let exp = 0;
 let maxExp = 100;
 let totalClicks = 0;
 
-// Цены улучшений (ДОБАВЬТЕ ЭТО!)
-let upgradePrices = {
-    click1: 100,
-    click2: 1000,
-    click3: 5000,
-    click4: 15000,
-    click5: 30000,
-    autoclick1: 50,
-    autoclick2: 250,
-    autoclick3: 750,
-    autoclick4: 2500
-};
+// УБИРАЕМ upgradePrices - используем данные из HTML
 
-// Скины
+// Скины (остаются без изменений)
 let unlockedSkins = ['default'];
 let currentSkin = 'default';
 const skins = {
@@ -131,7 +120,6 @@ function saveGame() {
         exp: exp,
         maxExp: maxExp,
         totalClicks: totalClicks,
-        upgradePrices: upgradePrices,
         unlockedSkins: unlockedSkins,
         currentSkin: currentSkin
     };
@@ -152,7 +140,6 @@ function loadGame() {
             exp = gameData.exp || 0;
             maxExp = gameData.maxExp || 100;
             totalClicks = gameData.totalClicks || 0;
-            upgradePrices = gameData.upgradePrices || upgradePrices;
             unlockedSkins = gameData.unlockedSkins || ['default'];
             currentSkin = gameData.currentSkin || 'default';
             
@@ -171,7 +158,6 @@ function initGame() {
     
     updateDisplay();
     updateLevelDisplay();
-    updatePricesDisplay();
     checkUpgradesAvailability();
     loadSkins();
     startChangingText();
@@ -196,10 +182,12 @@ buttonEl.onclick = function() {
     saveGame();
 };
 
-// Исправленная функция покупки улучшения (МНОГОРАЗОВАЯ покупка)
+// Упрощенная функция покупки улучшения (берем цену из HTML)
 function buyUpgrade(type, power, basePrice) {
-    const requiredLevel = parseInt(event.target.getAttribute('data-level'));
-    const currentPrice = upgradePrices[type];
+    const button = event.target;
+    const priceElement = button.querySelector('span');
+    const currentPrice = parseInt(priceElement.textContent);
+    const requiredLevel = parseInt(button.getAttribute('data-level'));
     
     // Проверяем условия покупки
     if (score < currentPrice) {
@@ -222,17 +210,17 @@ function buyUpgrade(type, power, basePrice) {
         addPerSecond += power;
     }
     
-    // Увеличиваем цену на 17% для этого улучшения
-    upgradePrices[type] = Math.round(currentPrice * 1.17);
+    // Увеличиваем цену на 17% и обновляем в HTML
+    const newPrice = Math.round(currentPrice * 1.17);
+    priceElement.textContent = newPrice;
     
     updateDisplay();
-    updatePricesDisplay();
     checkUpgradesAvailability();
     saveGame();
     showNotification("Улучшение куплено!");
 }
 
-// Функция покупки кейса
+// Функция покупки кейса (без изменений)
 function buyCase() {
     if (score < 1250) {
         showNotification("Недостаточно капель для кейса!");
@@ -368,21 +356,14 @@ function updateLevelDisplay() {
     progressBar.style.width = `${progressPercent}%`;
 }
 
-// Обновление цен
-function updatePricesDisplay() {
-    for (const type in upgradePrices) {
-        const priceElement = document.getElementById(`${type}-price`);
-        if (priceElement) {
-            priceElement.textContent = upgradePrices[type];
-        }
-    }
-}
+// УБИРАЕМ updatePricesDisplay - не нужна
 
-// Проверка доступности улучшений
+// Проверка доступности улучшений (упрощенная)
 function checkUpgradesAvailability() {
     const upgradeButtons = document.querySelectorAll('.upgrade-item');
     upgradeButtons.forEach(button => {
-        const price = parseInt(button.querySelector('span').textContent);
+        const priceElement = button.querySelector('span');
+        const price = priceElement ? parseInt(priceElement.textContent) : 0;
         const requiredLevel = parseInt(button.getAttribute('data-level'));
         
         if (score >= price && level >= requiredLevel) {
@@ -395,7 +376,7 @@ function checkUpgradesAvailability() {
     });
 }
 
-// Управление панелями
+// Управление панелями (без изменений)
 function toggleShop() {
     document.getElementById('shop-panel').classList.toggle('active');
     document.getElementById('overlay').classList.toggle('active');
