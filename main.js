@@ -51,13 +51,13 @@ const clickSkins = {
     },
     'path2': { 
         name: 'ПУТЬ: Огненый', 
-        url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaLfKjCJeRybo_HA5pSyFISZFrCZJnKqSuiQ&s',
+        url: 'https://pvsz2.ru/statics/plants-big/31.png',
         rarity: 'path',
         requiredClicks: 10000
     },
     'path3': { 
-        name: 'ПУТЬ: огонь', 
-        url: 'https://pvsz2.ru/statics/plants-big/121.png',
+        name: 'ПУТЬ: теневой', 
+        url: 'https://i.pinimg.com/236x/28/e5/da/28e5da85ae6af5b29b1669f2ebe8333d.jpg',
         rarity: 'path',
         requiredClicks: 1000000
     },
