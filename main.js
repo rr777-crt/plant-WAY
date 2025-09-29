@@ -45,7 +45,7 @@ const skins = {
 const clickSkins = {
     'path1': { 
         name: 'ПУТЬ: Ледяной', 
-        url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/a/a2/Snow_Pea_%28HD_size%29.png/revision/latest?cb=20220305060759&path-prefix=ru',
+        url: 'https://kartinkof.club/uploads/posts/2023-05/1683321985_kartinkof-club-p-kartinki-gorokhostrel-45.png',
         rarity: 'path',
         requiredClicks: 1000
     },
@@ -57,7 +57,7 @@ const clickSkins = {
     },
     'path3': { 
         name: 'ПУТЬ: теневой', 
-        url: 'https://i.pinimg.com/236x/28/e5/da/28e5da85ae6af5b29b1669f2ebe8333d.jpg',
+        url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/2/28/ShadowPea.png/revision/latest?cb=20190929110410&path-prefix=ru',
         rarity: 'path',
         requiredClicks: 1000000
     },
@@ -222,7 +222,7 @@ function buyUpgrade(type, power, basePrice) {
     }
     
     // Увеличиваем цену на 17% и обновляем в HTML
-    const newPrice = Math.round(currentPrice * 1.17);
+    const newPrice = Math.round(currentPrice * 1.16);
     priceElement.textContent = newPrice;
     
     updateDisplay();
@@ -241,7 +241,7 @@ function buyCase() {
     score -= casePrice;
     
     // Увеличиваем цену кейса на 50%
-    casePrice = Math.round(casePrice * 1.5);
+    casePrice = Math.round(casePrice * 1.01);
     updateCasePriceDisplay();
     
     const random = Math.random();
@@ -362,7 +362,7 @@ function checkLevelUp() {
     while (exp >= maxExp) {
         level++;
         exp -= maxExp; // Вычитаем использованный EXP
-        maxExp = Math.round(maxExp * 1.5);
+        maxExp = Math.round(maxExp * 1.04);
         showNotification(`🎉 Уровень ${level} достигнут!`);
     }
     updateLevelDisplay();
