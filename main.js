@@ -62,12 +62,25 @@ const clickSkins = {
         rarity: 'path',
         requiredClicks: 1000000
     },
-    'path4': { 
-        name: 'ПУТЬ: пулемёт', 
-        url: 'https://pikuco.ru/upload/test_stable/de2/de2983fac56e2217ef74382c0818d043.webp',
+   'path3': { 
+        name: 'ПУТЬ: грохомёт', 
+        url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/b/bf/Gatling_Pea_Fixed.png/revision/latest/thumbnail/width/360/height/360?cb=20190519095836&path-prefix=ru',
         rarity: 'path',
         requiredClicks: 25000000
+    },
+   'path3': { 
+        name: 'ПУТЬ: 2', 
+        url: 'https://pvsz2.ru/statics/plants-big/90.png',
+        rarity: 'path',
+        requiredClicks: 500000000
+    },
+   'path3': { 
+        name: 'ПУТЬ: тристрел', 
+        url: 'https://pvsz2.ru/statics/plants-big/104.png',
+        rarity: 'path',
+        requiredClicks: 2500000000
     }
+   
 };
 
 // Текста для меняющихся слов
@@ -77,7 +90,7 @@ const changingTexts = [
     "Вау! ты играешь в скучный кликер?",
     "абграбабара - Дейв",
     "Зомби отдыхают... лол",
-    "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!!",
+    "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!! подождитека...!",
     "Стань НАКЛИКНУТЫМ КЛИКОМ КЛИКАМИ КЛИКОСИКИАМ!",
     "попробуй также в Coockie Clicker!",
     "ты нищий?",
@@ -97,7 +110,12 @@ const changingTexts = [
     "вау как дорого стоит +250 на клик!",
     "... - второй раз",
     "ОМГ В ИНФ ЛИСТ ДОБАВЯТ ЧТО - то В 1.0.2?!?!?!",
-    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали"
+    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали",
+   "солнцы это полезно?",
+   "ВОБЩЕТО СОЛНЦЫ ЕТО НЕ КЛАСИВОЕ НАЗВАНИЕ",
+   "О НОУ, СОЛНЦЕ ПАДАЕТ!",
+   "где мой тако?",
+  "СМОТРИ! ЭТО САМАЯ БЕСПОЛЕЗНАЯ ИНФОРМАЦИЯ!"
 ];
 
 // Элементы DOM
@@ -268,7 +286,7 @@ function buyUpgrade(type, power, basePrice) {
         addPerSecond += power;
     }
     
-    const newPrice = Math.round(currentPrice * 1.16);
+    const newPrice = Math.round(currentPrice * 1.10);
     priceElement.textContent = newPrice;
     
     updateDisplay();
