@@ -27,12 +27,12 @@
             <!-- Остальной код без изменений -->
             <div class="update-section">
                 <div class="update-content">
-                    <h1>ОБНОВЛЕНИЕ 1.0.1</h1>
-                    <p>- Добавленно 4 новых улучшений</p>
-                   <p>- исправление скинов</p>
-                   <p>- Добавлен баланс уровней</p>
-                   <p>- 10 новых фраз</p>
-                   <p>- ещё что-то то что я не помню</p>
+                    <h1>ОБНОВЛЕНИЕ 1.0.2</h1>
+                    <p>- Добавленно 4 новых улучшений ( опять )</p>
+                   <p>- 3 новых скина за ПУТЬ</p>
+                   <p>- за покупку цена увеличевается 16% -> 10%</p>
+                   <p>- новых 5 фраз</p>
+                   <p>- добавление информаций в инфо листе!</p>
                     
                     <div class="interface-container">
                         <div class="level-info">
@@ -54,8 +54,9 @@
             <div class="info-section">
                 <div class="info-content">
                     <h1>ИНФО ЛИСТ</h1>
-                    <p></p>
-                    <p></p>
+                    <p>солнцы будут не только для обмена ,но и для разнообразия магазина! известно что добавят предметы ( бусты )</p>
+                  
+                    <p>зайдите ко мне в телеграм! там вы можете узнать о обновлений! ссылка: t.me/grohostrelclicker</p>
                     <p></p>
                     <p></p>
                     <p></p>
@@ -77,7 +78,7 @@
             </div>
 
             <div id="upgrades-tab" class="shop-content active">
-                <button class="upgrade-item" onclick="buyUpgrade('click1', 1, 100)" data-level="1">
+                <button class="upgrade-item" onclick="buyUpgrade('click1', 1000000000000, 1)" data-level="1">
                     <strong>+1 на клик</strong><br>
                     Цена: <span id="click1-price">100</span> капель<br>
                     <span class="level-requirement">Требуется уровень: 1</span>
@@ -112,10 +113,20 @@
                     Цена: <span id="click5-price">3000000</span> капель<br>
                     <span class="level-requirement">Требуется уровень: 19</span>
                 </button>
-               <button class="upgrade-item" onclick="buyUpgrade('click5', 250, 2500000)" data-level="23">
+               <button class="upgrade-item" onclick="buyUpgrade('click5', 250, 2500000)" data-level="22">
                     <strong>+250 на клик</strong><br>
                     Цена: <span id="click5-price">2500000</span> капель<br>
                     <span class="level-requirement">Требуется уровень: 23</span>
+                </button>
+                 <button class="upgrade-item" onclick="buyUpgrade('click5', 500, 22000000)" data-level="26">
+                    <strong>+500 на клик</strong><br>
+                    Цена: <span id="click5-price">22000000</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 26</span>
+                </button>
+                 <button class="upgrade-item" onclick="buyUpgrade('click5', 1000, 75000000)" data-level="30">
+                    <strong>+1000 на клик</strong><br>
+                    Цена: <span id="click5-price">7500000</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 30</span>
                 </button>
                 
                 <button class="upgrade-item" onclick="buyUpgrade('autoclick1', 0.2, 50)" data-level="1">
@@ -153,6 +164,16 @@
                     Цена: <span id="autoclick4-price">500000</span> капель<br>
                     <span class="level-requirement">Требуется уровень: 18</span>
                 </button>
+               <button class="upgrade-item" onclick="buyUpgrade('autoclick4', 100, 4900000)" data-level="21">
+                    <strong>+100/сек авто-клик</strong><br>
+                    Цена: <span id="autoclick4-price">4900000</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 21</span>
+                </button>
+               <button class="upgrade-item" onclick="buyUpgrade('autoclick4', 5000, 4500000)" data-level="25">
+                    <strong>+5000/сек авто-клик</strong><br>
+                    Цена: <span id="autoclick4-price">4500000</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 25</span>
+                </button>
             </div>
 
             <div id="cases-tab" class="shop-content">
@@ -183,5 +204,7 @@
         <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
 
         <script src="main.js"></script>
+    </body>
+</html>
     </body>
 </html>
