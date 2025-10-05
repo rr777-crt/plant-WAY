@@ -1,133 +1,141 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>грохострел кликер: ПУТЬ! v:1.0.0</title>
-        <meta name="description" content="грохострел">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <!-- Основной контент -->
-        <div class="main-content" id="main-content">
-            <header>
-                <div class="menu">
-                    капель (воды): <b id="score">0</b>
-                </div>
-                <div>
-                    За клик +<b id="add">1</b>
-                </div>
-                <!-- Блок для меняющихся слов -->
-                <div id="changing-text" class="changing-text"></div>
-            </header>
-
-            <main>
-                <div id="button"></div>
-            </main>
-
-            <!-- Остальной код без изменений -->
-            <div class="update-section">
-                <div class="update-content">
-                    <h1>ОБНОВЛЕНИЕ 1.0.2</h1>
-                    <p>- Добавленно 4 новых улучшений ( опять )</p>
-                   <p>- 3 новых скина за ПУТЬ</p>
-                   <p>- за покупку цена увеличевается 16% -> 10%</p>
-                   <p>- новых 5 фраз</p>
-                   <p>- добавление информаций в инфо листе!</p>
-                    
-                    <div class="interface-container">
-                        <div class="level-info">
-                            <div>Уровень: <span id="level">1</span></div>
-                            <div id="level-bar">
-                                <div id="level-progress"></div>
-                            </div>
-                            <div>EXP: <span id="exp">0</span>/<span id="max-exp">100</span></div>
-                        </div>
-                        
-                        <div class="interface-buttons">
-                            <button id="inventory-btn" class="interface-btn" onclick="toggleInventory()">Инвентарь</button>
-                            <button id="shop-btn" class="interface-btn" onclick="toggleShop()">Магазин</button>
-                        </div>
-                    </div>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <title>грохострел кликер: ПУТЬ! v:1.0.2</title>
+    <meta name="description" content="грохострел">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-content" id="main-content">
+        <header>
+            <div class="menu">
+                капель: <b id="score">0</b>
             </div>
+            <div>
+                За клик +<b id="add">1</b>
+            </div>
+            <div class="sun-counter">
+                солнц: <b id="sun-score">0</b>
+            </div>
+            <div id="changing-text" class="changing-text"></div>
+        </header>
 
-            <div class="info-section">
-                <div class="info-content">
-                    <h1>ИНФО ЛИСТ</h1>
-                    <p>солнцы будут не только для обмена ,но и для разнообразия магазина! известно что добавят предметы ( бусты )</p>
-                  
-                    <p>зайдите ко мне в телеграм! там вы можете узнать о обновлений! ссылка: t.me/grohostrelclicker</p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                    <p></p>
+        <main>
+            <div id="button"></div>
+        </main>
+
+        <div class="update-section">
+            <div class="update-content">
+                <h1>ОБНОВЛЕНИЕ 1.0.3</h1>
+                <p>- новый скин в кейсе!</p>
+                <p>- Новый! предметы в магазине</p>
+                <p>- СИТСЕМА СОЛНЦ</p>
+              <p>- новые 2 улучшения</p>
+               <p>- новые 15 новых фраз</p>
+                
+                <div class="interface-container">
+                    <div class="level-info">
+                        <div>Уровень: <span id="level">1</span></div>
+                        <div id="level-bar">
+                            <div id="level-progress"></div>
+                        </div>
+                        <div>EXP: <span id="exp">0</span>/<span id="max-exp">100</span></div>
+                    </div>
+                    
+                    <div class="interface-buttons">
+                        <button id="inventory-btn" class="interface-btn" onclick="toggleInventory()">Инвентарь</button>
+                        <button id="shop-btn" class="interface-btn" onclick="toggleShop()">Магазин</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Магазин -->
-        <div id="shop-panel">
-            <div class="shop-header">
-                <div></div>
-                <button class="close-btn" onclick="closeShop()">×</button>
+        <div class="info-section">
+            <div class="info-content">
+                <h1>ИНФО ЛИСТ</h1>
+                <p>Телеграм: t.me/grohostrelclicker</p>
             </div>
-            
-            <div class="shop-tabs">
-                <button class="shop-tab active" onclick="openShopTab('upgrades')">Улучшения</button>
-                <button class="shop-tab" onclick="openShopTab('cases')">Кейсы</button>
-            </div>
+        </div>
+    </div>
 
-            <div id="upgrades-tab" class="shop-content active">
-                <button class="upgrade-item" onclick="buyUpgrade('click1',  1, 100)" data-level="1">
-                    <strong>+1 на клик</strong><br>
-                    Цена: <span id="click1-price">100</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 1</span>
-                </button>
-                <button class="upgrade-item" onclick="buyUpgrade('click2', 3, 1000)" data-level="3">
-                    <strong>+3 на клик</strong><br>
-                    Цена: <span id="click2-price">1000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 3</span>
-                </button>
-                <button class="upgrade-item" onclick="buyUpgrade('click3', 7, 5000)" data-level="6">
-                    <strong>+7 на клик</strong><br>
-                    Цена: <span id="click3-price">5000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 6</span>
-                </button>
-                <button class="upgrade-item" onclick="buyUpgrade('click4', 15, 15000)" data-level="10">
-                    <strong>+15 на клик</strong><br>
-                    Цена: <span id="click4-price">15000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 10</span>
-                </button>
-                <button class="upgrade-item" onclick="buyUpgrade('click5', 30, 30000)" data-level="13">
-                    <strong>+30 на клик</strong><br>
-                    Цена: <span id="click5-price">30000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 13</span>
-                </button>
-                 <button class="upgrade-item" onclick="buyUpgrade('click5', 50, 100000)" data-level="17">
-                    <strong>+50 на клик</strong><br>
-                    Цена: <span id="click5-price">100000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 17</span>
-                </button>
-               <button class="upgrade-item" onclick="buyUpgrade('click5', 100, 3000000)" data-level="19">
-                    <strong>+100 на клик</strong><br>
-                    Цена: <span id="click5-price">3000000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 19</span>
-                </button>
-               <button class="upgrade-item" onclick="buyUpgrade('click5', 250, 2500000)" data-level="22">
-                    <strong>+250 на клик</strong><br>
-                    Цена: <span id="click5-price">2500000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 23</span>
-                </button>
-                 <button class="upgrade-item" onclick="buyUpgrade('click5', 500, 22000000)" data-level="26">
-                    <strong>+500 на клик</strong><br>
-                    Цена: <span id="click5-price">22000000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 26</span>
-                </button>
-                 <button class="upgrade-item" onclick="buyUpgrade('click5', 1000, 75000000)" data-level="30">
-                    <strong>+1000 на клик</strong><br>
-                    Цена: <span id="click5-price">7500000</span> капель<br>
-                    <span class="level-requirement">Требуется уровень: 30</span>
-                </button>
+    <!-- Магазин -->
+    <div id="shop-panel" class="shop-panel">
+        <div class="shop-header">
+            <h2>Магазин</h2>
+            <button class="close-btn" onclick="closeShop()">×</button>
+        </div>
+        
+        <div class="shop-tabs">
+            <button class="shop-tab active" onclick="openShopTab('upgrades')">Улучшения</button>
+            <button class="shop-tab" onclick="openShopTab('cases')">Кейсы</button>
+            <button class="shop-tab" onclick="openShopTab('items')">Предметы</button>
+        </div>
+
+        <div id="upgrades-tab" class="shop-content active">
+            <!-- Обмен солнц -->
+          
+            
+            <!-- Улучшения клика -->
+        <button class="upgrade-item" onclick="buyUpgrade(1,100)" data-level="1">
+    <strong>+1 на клик</strong><br>
+    Цена: <span class="price-display">100</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 1</span>
+</button>
+          <button class="upgrade-item" onclick="buyUpgrade(3,1000)" data-level="3">
+    <strong>+3 на клик</strong><br>
+    Цена: <span class="price-display">1000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 3</span>
+</button>
+            <button class="upgrade-item" onclick="buyUpgrade(7,5000)" data-level="6">
+    <strong>+7 на клик</strong><br>
+    Цена: <span class="price-display">5000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 6</span>
+</button>
+          <button class="upgrade-item" onclick="buyUpgrade(15,15000)" data-level="10">
+    <strong>+15 на клик</strong><br>
+    Цена: <span class="price-display">15000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 10</span>
+</button>
+          <button class="upgrade-item" onclick="buyUpgrade(30,30000)" data-level="13">
+    <strong>+30 на клик</strong><br>
+    Цена: <span class="price-display">30000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 13</span>
+</button>
+          <button class="upgrade-item" onclick="buyUpgrade(50,100000)" data-level="17">
+    <strong>+50 на клик</strong><br>
+    Цена: <span class="price-display">100000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 17</span>
+</button>
+               
+             <button class="upgrade-item" onclick="buyUpgrade(100,3000000)" data-level="1">
+    <strong>+100 на клик</strong><br>
+    Цена: <span class="price-display">3000000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 19</span>
+</button>
+          <button class="upgrade-item" onclick="buyUpgrade(250, 2500000)" data-level="23">
+    <strong>+250 на клик</strong><br>
+    Цена: <span class="price-display">2500000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 23</span>
+</button>
+        <button class="upgrade-item" onclick="buyUpgrade(500, 22000000)" data-level="26">
+    <strong>+500 на клик</strong><br>
+    Цена: <span class="price-display">22000000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 26</span>
+</button>     
+          <button class="upgrade-item" onclick="buyUpgrade(1000, 75000000)" data-level="30">
+    <strong>+1000 на клик</strong><br>
+    Цена: <span class="price-display">75000000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 30</span>
+</button>     
+          <button class="upgrade-item" onclick="buyUpgrade(2500, 130000000)" data-level="36">
+    <strong>+2500 на клик</strong><br>
+    Цена: <span class="price-display">130000000</span> капель<br>
+    <span class="level-requirement">Требуется уровень: 36</span>
+</button>     
+                
+
+            
                 
                 <button class="upgrade-item" onclick="buyUpgrade('autoclick1', 0.2, 50)" data-level="1">
                     <strong>+0.2/сек авто-клик</strong><br>
@@ -174,37 +182,103 @@
                     Цена: <span id="autoclick4-price">4500000</span> капель<br>
                     <span class="level-requirement">Требуется уровень: 25</span>
                 </button>
-            </div>
-
-            <div id="cases-tab" class="shop-content">
-                <button class="upgrade-item" onclick="buyCase()">
-                    <strong>Обычный кейс</strong><br>
-                    Цена: 1250 капель<br>
-                    <div style="font-size: 12px; margin-top: 5px;">
-                        Шансы:<br>
-                        <span style="color: #27ae60">60% - Обычный</span><br>
-                        <span style="color: #3498db">30% - Редкий</span><br>
-                        <span style="color: #9b59b6">9% - Эпический</span><br>
-                        <span style="color: #f39c12">1% - Легендарный</span>
-                    </div>
+           <button class="upgrade-item" onclick="buyUpgrade('autoclick4', 10000, 40000000)" data-level="29">
+                    <strong>+10000/сек авто-клик</strong><br>
+                    Цена: <span id="autoclick4-price">40000000</span> капель<br>
+                    <span class="level-requirement">Требуется уровень: 29</span>
                 </button>
-            </div>
+          
+          
+          
+          
+            <button class="upgrade-item" onclick="buySunExchange(100, 1)" data-level="3" data-price="1" data-currency="suns">
+                <strong> 100 капель</strong><br>
+                Цена: 1 солнце<br>
+                <span class="level-requirement">Требуется уровень: 3</span>
+            </button>
+            <button class="upgrade-item" onclick="buySunExchange(750, 5)" data-level="6" data-price="5" data-currency="suns">
+                <strong>750 капель</strong><br>
+                Цена: 5 солнце<br>
+                <span class="level-requirement">Требуется уровень: 5</span>
+            </button>
+            <button class="upgrade-item" onclick="buySunExchange(10000, 10)" data-level="10" data-price="10" data-currency="suns">
+                <strong>10000 капель</strong><br>
+                Цена: 10 солнце<br>
+                <span class="level-requirement">Требуется уровень: 10</span>
+            </button>
+            <button class="upgrade-item" onclick="buySunExchange(75000, 20)" data-level="20" data-price="20" data-currency="suns">
+                <strong> 100 капель</strong><br>
+                Цена: 20 солнце<br>
+                <span class="level-requirement">Требуется уровень: 20</span>
+            </button>
         </div>
 
-        <!-- Инвентарь и остальные элементы -->
-        <div id="inventory-panel">
-            <div class="shop-header">
-                <h2 style="color: white; margin: 0;">Инвентарь скинов</h2>
-                <button class="close-btn" onclick="closeInventory()">×</button>
-            </div>
-            <div id="skins-container" class="skins-grid"></div>
+        <div id="cases-tab" class="shop-content">
+            <button class="upgrade-item" onclick="buyCase()" data-price="1250" data-currency="drops">
+                <strong>Обычный кейс</strong><br>
+                Цена: <span class="price-display">1250</span> капель<br>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    Шансы:<br>
+                    <span style="color: #27ae60">60% - Обычный</span><br>
+                    <span style="color: #3498db">30% - Редкий</span><br>
+                    <span style="color: #9b59b6">8.6% - Эпический</span><br>
+                    <span style="color: #f39c12">1% - Легендарный</span>
+                  <br>
+                    <span style="color: #f39c12">0.4% - Мифический</span>
+                </div>
+            </button>
         </div>
 
-        <div id="notification" class="notification"></div>
-        <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
+        <div id="items-tab" class="shop-content">
+            <button class="upgrade-item" onclick="buyItem('exp1')" data-level="5" data-price="5" data-currency="suns">
+                <strong>Бутылочка опыта</strong><br>
+                Цена: <span class="price-display">5</span> солнц<br>
+                <span style="font-size: 12px;">На 2 минуты ×2 опыта за клик</span><br>
+                <span class="level-requirement">Требуется уровень: 5</span>
+            </button>
+            
+            <button class="upgrade-item" onclick="buyItem('exp2')" data-level="10" data-price="15" data-currency="suns">
+                <strong>Большая бутылочка опыта</strong><br>
+                Цена: <span class="price-display">15</span> солнц<br>
+                <span style="font-size: 12px;">На 2 минуты ×5 опыта за клик</span><br>
+                <span class="level-requirement">Требуется уровень: 10</span>
+            </button>
+            
+            <button class="upgrade-item" onclick="buyItem('sunBoost')" data-level="15" data-price="8" data-currency="suns">
+                <strong>Амулет фотосинтеза</strong><br>
+                Цена: <span class="price-display">8</span> солнц<br>
+                <span style="font-size: 12px;">На 2 минуты ×2 солнц за клик</span><br>
+                <span class="level-requirement">Требуется уровень: 15</span>
+            </button>
+            
+            <button class="upgrade-item" onclick="buyItem('levelUp')" data-level="20" data-price="25" data-currency="suns">
+                <strong>Сфера уровня</strong><br>
+                Цена: <span class="price-display">25</span> солнц<br>
+                <span style="font-size: 12px;">Мгновенно +1 уровень</span><br>
+                <span class="level-requirement">Требуется уровень: 20</span>
+            </button>
+            
+            <button class="upgrade-item" onclick="buyItem('dropBoost')" data-level="25" data-price="30" data-currency="suns">
+                <strong>Горох</strong><br>
+                Цена: <span class="price-display">30</span> солнц<br>
+                <span style="font-size: 12px;">На 2 минуты ×1.5 капель за клик</span><br>
+                <span class="level-requirement">Требуется уровень: 25</span>
+            </button>
+        </div>
+    </div>
 
-        <script src="main.js"></script>
-    </body>
-</html>
-    </body>
+    <!-- Инвентарь -->
+    <div id="inventory-panel" class="inventory-panel">
+        <div class="shop-header">
+            <h2 style="color: white; margin: 0;">Инвентарь скинов</h2>
+            <button class="close-btn" onclick="closeInventory()">×</button>
+        </div>
+        <div id="skins-container" class="skins-grid"></div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
+
+    <script src="main.js"></script>
+</body>
 </html>
