@@ -10,6 +10,17 @@ let maxExp = 100;
 let totalClicks = 0;
 let casePrice = 1250;
 
+// Новая валюта - Солнце
+let sunScore = 0;
+let sunPerClick = 0.01;
+
+// Бусты
+let activeBoosts = {
+    exp: { active: false, multiplier: 1, endTime: 0 },
+    sun: { active: false, multiplier: 1, endTime: 0 },
+    drop: { active: false, multiplier: 1, endTime: 0 }
+};
+
 // Скины
 let unlockedSkins = ['default'];
 let currentSkin = 'default';
@@ -40,9 +51,14 @@ const skins = {
         url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtVQyQTbYoKxhSByfHMhQF4zmNxkH6Vm0vPQ&s',
         rarity: 'legendary'
     },
+    'mythic1': { 
+        name: 'ГЕРОЙ ГОРОХ', 
+        url: 'https://media.contentapi.ea.com/content/dam/eacom/en-us/migrated-images/2017/02/newsmedia-pvzh-2-feb-ftimg-greenshadow.png.adapt.crop191x100.628p.png',
+        rarity: 'mythic'
+    },
 };
 
-// Скины за клики (ПУТЬ) - эти НЕ выпадают из кейсов
+// Скины за клики (ПУТЬ)
 const clickSkins = {
     'path1': { 
         name: 'ПУТЬ: Ледяной', 
@@ -62,60 +78,72 @@ const clickSkins = {
         rarity: 'path',
         requiredClicks: 1000000
     },
-   'path3': { 
+    'path4': { 
         name: 'ПУТЬ: грохомёт', 
         url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/b/bf/Gatling_Pea_Fixed.png/revision/latest/thumbnail/width/360/height/360?cb=20190519095836&path-prefix=ru',
         rarity: 'path',
-        requiredClicks: 25000000
+        requiredClicks: 1000000000
     },
-   'path3': { 
+    'path5': { 
         name: 'ПУТЬ: 2', 
         url: 'https://pvsz2.ru/statics/plants-big/90.png',
         rarity: 'path',
-        requiredClicks: 500000000
+        requiredClicks: 15000000000
     },
-   'path3': { 
+    'path6': { 
         name: 'ПУТЬ: тристрел', 
         url: 'https://pvsz2.ru/statics/plants-big/104.png',
         rarity: 'path',
-        requiredClicks: 2500000000
+        requiredClicks: 500000000000
     }
-   
 };
 
 // Текста для меняющихся слов
 const changingTexts = [
     "Кликай быстрее!",
-    "привет",
-    "Вау! ты играешь в скучный кликер?",
-    "абграбабара - Дейв",
-    "Зомби отдыхают... лол",
-    "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!! подождитека...!",
+  "привет", 
+  "Вау! ты играешь в скучный кликер?",
+  "абграбабара - Дейв",
+    "Зомби отдыхают... лол", 
+  "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!! подождитека...!",
     "Стань НАКЛИКНУТЫМ КЛИКОМ КЛИКАМИ КЛИКОСИКИАМ!",
-    "попробуй также в Coockie Clicker!",
+  "попробуй также в Coockie Clicker!", 
     "ты нищий?",
-    "Кликай медленее!",
-    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
-    "витамин D",
-    "...",
-    "попытай удачи и иди в казик! ой то-есть открой кейс!",
-    "витамин C ой.. фотосинтез... ой да пошло",
+  "Кликай медленее!",
+  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
+    "витамин D", 
+  "...",
+  "попытай удачи и иди в казик! ой то-есть открой кейс!", 
+  "витамин C ой.. фотосинтез... ой да пошло",
     "cool... so what the tung sahur - cringe",
-    "долго сидишь",
-    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в туалет. стоп я это уже говорил?",
+  "долго сидишь",
+  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в туалет. стоп я это уже говорил?",
     "меня зовут печенька?",
-    "ВЫЙДИ!",
-    "ВТОРАЯ ПОПЫТКА: ВЫЙДИ!!!!",
-    "крутая система инвентаря?",
-    "вау как дорого стоит +250 на клик!",
-    "... - второй раз",
-    "ОМГ В ИНФ ЛИСТ ДОБАВЯТ ЧТО - то В 1.0.2?!?!?!",
-    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали",
-   "солнцы это полезно?",
-   "ВОБЩЕТО СОЛНЦЫ ЕТО НЕ КЛАСИВОЕ НАЗВАНИЕ",
-   "О НОУ, СОЛНЦЕ ПАДАЕТ!",
-   "где мой тако?",
-  "СМОТРИ! ЭТО САМАЯ БЕСПОЛЕЗНАЯ ИНФОРМАЦИЯ!"
+  "ВЫЙДИ!",
+  "ВТОРАЯ ПОПЫТКА: ВЫЙДИ!!!!", "крутая система инвентаря?", 
+  "вау как дорого стоит +250 на клик!",
+    "... - второй раз", "ОМГ В ИНФ ЛИСТ ДОБАВЯТ ЧТО - то В 1.0.2?!?!?!",
+  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали",
+    "солнцы это полезно?",
+  "ВОБЩЕТО СОЛНЦЫ ЕТО НЕ КЛАСИВОЕ НАЗВАНИЕ", 
+  "О НОУ, СОЛНЦЕ ПАДАЕТ!", 
+  "где мой тако?",
+  "следущая фраза предсказывает будущее",
+   "будешь нищим",
+   "ЛОЛ!",
+   "мен лень!!!!!!!!!!!!",
+   "Также будь хорошим и не жди обновления ивент: солнечное затмение",
+   "я говорю всегда правду",
+   "я не плохой и не люблю людей которые долбят телефон",
+   "стэндоф 2 ... прекрати",
+   "А ТЫ ИГЛАЕС В ЛОБЛОКС?!?!?!",
+   "слушай... советую еакопить много солнц",
+   "...  3 раз... лол зачем?",
+   "АКЦИЯ! +0% КО ВСЕМ ЦЕНАМ!!",
+   "зайди в тг пж",
+   "СКОЛЬКО СДЕСЬ УЖЕ ФРАЗ?!",
+   "бес гламатный - какойто чел... хз... не правда",
+   "ты богатый, ты хороший! держи в себя руках и не пальцем комната..."
 ];
 
 // Элементы DOM
@@ -130,11 +158,11 @@ const skinsContainer = document.getElementById('skins-container');
 const notification = document.getElementById('notification');
 const mainContent = document.getElementById('main-content');
 const changingTextEl = document.getElementById('changing-text');
+const sunScoreEl = document.getElementById('sun-score');
 
-// Функция меняющегося текста
+// Функция меняющихся текстов
 function startChangingText() {
     let currentIndex = 0;
-    
     changingTextEl.textContent = changingTexts[currentIndex];
     
     setInterval(() => {
@@ -155,10 +183,12 @@ function saveGame() {
         totalClicks: totalClicks,
         unlockedSkins: unlockedSkins,
         currentSkin: currentSkin,
-        casePrice: casePrice
+        casePrice: casePrice,
+        sunScore: sunScore,
+        sunPerClick: sunPerClick,
+        activeBoosts: activeBoosts
     };
     localStorage.setItem('gorohostrelSave', JSON.stringify(gameData));
-    console.log('Игра сохранена. Разблокировано скинов:', unlockedSkins.length);
 }
 
 // Загрузка игры
@@ -177,74 +207,55 @@ function loadGame() {
             totalClicks = gameData.totalClicks || 0;
             currentSkin = gameData.currentSkin || 'default';
             casePrice = gameData.casePrice || 1250;
+            sunScore = gameData.sunScore || 0;
+            sunPerClick = gameData.sunPerClick || 0.01;
+            activeBoosts = gameData.activeBoosts || {
+                exp: { active: false, multiplier: 1, endTime: 0 },
+                sun: { active: false, multiplier: 1, endTime: 0 },
+                drop: { active: false, multiplier: 1, endTime: 0 }
+            };
             
             unlockedSkins = gameData.unlockedSkins || ['default'];
             
-            console.log('Игра загружена. Разблокировано скинов:', unlockedSkins.length);
             return true;
         } catch (e) {
-            console.error('Ошибка загрузки сохранения:', e);
+            console.error('Ошибка загрузки:', e);
             return false;
         }
     }
     return false;
 }
 
-// Инициализация игры
-function initGame() {
-    const loaded = loadGame();
-    
-    updateDisplay();
-    updateLevelDisplay();
-    updateCasePriceDisplay();
-    checkUpgradesAvailability();
-    loadSkins();
-    startChangingText();
-    
-    // Применяем текущий скин
-    const allSkins = {...skins, ...clickSkins};
-    if (currentSkin && allSkins[currentSkin]) {
-        buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
-    }
-    
-    startAutosave();
-    
-    // Проверяем скины сразу после загрузки
-    checkAllSkinUnlocks();
-}
-
 // Основной клик
 buttonEl.onclick = function() {
-    score += addPerClick;
-    exp += 1;
+    let dropMultiplier = activeBoosts.drop.active ? activeBoosts.drop.multiplier : 1;
+    let expMultiplier = activeBoosts.exp.active ? activeBoosts.exp.multiplier : 1;
+    let sunMultiplier = activeBoosts.sun.active ? activeBoosts.sun.multiplier : 1;
+    
+    score += addPerClick * dropMultiplier;
+    exp += 1 * expMultiplier;
+    sunScore += sunPerClick * sunMultiplier;
     totalClicks += 1;
+    
     updateDisplay();
     checkLevelUp();
-    checkAllSkinUnlocks();
+    checkSkinUnlocks();
     checkUpgradesAvailability();
     saveGame();
 };
 
-// Проверка всех типов скинов
-function checkAllSkinUnlocks() {
-    let unlockedNew = false;
+// Проверка разблокировки скинов
+function checkSkinUnlocks() {
     const allSkins = {...skins, ...clickSkins};
+    let unlockedNew = false;
     
     for (const skinId in allSkins) {
-        // Пропускаем default скин, он уже разблокирован
         if (skinId === 'default') continue;
         
         if (!unlockedSkins.includes(skinId)) {
             const skin = allSkins[skinId];
-            let shouldUnlock = false;
             
-            // Проверяем скины за клики (только ПУТЬ скины)
             if (skin.rarity === 'path' && skin.requiredClicks && totalClicks >= skin.requiredClicks) {
-                shouldUnlock = true;
-                console.log(`Разблокирован скин ПУТЬ ${skin.name} за ${skin.requiredClicks} кликов!`);
-            }
-            
-            if (shouldUnlock) {
                 unlockedSkins.push(skinId);
                 showNotification(`🎉 Разблокирован скин: ${skin.name}!`);
                 unlockedNew = true;
@@ -258,11 +269,9 @@ function checkAllSkinUnlocks() {
     }
 }
 
-// Функция покупки улучшения
+// Покупка улучшения (ПРОСТАЯ ВЕРСИЯ)
 function buyUpgrade(type, power, basePrice) {
     const button = event.target.closest('.upgrade-item');
-    if (!button) return;
-    
     const priceElement = button.querySelector('span');
     const currentPrice = parseInt(priceElement.textContent);
     const requiredLevel = parseInt(button.getAttribute('data-level'));
@@ -295,55 +304,74 @@ function buyUpgrade(type, power, basePrice) {
     showNotification("Улучшение куплено!");
 }
 
-// Функция покупки кейса - ТОЛЬКО скины из объекта skins (НЕ ПУТЬ)
-function buyCase() {
-    if (score < casePrice) {
-        showNotification("Недостаточно капель для кейса!");
+// Обмен солнц
+function buySunExchange(drops, sunCost) {
+    const button = event.target.closest('.upgrade-item');
+    const requiredLevel = parseInt(button.getAttribute('data-level'));
+    
+    if (sunScore < sunCost) {
+        showNotification("Недостаточно солнц!");
         return;
     }
     
-    score -= casePrice;
-    casePrice = Math.round(casePrice * 1.01);
-    updateCasePriceDisplay();
-    
-    const random = Math.random();
-    let wonSkin = null;
-    let rarity = '';
-    
-    // Определяем редкость
-    if (random < 0.01) {
-        rarity = 'legendary';
-    } else if (random < 0.1) {
-        rarity = 'epic';
-    } else if (random < 0.4) {
-        rarity = 'rare';
-    } else {
-        rarity = 'common';
+    if (level < requiredLevel) {
+        showNotification(`Требуется уровень ${requiredLevel}!`);
+        return;
     }
     
-    console.log(`Выпала редкость: ${rarity}`);
+    sunScore -= sunCost;
+    score += drops;
     
-    // Ищем доступные скины этой редкости из объекта skins (НЕ ПУТЬ)
-    const availableSkins = Object.keys(skins).filter(skinId => 
-        skins[skinId].rarity === rarity && 
-        skinId !== 'default' && 
-        !unlockedSkins.includes(skinId)
-    );
+    updateDisplay();
+    checkUpgradesAvailability();
+    saveGame();
+    showNotification(`Получено ${drops} капель!`);
+}
+
+// Покупка предмета
+function buyItem(itemType) {
+    const button = event.target.closest('.upgrade-item');
+    const price = parseInt(button.querySelector('.price-display').textContent);
+    const requiredLevel = parseInt(button.getAttribute('data-level'));
     
-    console.log(`Доступные скины ${rarity} из кейса:`, availableSkins);
+    if (sunScore < price) {
+        showNotification("Недостаточно солнц!");
+        return;
+    }
     
-    if (availableSkins.length > 0) {
-        wonSkin = availableSkins[Math.floor(Math.random() * availableSkins.length)];
-        unlockedSkins.push(wonSkin);
-        showNotification(`🎉 Получен ${rarity} скин: ${skins[wonSkin].name}!`);
-        console.log(`Выигран скин из кейса: ${wonSkin}`);
-        loadSkins();
-    } else {
-        // Если все скины этой редкости уже есть
-        const compensation = Math.round(casePrice * 0.2);
-        score += compensation;
-        showNotification(`Все скины ${rarity} редкости уже есть! +${compensation} капель`);
-        console.log(`Все скины ${rarity} редкости уже разблокированы`);
+    if (level < requiredLevel) {
+        showNotification(`Требуется уровень ${requiredLevel}!`);
+        return;
+    }
+    
+    sunScore -= price;
+    
+    const boostDuration = 2 * 60 * 1000;
+    
+    switch(itemType) {
+        case 'exp1':
+            activeBoosts.exp = { active: true, multiplier: 2, endTime: Date.now() + boostDuration };
+            showNotification("×2 опыта на 2 минуты!");
+            break;
+        case 'exp2':
+            activeBoosts.exp = { active: true, multiplier: 5, endTime: Date.now() + boostDuration };
+            showNotification("×5 опыта на 2 минуты!");
+            break;
+        case 'sunBoost':
+            activeBoosts.sun = { active: true, multiplier: 2, endTime: Date.now() + boostDuration };
+            showNotification("×2 солнц на 2 минуты!");
+            break;
+        case 'levelUp':
+            level++;
+            exp = 0;
+            maxExp = Math.round(maxExp * 1.04);
+            showNotification("Уровень повышен!");
+            updateLevelDisplay();
+            break;
+        case 'dropBoost':
+            activeBoosts.drop = { active: true, multiplier: 1.5, endTime: Date.now() + boostDuration };
+            showNotification("×1.5 капель на 2 минуты!");
+            break;
     }
     
     updateDisplay();
@@ -351,28 +379,81 @@ function buyCase() {
     saveGame();
 }
 
-// Обновление отображения цены кейса
-function updateCasePriceDisplay() {
-    const caseButton = document.querySelector('#cases-tab .upgrade-item');
-    if (caseButton) {
-        const priceText = caseButton.querySelector('strong').nextSibling;
-        if (priceText) {
-            priceText.textContent = `Цена: ${casePrice} капель`;
-        }
+// Покупка кейса
+function buyCase() {
+    const button = document.querySelector('#cases-tab .upgrade-item');
+    const price = parseInt(button.querySelector('.price-display').textContent);
+    
+    if (score < price) {
+        showNotification("Недостаточно капель!");
+        return;
     }
+    
+    score -= price;
+    
+    const random = Math.random();
+    let rarity = '';
+  
+  if (random < 0.004) rarity = 'mythic';      // 0.4% - мифический
+else if (random < 0.014) rarity = 'legendary'; // 1% - легендарный (0.4% + 1% = 1.4%)
+else if (random < 0.1) rarity = 'epic';      // 8.6% - эпический
+else if (random < 0.4) rarity = 'rare';      // 30% - редкий
+else rarity = 'common';                      // 60% - обычный                  // 48.6% - обычный
+    
+    const availableSkins = Object.keys(skins).filter(skinId => 
+        skins[skinId].rarity === rarity && 
+        skinId !== 'default' && 
+        !unlockedSkins.includes(skinId)
+    );
+    
+    if (availableSkins.length > 0) {
+        const wonSkin = availableSkins[Math.floor(Math.random() * availableSkins.length)];
+        unlockedSkins.push(wonSkin);
+        showNotification(`🎉 ${skins[wonSkin].name} (${rarity})!`);
+        loadSkins();
+    } else {
+        const compensation = Math.round(price * 0.5);
+        score += compensation;
+        showNotification(`Все скины ${rarity} есть! +${compensation} капель`);
+    }
+    
+    updateDisplay();
+    checkUpgradesAvailability();
+    saveGame();
 }
 
-// Загрузка скинов в инвентарь
+// Проверка доступности улучшений
+function checkUpgradesAvailability() {
+    const upgradeButtons = document.querySelectorAll('.upgrade-item');
+    
+    upgradeButtons.forEach(button => {
+        const priceElement = button.querySelector('span');
+        let price = 0;
+        
+        if (priceElement) {
+            price = parseInt(priceElement.textContent) || 0;
+        }
+        
+        const requiredLevel = parseInt(button.getAttribute('data-level')) || 1;
+        
+        if (score >= price && level >= requiredLevel) {
+            button.disabled = false;
+            button.style.background = 'lightblue';
+            button.style.cursor = 'pointer';
+        } else {
+            button.disabled = true;
+            button.style.background = '#7f8c8d';
+            button.style.cursor = 'not-allowed';
+        }
+    });
+}
+
+// Загрузка скинов
 function loadSkins() {
     skinsContainer.innerHTML = '';
     const allSkins = {...skins, ...clickSkins};
     
-    const sortedSkins = [...unlockedSkins].sort((a, b) => {
-        const rarityOrder = { 'common': 1, 'rare': 2, 'epic': 3, 'legendary': 4, 'path': 5 };
-        return rarityOrder[allSkins[b].rarity] - rarityOrder[allSkins[a].rarity];
-    });
-    
-    sortedSkins.forEach(skinId => {
+    unlockedSkins.forEach(skinId => {
         if (allSkins[skinId]) {
             const skin = allSkins[skinId];
             const skinItem = document.createElement('button');
@@ -388,8 +469,6 @@ function loadSkins() {
             skinsContainer.appendChild(skinItem);
         }
     });
-    
-    console.log('Загружено скинов в инвентарь:', unlockedSkins.length);
 }
 
 // Выбор скина
@@ -413,13 +492,13 @@ function showNotification(message) {
     }, 3000);
 }
 
-// Проверка повышения уровня
+// Проверка уровня
 function checkLevelUp() {
     while (exp >= maxExp) {
         level++;
         exp -= maxExp;
         maxExp = Math.round(maxExp * 1.04);
-        showNotification(`🎉 Уровень ${level} достигнут!`);
+        showNotification(`🎉 Уровень ${level}!`);
     }
     updateLevelDisplay();
 }
@@ -428,44 +507,16 @@ function checkLevelUp() {
 function updateDisplay() {
     scoreEl.textContent = Math.floor(score);
     addEl.textContent = addPerClick;
+    sunScoreEl.textContent = sunScore.toFixed(2);
 }
 
 // Обновление уровня
 function updateLevelDisplay() {
     levelEl.textContent = level;
-    expEl.textContent = exp;
+    expEl.textContent = Math.floor(exp);
     maxExpEl.textContent = maxExp;
     const progressPercent = (exp / maxExp) * 100;
     progressBar.style.width = `${progressPercent}%`;
-}
-
-// Проверка доступности улучшений
-function checkUpgradesAvailability() {
-    const upgradeButtons = document.querySelectorAll('.upgrade-item');
-    upgradeButtons.forEach(button => {
-        const priceElement = button.querySelector('span');
-        let price = 0;
-        
-        if (priceElement) {
-            price = parseInt(priceElement.textContent) || 0;
-        } else {
-            if (button.querySelector('strong') && button.querySelector('strong').textContent === 'Обычный кейс') {
-                price = casePrice;
-            }
-        }
-        
-        const requiredLevel = parseInt(button.getAttribute('data-level')) || 1;
-        
-        if (score >= price && level >= requiredLevel) {
-            button.disabled = false;
-            button.style.background = 'lightblue';
-            button.style.cursor = 'pointer';
-        } else {
-            button.disabled = true;
-            button.style.background = '#7f8c8d';
-            button.style.cursor = 'not-allowed';
-        }
-    });
 }
 
 // Управление панелями
@@ -473,9 +524,7 @@ function toggleShop() {
     document.getElementById('shop-panel').classList.toggle('active');
     document.getElementById('overlay').classList.toggle('active');
     mainContent.classList.toggle('shop-open');
-    if (document.getElementById('shop-panel').classList.contains('active')) {
-        checkUpgradesAvailability();
-    }
+    checkUpgradesAvailability();
 }
 
 function closeShop() {
@@ -503,7 +552,6 @@ function openShopTab(tabName) {
     document.querySelectorAll('.shop-content').forEach(tab => {
         tab.classList.remove('active');
     });
-    
     document.querySelectorAll('.shop-tab').forEach(tab => {
         tab.classList.remove('active');
     });
@@ -513,11 +561,22 @@ function openShopTab(tabName) {
     checkUpgradesAvailability();
 }
 
-// Автосохранение
-function startAutosave() {
+// Проверка бустов
+function startBoostChecker() {
     setInterval(() => {
-        saveGame();
-    }, 10000);
+        const now = Date.now();
+        let updated = false;
+        
+        for (const boostType in activeBoosts) {
+            if (activeBoosts[boostType].active && now > activeBoosts[boostType].endTime) {
+                activeBoosts[boostType].active = false;
+                activeBoosts[boostType].multiplier = 1;
+                updated = true;
+            }
+        }
+        
+        if (updated) saveGame();
+    }, 1000);
 }
 
 // Авто-кликер
@@ -525,14 +584,32 @@ setInterval(() => {
     if (addPerSecond > 0) {
         score += addPerSecond;
         updateDisplay();
-        checkUpgradesAvailability();
         saveGame();
     }
 }, 1000);
 
-window.addEventListener('beforeunload', () => {
+// Автосохранение
+setInterval(() => {
     saveGame();
-});
+}, 10000);
+
+// Инициализация игры
+function initGame() {
+    loadGame();
+    updateDisplay();
+    updateLevelDisplay();
+    loadSkins();
+    startChangingText();
+    checkSkinUnlocks();
+    checkUpgradesAvailability();
+    startBoostChecker();
+    
+    // Применяем текущий скин
+    const allSkins = {...skins, ...clickSkins};
+    if (currentSkin && allSkins[currentSkin]) {
+        buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
+    }
+}
 
 // Запуск игры
 initGame();
