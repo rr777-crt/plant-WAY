@@ -56,6 +56,11 @@ const skins = {
         url: 'https://media.contentapi.ea.com/content/dam/eacom/en-us/migrated-images/2017/02/newsmedia-pvzh-2-feb-ftimg-greenshadow.png.adapt.crop191x100.628p.png',
         rarity: 'mythic'
     },
+    'pea1': { 
+        name: 'ВСЕЛЕННАЯ 3', 
+        url: 'https://static.wikia.nocookie.net/plantsvs-zombies/images/c/c5/Peashooter_29.webp/revision/latest?cb=20250830052323&path-prefix=ru',
+        rarity: 'pea'
+    }
 };
 
 // Скины за клики (ПУТЬ)
@@ -95,55 +100,70 @@ const clickSkins = {
         url: 'https://pvsz2.ru/statics/plants-big/104.png',
         rarity: 'path',
         requiredClicks: 500000000000
+    },
+   'path7': { 
+        name: 'ПУТЬ: гороховая хватка', 
+        url: 'https://pvsz2.ru/statics/plants-big/127.png',
+        rarity: 'path',
+        requiredClicks: 6200000000000
     }
 };
 
 // Текста для меняющихся слов
 const changingTexts = [
     "Кликай быстрее!",
-  "привет", 
-  "Вау! ты играешь в скучный кликер?",
-  "абграбабара - Дейв",
+    "привет", 
+    "Вау! ты играешь в скучный кликер?",
+    "абграбабара - Дейв",
     "Зомби отдыхают... лол", 
-  "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!! подождитека...!",
+    "СМОТРИ В ИНФО ЛИСТЕ НИЧЕГО НЕТ!!! подождитека...!",
     "Стань НАКЛИКНУТЫМ КЛИКОМ КЛИКАМИ КЛИКОСИКИАМ!",
-  "попробуй также в Coockie Clicker!", 
+    "попробуй также в Coockie Clicker!", 
     "ты нищий?",
-  "Кликай медленее!",
-  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
+    "Кликай медленее!",
+    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
     "витамин D", 
-  "...",
-  "попытай удачи и иди в казик! ой то-есть открой кейс!", 
-  "витамин C ой.. фотосинтез... ой да пошло",
+    "...",
+     "следущая фраза не предсказывает будущее",
+    "будешь богатым",
+    "попытай удачи и иди в казик! ой то-есть открой кейс!", 
+    "витамин C ой.. фотосинтез... ой да пошло",
     "cool... so what the tung sahur - cringe",
-  "долго сидишь",
-  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в туалет. стоп я это уже говорил?",
+    "долго сидишь",
+    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в туалет. стоп я это уже говорил?",
     "меня зовут печенька?",
-  "ВЫЙДИ!",
-  "ВТОРАЯ ПОПЫТКА: ВЫЙДИ!!!!", "крутая система инвентаря?", 
-  "вау как дорого стоит +250 на клик!",
-    "... - второй раз", "ОМГ В ИНФ ЛИСТ ДОБАВЯТ ЧТО - то В 1.0.2?!?!?!",
-  "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали",
+    "ВЫЙДИ!",
+    "ВТОРАЯ ПОПЫТКА: ВЫЙДИ!!!!", 
+    "крутая система инвентаря?", 
+    "вау как дорого стоит +250 на клик!",
+    "... - второй раз", 
+    "ОМГ В ИНФ ЛИСТ ДОБАВЯТ ЧТО - то В 1.0.2?!?!?!",
+    "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти в см знаешь куда... и не шали",
     "солнцы это полезно?",
-  "ВОБЩЕТО СОЛНЦЫ ЕТО НЕ КЛАСИВОЕ НАЗВАНИЕ", 
-  "О НОУ, СОЛНЦЕ ПАДАЕТ!", 
-  "где мой тако?",
-  "следущая фраза предсказывает будущее",
-   "будешь нищим",
-   "ЛОЛ!",
-   "мен лень!!!!!!!!!!!!",
-   "Также будь хорошим и не жди обновления ивент: солнечное затмение",
-   "я говорю всегда правду",
-   "я не плохой и не люблю людей которые долбят телефон",
-   "стэндоф 2 ... прекрати",
-   "А ТЫ ИГЛАЕС В ЛОБЛОКС?!?!?!",
-   "слушай... советую еакопить много солнц",
-   "...  3 раз... лол зачем?",
-   "АКЦИЯ! +0% КО ВСЕМ ЦЕНАМ!!",
-   "зайди в тг пж",
-   "СКОЛЬКО СДЕСЬ УЖЕ ФРАЗ?!",
-   "бес гламатный - какойто чел... хз... не правда",
-   "ты богатый, ты хороший! держи в себя руках и не пальцем комната..."
+    "ВОБЩЕТО СОЛНЦЫ ЕТО НЕ КЛАСИВОЕ НАЗВАНИЕ", 
+    "О НОУ, СОЛНЦЕ ПАДАЕТ!", 
+    "где мой тако?",
+    "следущая фраза предсказывает будущее",
+    "будешь нищим",
+    "ЛОЛ!",
+    "мен лень!!!!!!!!!!!!",
+    "Также будь хорошим и не жди обновления ивент: солнечное затмение",
+    "я говорю всегда правду",
+    "я не плохой и не люблю людей которые долбят телефон",
+    "стэндоф 2 ... прекрати",
+    "А ТЫ ИГЛАЕС В ЛОБЛОКС?!?!?!",
+    "слушай... советую еакопить много солнц",
+    "...  3 раз... лол зачем?",
+    "АКЦИЯ! +0% КО ВСЕМ ЦЕНАМ!!",
+    "зайди в тг пж",
+    "СКОЛЬКО СДЕСЬ УЖЕ ФРАЗ?!",
+    "бес гламатный - какойто чел... хз... не правда",
+    "ты богатый, ты хороший! держи в себя руках и не пальцем комната...",
+  "что здесь ещё придумать?",
+  "ТЫ ПОЛУИЛ ГОРОХНЫЙ?",
+  "О НОУ! ТУАЛЕТ ПАДАЕТ",
+  "ты видишь как ты играешь в эту игру, которую создовали ??? веков ,а точнее миллисикунд",
+  "1.0.5 - это круто"
 ];
 
 // Элементы DOM
@@ -244,39 +264,9 @@ buttonEl.onclick = function() {
     saveGame();
 };
 
-// Проверка разблокировки скинов
-function checkSkinUnlocks() {
-    const allSkins = {...skins, ...clickSkins};
-    let unlockedNew = false;
-    
-    for (const skinId in allSkins) {
-        if (skinId === 'default') continue;
-        
-        if (!unlockedSkins.includes(skinId)) {
-            const skin = allSkins[skinId];
-            
-            if (skin.rarity === 'path' && skin.requiredClicks && totalClicks >= skin.requiredClicks) {
-                unlockedSkins.push(skinId);
-                showNotification(`🎉 Разблокирован скин: ${skin.name}!`);
-                unlockedNew = true;
-            }
-        }
-    }
-    
-    if (unlockedNew) {
-        loadSkins();
-        saveGame();
-    }
-}
-
-// Покупка улучшения (ПРОСТАЯ ВЕРСИЯ)
-function buyUpgrade(type, power, basePrice) {
-    const button = event.target.closest('.upgrade-item');
-    const priceElement = button.querySelector('span');
-    const currentPrice = parseInt(priceElement.textContent);
-    const requiredLevel = parseInt(button.getAttribute('data-level'));
-    
-    if (score < currentPrice) {
+// Покупка улучшения клика
+function buyUpgrade(power, price, requiredLevel = 1) {
+    if (score < price) {
         showNotification("Недостаточно капель!");
         return;
     }
@@ -286,34 +276,44 @@ function buyUpgrade(type, power, basePrice) {
         return;
     }
     
-    score -= currentPrice;
-    
-    if (type.startsWith('click')) {
-        addPerClick += power;
-        addEl.textContent = addPerClick;
-    } else if (type.startsWith('autoclick')) {
-        addPerSecond += power;
-    }
-    
-    const newPrice = Math.round(currentPrice * 1.10);
-    priceElement.textContent = newPrice;
+    score -= price;
+    addPerClick += power;
     
     updateDisplay();
     checkUpgradesAvailability();
     saveGame();
-    showNotification("Улучшение куплено!");
+    showNotification(`Улучшение куплено! +${power} на клик`);
+}
+
+// Покупка авто-кликера
+function buyAutoClicker(power, price, requiredLevel = 1) {
+    if (score < price) {
+        showNotification("Недостаточно капель!");
+        return;
+    }
+    
+    if (level < requiredLevel) {
+        showNotification(`Требуется уровень ${requiredLevel}!`);
+        return;
+    }
+    
+    score -= price;
+    addPerSecond += power;
+    
+    updateDisplay();
+    checkUpgradesAvailability();
+    saveGame();
+    showNotification(`Авто-кликер куплен! +${power}/сек`);
 }
 
 // Обмен солнц
 function buySunExchange(drops, sunCost) {
-    const button = event.target.closest('.upgrade-item');
-    const requiredLevel = parseInt(button.getAttribute('data-level'));
-    
     if (sunScore < sunCost) {
         showNotification("Недостаточно солнц!");
         return;
     }
     
+    const requiredLevel = parseInt(event.target.closest('.upgrade-item').getAttribute('data-level'));
     if (level < requiredLevel) {
         showNotification(`Требуется уровень ${requiredLevel}!`);
         return;
@@ -372,6 +372,10 @@ function buyItem(itemType) {
             activeBoosts.drop = { active: true, multiplier: 1.5, endTime: Date.now() + boostDuration };
             showNotification("×1.5 капель на 2 минуты!");
             break;
+          case 'sunBoost2':
+            activeBoosts.sun = { active: true, multiplier: 3, endTime: Date.now() + boostDuration };
+            showNotification("×3 солнц на 3 минуты!");
+            break;
     }
     
     updateDisplay();
@@ -379,7 +383,7 @@ function buyItem(itemType) {
     saveGame();
 }
 
-// Покупка кейса
+// Покупка кейса с новыми шансами
 function buyCase() {
     const button = document.querySelector('#cases-tab .upgrade-item');
     const price = parseInt(button.querySelector('.price-display').textContent);
@@ -393,12 +397,13 @@ function buyCase() {
     
     const random = Math.random();
     let rarity = '';
-  
-  if (random < 0.004) rarity = 'mythic';      // 0.4% - мифический
-else if (random < 0.014) rarity = 'legendary'; // 1% - легендарный (0.4% + 1% = 1.4%)
-else if (random < 0.1) rarity = 'epic';      // 8.6% - эпический
-else if (random < 0.4) rarity = 'rare';      // 30% - редкий
-else rarity = 'common';                      // 60% - обычный                  // 48.6% - обычный
+    
+    if (random < 0.00055) rarity = 'pea';           // 0.055% - ГОРОХНЫЙ
+    else if (random < 0.00455) rarity = 'mythic';   // 0.4% - мифический
+    else if (random < 0.01455) rarity = 'legendary'; // 1% - легендарный
+    else if (random < 0.10055) rarity = 'epic';     // 8.6% - эпический
+    else if (random < 0.40055) rarity = 'rare';     // 30% - редкий
+    else rarity = 'common';                         // 59.945% - обычный
     
     const availableSkins = Object.keys(skins).filter(skinId => 
         skins[skinId].rarity === rarity && 
@@ -409,10 +414,16 @@ else rarity = 'common';                      // 60% - обычный            
     if (availableSkins.length > 0) {
         const wonSkin = availableSkins[Math.floor(Math.random() * availableSkins.length)];
         unlockedSkins.push(wonSkin);
-        showNotification(`🎉 ${skins[wonSkin].name} (${rarity})!`);
+        
+        if (rarity === 'pea') {
+            showNotification(`🎉🎉🎉 НЕВЕРОЯТНО! ${skins[wonSkin].name} (ГОРОХНЫЙ)!!! 🎉🎉🎉`);
+        } else {
+            showNotification(`🎉 ${skins[wonSkin].name} (${rarity})!`);
+        }
+        
         loadSkins();
     } else {
-        const compensation = Math.round(price * 0.5);
+        const compensation = Math.round(price * (rarity === 'pea' ? 10 : 0.5));
         score += compensation;
         showNotification(`Все скины ${rarity} есть! +${compensation} капель`);
     }
@@ -446,6 +457,31 @@ function checkUpgradesAvailability() {
             button.style.cursor = 'not-allowed';
         }
     });
+}
+
+// Проверка разблокировки скинов
+function checkSkinUnlocks() {
+    const allSkins = {...skins, ...clickSkins};
+    let unlockedNew = false;
+    
+    for (const skinId in allSkins) {
+        if (skinId === 'default') continue;
+        
+        if (!unlockedSkins.includes(skinId)) {
+            const skin = allSkins[skinId];
+            
+            if (skin.rarity === 'path' && skin.requiredClicks && totalClicks >= skin.requiredClicks) {
+                unlockedSkins.push(skinId);
+                showNotification(`🎉 Разблокирован скин: ${skin.name}!`);
+                unlockedNew = true;
+            }
+        }
+    }
+    
+    if (unlockedNew) {
+        loadSkins();
+        saveGame();
+    }
 }
 
 // Загрузка скинов
