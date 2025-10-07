@@ -1,7 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>грохострел кликер: ПУТЬ! v:1.0.3</title>
+    <title>грохострел кликер: ПУТЬ! v:1.0.5</title>
     <meta name="description" content="грохострел">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
@@ -27,13 +28,13 @@
 
         <div class="update-section">
             <div class="update-content">
-                <h1>ОБНОВЛЕНИЕ 1.0.4</h1>
-                <p>- новый скин в кейсе! 0.055%...</p>
-                <p>- новые 6 улучшение ( +2 )</p>
-                <p>- исправление ошибок</p>
-                <p>- новые 7 фраз</p>
-                <p>- новый скин за путь</p>
-                <p>- новый предмет</p>
+                <h1>ОБНОВЛЕНИЕ 1.0.5 - СОЛНЕЧНОЕ ЗАТМЕНИЕ</h1>
+                <p>- событие: Солнечное затмение! </p>
+                <p>- новые 2 улучшения ( +1 )</p>
+              <p>- новые 10 фраз</p>
+               <p>- новый предмет!</p>
+                
+                <p>- Исправление ошибок и баланс</p>
                 
                 <div class="interface-container">
                     <div class="level-info">
@@ -47,6 +48,7 @@
                     <div class="interface-buttons">
                         <button id="inventory-btn" class="interface-btn" onclick="toggleInventory()">Инвентарь</button>
                         <button id="shop-btn" class="interface-btn" onclick="toggleShop()">Магазин</button>
+                        <button id="event-btn" class="interface-btn event-btn" onclick="toggleEvent()">Ивент</button>
                     </div>
                 </div>
             </div>
@@ -56,6 +58,7 @@
             <div class="info-content">
                 <h1>ИНФО ЛИСТ</h1>
                 <p>Телеграм: t.me/grohostrelclicker</p>
+                <p>в версии 1.0.7 добавят силы! которые бафают любое значение!</p>
             </div>
         </div>
     </div>
@@ -74,9 +77,7 @@
         </div>
 
         <div id="upgrades-tab" class="shop-content active">
-            <!-- Обмен солнц -->
-         
-            <!-- Улучшения кликаитловяколдачпвл -->
+            <!-- Улучшения клика -->
             <button class="upgrade-item" onclick="buyUpgrade(1, 100, 1)" data-level="1">
                 <strong>+1 на клик</strong><br>
                 Цена: <span>100</span> капель<br>
@@ -147,6 +148,12 @@
                 Цена: <span>20000000000</span> капель<br>
                 <span class="level-requirement">Требуется уровень: 64</span>
             </button>
+          
+            <button class="upgrade-item" onclick="buyUpgrade(50000, 100000000000, 76)" data-level="76">
+                <strong>+50000 на клик</strong><br>
+                Цена: <span>100000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 76</span>
+            </button>
 
             <!-- Авто-кликеры -->
             <button class="upgrade-item" onclick="buyAutoClicker(0.2, 50, 1)" data-level="1">
@@ -205,17 +212,24 @@
                 <span class="level-requirement">Требуется уровень: 35</span>
             </button>
             <button class="upgrade-item" onclick="buyAutoClicker(500000,25000000000, 52)" data-level="52">
-                <strong>+25000000000/сек авто-клик</strong><br>
-                Цена: <span>40000000</span> капель<br>
+                <strong>+500000/сек авто-клик</strong><br>
+                Цена: <span>25000000000</span> капель<br>
                 <span class="level-requirement">Требуется уровень: 52</span>
             </button>
-            <button class="upgrade-item" onclick="buyAutoClicker(1000000,100000000000, 29)" data-level="75">
+            <button class="upgrade-item" onclick="buyAutoClicker(1000000,100000000000, 75)" data-level="75">
                 <strong>+1000000/сек авто-клик</strong><br>
                 Цена: <span>100000000000</span> капель<br>
                 <span class="level-requirement">Требуется уровень: 75</span>
             </button>
-             <!--солнцы шаолпиоко -->
-             <button class="upgrade-item" onclick="buySunExchange(100, 1)" data-level="3">
+          
+             <button class="upgrade-item" onclick="buyAutoClicker(5000000,2500000000000, 80)" data-level="80">
+                <strong>+5000000/сек авто-клик</strong><br>
+                Цена: <span>2500000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 80</span>
+            </button>
+
+            <!-- Обмен солнц -->
+            <button class="upgrade-item" onclick="buySunExchange(100, 1)" data-level="3">
                 <strong>100 капель</strong><br>
                 Цена: 1 солнце<br>
                 <span class="level-requirement">Требуется уровень: 3</span>
@@ -235,17 +249,22 @@
                 Цена: 20 солнц<br>
                 <span class="level-requirement">Требуется уровень: 20</span>
             </button>
-             <button class="upgrade-item" onclick="buySunExchange(1000000, 28)" data-level="28">
+            <button class="upgrade-item" onclick="buySunExchange(1000000, 50)" data-level="28">
                 <strong>1000000 капель</strong><br>
                 Цена: 50 солнц<br>
                 <span class="level-requirement">Требуется уровень: 28</span>
             </button>
-             <button class="upgrade-item" onclick="buySunExchange(19000000, 41)" data-level="41">
+            <button class="upgrade-item" onclick="buySunExchange(19000000, 100)" data-level="41">
                 <strong>19000000 капель</strong><br>
-                Цена:100 солнц<br>
+                Цена: 100 солнц<br>
                 <span class="level-requirement">Требуется уровень: 41</span>
             </button>
-
+          
+             <button class="upgrade-item" onclick="buySunExchange(18500000, 500)" data-level="61">
+                <strong>185000000 капель</strong><br>
+                Цена: 500 солнц<br>
+                <span class="level-requirement">Требуется уровень: 61</span>
+            </button>
         </div>
 
         <div id="cases-tab" class="shop-content">
@@ -299,11 +318,18 @@
                 <span style="font-size: 12px;">На 2 минуты ×1.5 капель за клик</span><br>
                 <span class="level-requirement">Требуется уровень: 25</span>
             </button>
-           <button class="upgrade-item" onclick="buyItem('sunBoost2')" data-level="30" data-price="20" data-currency="suns">
+            <button class="upgrade-item" onclick="buyItem('sunBoost2')" data-level="30" data-price="20" data-currency="suns">
                 <strong>Амулет фотосинтеза 2.0</strong><br>
                 Цена: <span class="price-display">20</span> солнц<br>
                 <span style="font-size: 12px;">На 3 минуты ×3 солнц за клик</span><br>
                 <span class="level-requirement">Требуется уровень: 30</span>
+            </button>
+          
+             <button class="upgrade-item" onclick="buyItem('???')" data-level="200" data-price="750" data-currency="suns">
+                <strong>???</strong><br>
+                Цена: <span class="price-display">750</span> солнц<br>
+                <span style="font-size: 12px;">ч...что это?</span><br>
+                <span class="level-requirement">Требуется уровень: 200</span>
             </button>
         </div>
     </div>
@@ -317,7 +343,112 @@
         <div id="skins-container" class="skins-grid"></div>
     </div>
 
+    <!-- Ивент панель -->
+    <div id="event-panel" class="event-panel">
+        <div class="shop-header">
+            <h2>Солнечное затмение</h2>
+            <button class="close-btn" onclick="closeEvent()">×</button>
+        </div>
+        
+        <div class="event-timer">
+            До конца затмения: <span id="event-timer">05:00</span>
+        </div>
+        
+        <div class="event-currency">
+            Осколки тёмного солнца: <span id="shard-score">0</span>
+        </div>
+        
+        <div class="shop-tabs">
+            <button class="shop-tab active" onclick="openEventTab('stage1')">1 Этап</button>
+            <button class="shop-tab" onclick="openEventTab('stage2')">2 Этап</button>
+            <button class="shop-tab" onclick="openEventTab('stage3')">3 Этап</button>
+            <button class="shop-tab" onclick="openEventTab('stage4')">4 Этап</button>
+        </div>
+
+    <!-- 1 ЭТАП -->
+<div id="stage1-tab" class="shop-content active">
+    <button class="upgrade-item" onclick="buyEventUpgrade('shard1', 250, 1)" data-stage="1">
+        <strong>+1 осколок на клик</strong><br>
+        Цена: <span>250</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('shard2', 3000, 1)" data-stage="1">
+        <strong>+5 осколков на клик</strong><br>
+        Цена: <span>3000</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('shard3', 6500, 1)" data-stage="1">
+        <strong>+15 осколков на клик</strong><br>
+        Цена: <span>6500</span> осколков<br>
+    </button>
+</div>
+
+<!-- 2 ЭТАП -->
+<div id="stage2-tab" class="shop-content">
+    <button class="upgrade-item stage-locked" id="stage2-lock" onclick="buyStageAccess(2, 1500)">
+        <strong>🔒 Разблокировать 2 Этап</strong><br>
+        Цена: <span>1500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('drop1', 500, 2)" data-stage="2">
+        <strong>+45 капель на клик</strong><br>
+        Цена: <span>500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('drop2', 2500, 2)" data-stage="2">
+        <strong>+250 капель на клик</strong><br>
+        Цена: <span>2500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('drop3', 7500, 2)" data-stage="2">
+        <strong>+1000 капель на клик</strong><br>
+        Цена: <span>7500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('drop4', 25000, 2)" data-stage="2">
+        <strong>+3500 капель на клик</strong><br>
+        Цена: <span>25000</span> осколков<br>
+    </button>
+</div>
+
+<!-- 3 ЭТАП -->
+<div id="stage3-tab" class="shop-content">
+    <button class="upgrade-item stage-locked" id="stage3-lock" onclick="buyStageAccess(3, 3250)">
+        <strong>🔒 Разблокировать 3 Этап</strong><br>
+        Цена: <span>3250</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventCase()" data-stage="3">
+        <strong>Кейс тёмного солнца</strong><br>
+        Цена: <span>666</span> осколков<br>
+        <div style="font-size: 12px; margin-top: 5px;">
+            Шансы:<br>
+            <span style="color: #27ae60">65% - Обычный</span><br>
+            <span style="color: #3498db">22% - Редкий</span><br>
+            <span style="color: #9b59b6">5% - Эпический</span><br>
+            <span style="color: #f39c12">2.4% - Легендарный</span><br>
+            <span style="color: #e74c3c">0.5% - Мифический</span><br>
+            <span style="color: #000000">0.1% - ТЁМНЫЙ</span>
+        </div>
+    </button>
+</div>
+
+<!-- 4 ЭТАП -->
+<div id="stage4-tab" class="shop-content">
+    <button class="upgrade-item stage-locked" id="stage4-lock" onclick="buyStageAccess(4, 17500)">
+        <strong>🔒 Разблокировать 4 Этап</strong><br>
+        Цена: <span>17500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('sun1', 5000, 4)" data-stage="4">
+        <strong>+0.002 солнца на клик</strong><br>
+        Цена: <span>5000</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('level', 12500, 4)" data-stage="4">
+        <strong>+3 уровня</strong><br>
+        Цена: <span>12500</span> осколков<br>
+    </button>
+    <button class="upgrade-item" onclick="buyEventUpgrade('megaDrop', 100000, 4)" data-stage="4">
+        <strong>+1,000,000,000 капель</strong><br>
+        Цена: <span>100000</span> осколков<br>
+    </button>
+</div>
+    </div>
+
     <div id="notification" class="notification"></div>
+    <div id="event-notification" class="event-notification"></div>
     <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
 
     <script src="main.js"></script>
