@@ -26,6 +26,10 @@ body {
     transform: translateX(-300px);
 }
 
+.main-content.event-open {
+    transform: translateX(300px);
+}
+
 header {
     background-color: white;
     height: 50px;
@@ -167,6 +171,22 @@ main {
     color: black;
 }
 
+.event-btn {
+    background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+    color: white !important;
+    border: 2px solid #000 !important;
+    animation: event-glow 2s infinite alternate;
+}
+
+@keyframes event-glow {
+    from {
+        box-shadow: 0 0 10px #e74c3c;
+    }
+    to {
+        box-shadow: 0 0 20px #c0392b, 0 0 30px #e74c3c;
+    }
+}
+
 #shop-panel {
     position: fixed;
     top: 0;
@@ -183,6 +203,44 @@ main {
 
 #shop-panel.active {
     right: 0;
+}
+
+.event-panel {
+    position: fixed;
+    top: 0;
+    left: -400px;
+    width: 300px;
+    height: 100vh;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+}
+
+.event-panel.active {
+    left: 0;
+}
+
+.event-timer {
+    background: #e74c3c;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.event-currency {
+    background: #8e44ad;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .shop-header {
@@ -251,6 +309,11 @@ main {
     background: #7f8c8d;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+.stage-locked {
+    background: #7f8c8d !important;
+    opacity: 0.7;
 }
 
 .level-requirement {
@@ -352,6 +415,33 @@ main {
     display: block;
 }
 
+.event-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1002;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    display: none;
+}
+
+.event-notification.show {
+    display: block;
+    animation: event-pulse 0.5s;
+}
+
+@keyframes event-pulse {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+    70% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
 .info-section {
     padding: 30px 20px;
     background: white;
@@ -393,5 +483,14 @@ main {
     #button {
         width: 200px;
         height: 200px;
+    }
+    
+    .interface-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .interface-btn {
+        min-width: 140px;
     }
 }
