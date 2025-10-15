@@ -494,3 +494,323 @@ main {
         min-width: 140px;
     }
 }
+ 
+/* Добавьте эти стили в существующий CSS файл */
+
+.power-slot {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    z-index: 10;
+}
+
+.equipped-power {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    border: 3px solid gold;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.powers-panel {
+    position: fixed;
+    top: 0;
+    left: -400px;
+    width: 300px;
+    height: 100vh;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    transition: left 0.3s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+}
+
+.powers-panel.active {
+    left: 0;
+}
+
+.powers-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.powers-tab {
+    background: #2c3e50;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    flex: 1;
+}
+
+.powers-tab.active {
+    background: #34495e;
+}
+
+.powers-content {
+    display: none;
+}
+
+.powers-content.active {
+    display: block;
+}
+
+.amulet-info {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.amulet-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.powers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.power-item {
+    background: #34495e;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.power-item.active {
+    background: #2ecc71;
+    border: 2px solid gold;
+}
+
+.power-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    margin: 0 auto 10px;
+}
+
+.powers-btn {
+    background: linear-gradient(45deg, #9b59b6, #8e44ad) !important;
+    color: white !important;
+    border: 2px solid #000 !important;
+}
+
+@media (max-width: 768px) {
+    .power-slot {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin: 0 auto 20px;
+    }
+    
+    .powers-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Стили для системы перерождения */
+.rebirth-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 300px;
+    height: 100vh;
+    background: linear-gradient(135deg, #8e44ad, #9b59b6);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+}
+
+.rebirth-panel.active {
+    right: 0;
+}
+
+.divine-sun-counter {
+    color: gold;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.current-rebirth {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.rebirth-requirements {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.rebirth-requirement {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+.rebirth-requirement.met {
+    color: #2ecc71;
+}
+
+.rebirth-requirement.not-met {
+    color: #e74c3c;
+}
+
+.rebirth-btn {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.rebirth-btn:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+}
+
+.rebirth-btn:not(:disabled):hover {
+    transform: scale(1.05);
+}
+
+.rebirth-warning {
+    color: #f39c12;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.god-upgrades {
+    margin-top: 20px;
+}
+
+.god-upgrades h3 {
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.god-upgrades-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.god-upgrade-item {
+    background: #34495e;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.god-upgrade-item:disabled {
+    background: #7f8c8d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.god-upgrade-item:not(:disabled):hover {
+    background: #2c3e50;
+}
+
+.god-upgrade-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.god-upgrade-description {
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: #bdc3c7;
+}
+
+.god-upgrade-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #95a5a6;
+}
+
+.rebirth-interface-btn {
+    background: linear-gradient(45deg, #8e44ad, #9b59b6) !important;
+    color: white !important;
+    border: 2px solid #000 !important;
+}
+
+.rebirth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #8e44ad;
+}
+
+.rebirth-overlay.active {
+    display: flex;
+}
+
+/* Анимация для смены фраз */
+.changing-text {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.changing-text:hover {
+    color: #27ae60;
+    transform: scale(1.05);
+}
