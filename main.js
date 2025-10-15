@@ -1,12 +1,5 @@
 'use strict';
 
-// НАСТРОЙКИ ВРЕМЕНИ ИВЕНТА
-const EVENT_SETTINGS = {
-    firstEventDelay: 10 * 60 * 1000,    // 1 минута до первого ивента
-    eventDuration: 5 * 60 * 1000,      // 5 минут длительность ивента
-    eventCooldown: 10 * 60 * 1000       // 1 минута между ивентами
-};
-
 // Переменные игры
 let score = 0;
 let addPerClick = 1;
@@ -21,23 +14,32 @@ let casePrice = 1250;
 let sunScore = 0;
 let sunPerClick = 0.01;
 
-// Ивент переменные
-let darkShards = 0;
-let shardsPerClick = 0;
-let unlockedStages = [1];
-let eventActive = false;
-let eventTimeLeft = 0;
-let eventInterval;
-let nextEventTime = EVENT_SETTINGS.firstEventDelay;
-let eventCooldownTime = 0;
-let eventCooldownInterval;
+// Система перерождения
+let divineSunScore = 0;
+let rebirthCount = 0;
+let godUpgrades = {
+    shopDiscount: { bought: 0, max: 5, basePrice: 1, effect: 0.01 },
+    itemDiscount: { bought: 0, max: 5, basePrice: 1, effect: 0.01 },
+    dropPerClick: { bought: 0, max: 10, basePrice: 1, effect: 0.005 },
+    autoClick: { bought: 0, max: 10, basePrice: 1, effect: 0.01 },
+    expBoost: { bought: 0, max: 20, basePrice: 1, effect: 0.10 }
+};
+
+// Требования для перерождения
+const rebirthRequirements = [
+    { drops: 1000000000, suns: 0, skins: [] },
+    { drops: 333333333333, suns: 100, skins: [] },
+    { drops: 500000000000000, suns: 200, skins: ['pea1'] },
+    { drops: 1000000000000000, suns: 400, skins: ['premium_pea1'] },
+    { drops: 1000000000000000000, suns: 500, skins: [] }
+];
 
 // Система множителей цен
 let priceMultipliers = {
     upgrades: {},
     autoClickers: {},
     sunExchanges: {},
-    eventUpgrades: {}
+    powers: {}
 };
 
 // Бусты
@@ -83,8 +85,8 @@ const skins = {
         rarity: 'mythic'
     },
     'pea1': { 
-        name: 'ВСЕЛЕННАЯ 3', 
-        url: 'https://static.wikia.nocookie.net/plantsvs-zombies/images/c/c5/Peashooter_29.webp/revision/latest?cb=20250830052323&path-prefix=ru',
+        name: 'захотел...', 
+        url: 'https://img-webcalypt.ru/img/thumb/lg/images/meme-templates/ZdjVHzFr5DQEF2rSDWlfFssh8Cd1UjvW.jpg.jpg',
         rarity: 'pea'
     }
 };
@@ -107,13 +109,13 @@ const clickSkins = {
         name: 'ПУТЬ: теневой', 
         url: 'https://avatars.mds.yandex.net/i?id=69a2b4239be746c0863ff1d2bf2c2a75_l-8972142-images-thumbs&n=13',
         rarity: 'path',
-        requiredClicks: 1000000
+        requiredClicks: 100000
     },
     'path4': { 
         name: 'ПУТЬ: грохомёт', 
         url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/b/bf/Gatling_Pea_Fixed.png/revision/latest/thumbnail/width/360/height/360?cb=20190519095836&path-prefix=ru',
         rarity: 'path',
-        requiredClicks: 1000000000
+        requiredClicks: 1000000
     },
     'path5': { 
         name: 'ПУТЬ: 2', 
@@ -127,11 +129,17 @@ const clickSkins = {
         rarity: 'path',
         requiredClicks: 500000000000
     },
-   'path7': { 
+    'path7': { 
+        name: 'ПУТЬ: ЭЛЕКТРИЧЕСКИЙ грохострел', 
+        url: 'https://png.klev.club/uploads/posts/2024-04/png-klev-club-f52r-p-gorokhostrel-png-12.png',
+        rarity: 'path',
+        requiredClicks: 6200000000000
+    },
+    'path8': { 
         name: 'ПУТЬ: гороховая хватка', 
         url: 'https://pvsz2.ru/statics/plants-big/127.png',
         rarity: 'path',
-        requiredClicks: 6200000000000
+        requiredClicks: 333000000000000
     }
 };
 
@@ -143,7 +151,7 @@ const darkSkins = {
         rarity: 'common'
     },
     'dark_rare1': { 
-        name: 'тёмная материя грохострела ( эм.. что?) ', 
+        name: 'тёмная материя грохострела', 
         url: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/e/e1/Goopeashooter.png/revision/latest?cb=20190928065425&path-prefix=ru',
         rarity: 'rare'
     },
@@ -169,6 +177,120 @@ const darkSkins = {
     }
 };
 
+// ДОПОЛНИТЕЛЬНЫЕ СКИНЫ ДЛЯ ДОРОГОГО КЕЙСА
+const premiumSkins = {
+    'premium_common1': { 
+        name: 'нет грохострела', 
+        url: 'https://static.wikia.nocookie.net/pvz-fusion/images/1/1e/PeaNut.png/revision/latest?cb=20250119164836&path-prefix=ru',
+        rarity: 'common'
+    },
+    'premium_rare1': { 
+        name: 'грохострел', 
+        url: 'https://pvsz2.ru/statics/plants-big/171.png',
+        rarity: 'rare'
+    },
+    'premium_epic2': { 
+        name: 'огненый 2.0', 
+        url: 'https://i.pinimg.com/236x/6e/4f/da/6e4fda417ab8bc18862e3a643c0fc49c.jpg',
+        rarity: 'epic'
+    },
+    'premium_legendary1': { 
+        name: 'не правильно!', 
+        url: 'https://static.wikia.nocookie.net/pvz-fusion/images/1/1f/SuperTallNut_0.png/revision/latest/thumbnail/width/360/height/450?cb=20250119184636&path-prefix=ru',
+        rarity: 'legendary'
+    },
+    'premium_pea1': { 
+        name: '360 НОУ СКОП', 
+        url: 'https://static.wikia.nocookie.net/pvz-fusion/images/4/4d/SniperPea_0.png/revision/latest/scale-to-width/360?cb=20250119140443&path-prefix=ru',
+        rarity: 'pea'
+    }
+};
+
+// Система Сил
+let amuletPrice = 1000000;
+let unlockedPowers = [];
+let equippedPower = null;
+let powerEffects = {};
+let powerIntervals = {};
+
+const powers = {
+    'sunflower': {
+        name: 'Подсолнух',
+        rarity: 'common',
+        effect: 'sunPerClick',
+        value: 0.01,
+        image: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/3/31/Sunflower_HD.png/revision/latest?cb=20220211160002&path-prefix=ru'
+    },
+    'squash': {
+        name: 'Кабачок',
+        rarity: 'common',
+        effect: 'dropPerSecond',
+        value: 0.072,
+        image: 'https://pvsz2.ru/statics/plants-big/93.png'
+    },
+    'walnut': {
+        name: 'Орех',
+        rarity: 'common',
+        effect: 'dropPerClick',
+        value: 0.03,
+        image: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/5/50/HD_%D0%9E%D1%80%D0%B5%D1%85_%D0%B8%D0%B7_%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%B8.png/revision/latest?cb=20220211210323&path-prefix=ru'
+    },
+    'potato': {
+        name: 'Картошка-мина',
+        rarity: 'rare',
+        effect: 'periodicDrops',
+        value: 0.1,
+        interval: 115000,
+        image: 'https://pvsz2.ru/statics/plants-big/72.png'
+    },
+    'chomper': {
+        name: 'Чомпер',
+        rarity: 'rare',
+        effect: 'shopDiscount',
+        value: 0.09,
+        image: 'https://pvsz2.ru/statics/plants-big/18.png'
+    },
+    'garlic': {
+        name: 'Чеснок',
+        rarity: 'epic',
+        effect: 'combo',
+        value: 0.055,
+        autoBuyInterval: 300000,
+        autoBuyAmount: 3,
+        image: 'https://pvsz2.ru/statics/plants-big/16.png'
+    },
+    'triplesunflower': {
+        name: 'Тройной Подсолнух',
+        rarity: 'epic',
+        effect: 'sunPerClick',
+        value: 0.03,
+        image: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/d/dc/Dirt_sun.png/revision/latest?cb=20200526085843&path-prefix=ru'
+    },
+    'cabbage': {
+        name: 'Капуста',
+        rarity: 'legendary',
+        effect: 'itemDiscount',
+        value: 0.05,
+        image: 'https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/3/3f/Cabbage-pult.png/revision/latest?cb=20201123070549&path-prefix=ru'
+    },
+    'darkrose': {
+        name: 'Мрачная Роза',
+        rarity: 'mythic',
+        effect: 'comboAdvanced',
+        value: 0.07,
+        autoBuyInterval: 210000,
+        image: 'https://pvsz2.ru/statics/plants-big/39.png'
+    },
+    'primitivesunflower': {
+        name: 'Первобытный Подсолнух',
+        rarity: 'pea',
+        effect: 'ultimate',
+        value: 0.04,
+        sunInterval: 240000,
+        image: 'https://pvsz2.ru/statics/plants-big/76.png'
+    }
+};
+
 // Текста для меняющихся слов
 const changingTexts = [
     "Кликай быстрее!",
@@ -184,7 +306,7 @@ const changingTexts = [
     "если честно эта игра то это сайт типо игры где ты кликаешь и зарабатывавешь капли воды хотя можешь пойти на кухню и попить воды",
     "витамин D", 
     "...",
-     "следущая фраза не предсказывает будущее",
+    "следущая фраза не предсказывает будущее",
     "будешь богатым",
     "попытай удачи и иди в казик! ой то-есть открой кейс!", 
     "витамин C ой.. фотосинтез... ой да пошло",
@@ -219,11 +341,40 @@ const changingTexts = [
     "СКОЛЬКО СДЕСЬ УЖЕ ФРАЗ?!",
     "бес гламатный - какойто чел... хз... не правда",
     "ты богатый, ты хороший! держи в себя руках и не пальцем комната...",
-  "что здесь ещё придумать?",
-  "ТЫ ПОЛУИЛ ГОРОХНЫЙ?",
-  "О НОУ! ТУАЛЕТ ПАДАЕТ",
-  "ты видишь как ты играешь в эту игру, которую создовали ??? веков ,а точнее миллисикунд",
-  "1.0.5 - это круто"
+    "что здесь ещё придумать?",
+    "ТЫ ПОЛУИЛ ГОРОХНЫЙ?",
+    "О НОУ! ТУАЛЕТ ПАДАЕТ",
+    "ты видишь как ты играешь в эту игру, которую создовали ??? веков ,а точнее миллисикунд",
+    "1.0.5 - это круто",
+    "привет",
+    "это уже долго длится",
+    "ЗНАЕШЬ! ТЫ НЕ ГЛУПЫЙ!!!! ТЫ...",
+    "чё так мало капель?",
+    "культ фотосинтеза",
+    "ееее 1.1.0 скоро?",
+    "О НОУ! грохострел ТЕПЕРЬ САМОЕ ДОРОГОЕ РАСТЕНИЕ!!!",
+  
+    "если в саду грохострела не будет то лор игры был бы бесполезен",
+      "с вас 1000 капель за то что ты челдовек",
+      "EZ",
+      "бро пж сделай перерождене :(",
+      "витамин грохострел",
+      "послушай... ты реально долго сидишь сдесь",
+      "я знаю всё о тебе!!!",
+      "1 - сейчас 00:00 - 23:58 время",
+      "2 - Ты сидишб или стоишь или кликаешь или лежишь или сидишележашотунг",
+      "3 - ты играешь",
+      "ЭТА ИГРА - САМАЯ ХУДШАЯ ПАРОДИЯ НА АНДЕРТЙЛ!!!!!!",
+      "ты плохой?",
+      "ты прав... ты ультранищий",
+      "тызнаешьроналдо?",
+      "кликни на белый кружок",
+      "секретка",
+      "67",
+      "привет",
+      "НЕТ ИДЕЙ ДЛЯ ЭТИХ СЛОВ!!",
+      "туг тунг тунг сахур та та та сахур, у дин дин дин дун мадиндиндиндун, лирири ларира оркалеро оркала балерина капучина лилири лалира брр брр патапим тралалело тралала брр брр патапим трелалело тралала лилири лалира",
+      "СПАСИБО! эта песня 10 из 10! - не так ли?"
 ];
 
 // Элементы DOM
@@ -236,12 +387,12 @@ const maxExpEl = document.getElementById('max-exp');
 const progressBar = document.getElementById('level-progress');
 const skinsContainer = document.getElementById('skins-container');
 const notification = document.getElementById('notification');
-const eventNotification = document.getElementById('event-notification');
 const mainContent = document.getElementById('main-content');
 const changingTextEl = document.getElementById('changing-text');
 const sunScoreEl = document.getElementById('sun-score');
-const eventTimerEl = document.getElementById('event-timer');
-const shardScoreEl = document.getElementById('shard-score');
+const equippedPowerEl = document.getElementById('equipped-power');
+const powersContainer = document.getElementById('powers-container');
+const amuletPriceEl = document.getElementById('amulet-price');
 
 // Функция меняющихся текстов
 function startChangingText() {
@@ -252,6 +403,26 @@ function startChangingText() {
         currentIndex = (currentIndex + 1) % changingTexts.length;
         changingTextEl.textContent = changingTexts[currentIndex];
     }, 10000);
+}
+
+// Быстрая смена фразы по клику
+function initChangingTextClick() {
+    if (changingTextEl) {
+        changingTextEl.style.cursor = 'pointer';
+        changingTextEl.addEventListener('click', showNextText);
+    }
+}
+
+let currentTextIndex = 0;
+function showNextText() {
+    currentTextIndex = (currentTextIndex + 1) % changingTexts.length;
+    changingTextEl.textContent = changingTexts[currentTextIndex];
+    
+    // Анимация
+    changingTextEl.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        changingTextEl.style.transform = 'scale(1)';
+    }, 200);
 }
 
 // Сохранение игры
@@ -270,16 +441,16 @@ function saveGame() {
         sunScore: sunScore,
         sunPerClick: sunPerClick,
         activeBoosts: activeBoosts,
-        // Новые данные ивента
-        darkShards: darkShards,
-        shardsPerClick: shardsPerClick,
-        unlockedStages: unlockedStages,
-        eventActive: eventActive,
-        eventTimeLeft: eventTimeLeft,
-        nextEventTime: nextEventTime,
-        eventCooldownTime: eventCooldownTime,
-        // Система множителей цен
-        priceMultipliers: priceMultipliers
+        priceMultipliers: priceMultipliers,
+        // Силы
+        amuletPrice: amuletPrice,
+        unlockedPowers: unlockedPowers,
+        equippedPower: equippedPower,
+        powerEffects: powerEffects,
+        // Перерождение
+        divineSunScore: divineSunScore,
+        rebirthCount: rebirthCount,
+        godUpgrades: godUpgrades
     };
     localStorage.setItem('gorohostrelSave', JSON.stringify(gameData));
 }
@@ -310,21 +481,36 @@ function loadGame() {
             
             unlockedSkins = gameData.unlockedSkins || ['default'];
             
-            // Новые данные ивента
-            darkShards = gameData.darkShards || 0;
-            shardsPerClick = gameData.shardsPerClick || 0;
-            unlockedStages = gameData.unlockedStages || [1];
-            eventActive = gameData.eventActive || false;
-            eventTimeLeft = gameData.eventTimeLeft || 0;
-            nextEventTime = gameData.nextEventTime || EVENT_SETTINGS.firstEventDelay;
-            eventCooldownTime = gameData.eventCooldownTime || 0;
+            // Сохраняем темные скины из старой системы
+            const allDarkSkins = Object.keys(darkSkins);
+            allDarkSkins.forEach(skinId => {
+                if (gameData.unlockedSkins && gameData.unlockedSkins.includes(skinId) && !unlockedSkins.includes(skinId)) {
+                    unlockedSkins.push(skinId);
+                }
+            });
             
-            // Система множителей цен
             priceMultipliers = gameData.priceMultipliers || {
                 upgrades: {},
                 autoClickers: {},
                 sunExchanges: {},
-                eventUpgrades: {}
+                powers: {}
+            };
+            
+            // Силы
+            amuletPrice = gameData.amuletPrice || 1000000;
+            unlockedPowers = gameData.unlockedPowers || [];
+            equippedPower = gameData.equippedPower || null;
+            powerEffects = gameData.powerEffects || {};
+            
+            // Новые данные перерождения
+            divineSunScore = gameData.divineSunScore || 0;
+            rebirthCount = gameData.rebirthCount || 0;
+            godUpgrades = gameData.godUpgrades || {
+                shopDiscount: { bought: 0, max: 5, basePrice: 1, effect: 0.01 },
+                itemDiscount: { bought: 0, max: 5, basePrice: 1, effect: 0.01 },
+                dropPerClick: { bought: 0, max: 10, basePrice: 1, effect: 0.005 },
+                autoClick: { bought: 0, max: 10, basePrice: 1, effect: 0.01 },
+                expBoost: { bought: 0, max: 20, basePrice: 1, effect: 0.10 }
             };
             
             return true;
@@ -336,83 +522,154 @@ function loadGame() {
     return false;
 }
 
-// Основной клик
-buttonEl.onclick = function() {
-    let dropMultiplier = activeBoosts.drop.active ? activeBoosts.drop.multiplier : 1;
-    let expMultiplier = activeBoosts.exp.active ? activeBoosts.exp.multiplier : 1;
-    let sunMultiplier = activeBoosts.sun.active ? activeBoosts.sun.multiplier : 1;
+// Оптимизированный обработчик клика
+function setupButton() {
+    let isPressed = false;
+    let clickCount = 0;
+    let lastClickTime = 0;
     
-    score += addPerClick * dropMultiplier;
-    exp += 1 * expMultiplier;
-    sunScore += sunPerClick * sunMultiplier;
-    totalClicks += 1;
-    
-    // Заработок осколков во время ивента - ИСПРАВЛЕНО
-    if (eventActive) {
-        let shardsEarned = 0;
+    function handleClick() {
+        const now = Date.now();
+        if (now - lastClickTime < 50) return; // Защита от спама
         
-        // Базовая награда за клик во время ивента
-        shardsEarned += 1;
+        lastClickTime = now;
+        clickCount++;
         
-        // Добавляем бонусы от улучшений
-        shardsEarned += shardsPerClick;
+        let dropMultiplier = activeBoosts.drop.active ? activeBoosts.drop.multiplier : 1;
+        let expMultiplier = activeBoosts.exp.active ? activeBoosts.exp.multiplier : 1;
+        let sunMultiplier = activeBoosts.sun.active ? activeBoosts.sun.multiplier : 1;
         
-        darkShards += shardsEarned;
-        updateEventDisplay();
+        // Бонус от улучшений Бога
+        if (godUpgrades.dropPerClick.bought > 0) {
+            dropMultiplier += godUpgrades.dropPerClick.effect * godUpgrades.dropPerClick.bought;
+        }
         
-        // Показываем визуальный эффект заработка осколков
-        if (shardsEarned > 0) {
-            showShardEarned(shardsEarned);
+        if (godUpgrades.expBoost.bought > 0) {
+            expMultiplier += godUpgrades.expBoost.effect * godUpgrades.expBoost.bought;
+        }
+        
+        // Базовые значения
+        let dropBonus = addPerClick * dropMultiplier;
+        let expBonus = 1 * expMultiplier;
+        let sunBonus = sunPerClick * sunMultiplier;
+        
+        // Эффекты от Сил
+        if (powerEffects.dropPerClick) {
+            dropBonus += addPerClick * powerEffects.dropPerClick;
+        }
+        
+        if (powerEffects.sunPerClick) {
+            sunBonus += powerEffects.sunPerClick;
+        }
+        
+        if (powerEffects.combo) {
+            dropBonus += addPerClick * powerEffects.combo;
+        }
+        
+        if (powerEffects.comboAdvanced) {
+            dropBonus += addPerClick * powerEffects.comboAdvanced;
+        }
+        
+        if (powerEffects.ultimate) {
+            sunBonus += powerEffects.ultimate;
+        }
+        
+        score += dropBonus;
+        exp += expBonus;
+        sunScore += sunBonus;
+        totalClicks += 1;
+        
+        updateDisplay();
+        checkLevelUp();
+        checkSkinUnlocks();
+        
+        // Сохраняем каждые 10 кликов для производительности
+        if (clickCount % 10 === 0) {
+            saveGame();
         }
     }
     
-    updateDisplay();
-    checkLevelUp();
-    checkSkinUnlocks();
-    checkUpgradesAvailability();
-    saveGame();
-};
-
-// Визуальный эффект заработка осколков
-function showShardEarned(amount) {
-    const shardPopup = document.createElement('div');
-    shardPopup.textContent = `+${amount} осколков`;
-    shardPopup.style.position = 'absolute';
-    shardPopup.style.color = '#8e44ad';
-    shardPopup.style.fontWeight = 'bold';
-    shardPopup.style.fontSize = '16px';
-    shardPopup.style.pointerEvents = 'none';
-    shardPopup.style.zIndex = '1000';
-    shardPopup.style.textShadow = '1px 1px 2px black';
+    // Touch события
+    buttonEl.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        isPressed = true;
+        this.style.transform = 'translateY(-7px) scale(0.95)';
+        handleClick();
+    }, { passive: false });
     
-    // Позиционируем возле кнопки
-    const rect = buttonEl.getBoundingClientRect();
-    shardPopup.style.left = (rect.left + rect.width / 2) + 'px';
-    shardPopup.style.top = (rect.top - 20) + 'px';
+    buttonEl.addEventListener('touchend', function() {
+        isPressed = false;
+        this.style.transform = 'translateY(0) scale(1)';
+    }, { passive: false });
     
-    document.body.appendChild(shardPopup);
+    buttonEl.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
     
-    // Анимация всплывания
-    let opacity = 1;
-    let top = parseInt(shardPopup.style.top);
-    const animation = setInterval(() => {
-        opacity -= 0.02;
-        top -= 1;
-        shardPopup.style.opacity = opacity;
-        shardPopup.style.top = top + 'px';
-        
-        if (opacity <= 0) {
-            clearInterval(animation);
-            document.body.removeChild(shardPopup);
+    // Mouse события
+    buttonEl.addEventListener('mousedown', function() {
+        isPressed = true;
+        this.style.transform = 'translateY(-7px) scale(0.95)';
+        handleClick();
+    });
+    
+    buttonEl.addEventListener('mouseup', function() {
+        isPressed = false;
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+    
+    buttonEl.addEventListener('mouseleave', function() {
+        if (isPressed) {
+            isPressed = false;
+            this.style.transform = 'translateY(0) scale(1)';
         }
-    }, 30);
+    });
+    
+    // Автокликер с оптимизацией
+    let lastUpdate = 0;
+    function gameLoop(timestamp) {
+        if (timestamp - lastUpdate > 1000) {
+            if (addPerSecond > 0) {
+                let dropBonus = addPerSecond;
+                
+                // Бонус от улучшений Бога
+                if (godUpgrades.autoClick.bought > 0) {
+                    dropBonus += addPerSecond * godUpgrades.autoClick.effect * godUpgrades.autoClick.bought;
+                }
+                
+                if (powerEffects.dropPerSecond) {
+                    dropBonus += addPerSecond * powerEffects.dropPerSecond;
+                }
+                
+                score += dropBonus;
+                updateDisplay();
+                
+                // Сохраняем каждую минуту авто-кликов
+                if (Date.now() % 60000 < 1000) {
+                    saveGame();
+                }
+            }
+            lastUpdate = timestamp;
+        }
+        requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
 }
 
-// Покупка улучшения клика с инфляцией
+// Покупка улучшения клика
 function buyUpgrade(power, basePrice, requiredLevel = 1) {
     const upgradeKey = `upgrade_${power}_${basePrice}`;
     const currentMultiplier = priceMultipliers.upgrades[upgradeKey] || 1;
-    const actualPrice = Math.round(basePrice * currentMultiplier);
+    let actualPrice = Math.round(basePrice * currentMultiplier);
+    
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.shopDiscount) {
+        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+    }
+    if (godUpgrades.shopDiscount.bought > 0) {
+        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+        actualPrice = Math.round(actualPrice * (1 - godDiscount));
+    }
     
     if (score < actualPrice) {
         showNotification("Недостаточно капель!");
@@ -427,20 +684,29 @@ function buyUpgrade(power, basePrice, requiredLevel = 1) {
     score -= actualPrice;
     addPerClick += power;
     
-    // Увеличиваем цену на 10%
+    // Увеличиваем цену на 10% и СОХРАНЯЕМ
     priceMultipliers.upgrades[upgradeKey] = currentMultiplier * 1.1;
     
     updateDisplay();
-    checkUpgradesAvailability();
+    checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ СРАЗУ ПОСЛЕ ПОКУПКИ
     saveGame();
     showNotification(`Улучшение куплено! +${power} на клик`);
 }
 
-// Покупка авто-кликера с инфляцией
+// Аналогично в buyAutoClicker:
 function buyAutoClicker(power, basePrice, requiredLevel = 1) {
     const autoClickerKey = `autoclicker_${power}_${basePrice}`;
     const currentMultiplier = priceMultipliers.autoClickers[autoClickerKey] || 1;
-    const actualPrice = Math.round(basePrice * currentMultiplier);
+    let actualPrice = Math.round(basePrice * currentMultiplier);
+    
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.shopDiscount) {
+        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+    }
+    if (godUpgrades.shopDiscount.bought > 0) {
+        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+        actualPrice = Math.round(actualPrice * (1 - godDiscount));
+    }
     
     if (score < actualPrice) {
         showNotification("Недостаточно капель!");
@@ -455,16 +721,16 @@ function buyAutoClicker(power, basePrice, requiredLevel = 1) {
     score -= actualPrice;
     addPerSecond += power;
     
-    // Увеличиваем цену на 10%
+    // Увеличиваем цену на 10% и СОХРАНЯЕМ
     priceMultipliers.autoClickers[autoClickerKey] = currentMultiplier * 1.1;
     
     updateDisplay();
-    checkUpgradesAvailability();
+    checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ СРАЗУ ПОСЛЕ ПОКУПКИ
     saveGame();
     showNotification(`Авто-кликер куплен! +${power}/сек`);
 }
 
-// Обмен солнц с инфляцией
+// И в buySunExchange:
 function buySunExchange(drops, sunCost) {
     const exchangeKey = `exchange_${drops}_${sunCost}`;
     const currentMultiplier = priceMultipliers.sunExchanges[exchangeKey] || 1;
@@ -484,20 +750,34 @@ function buySunExchange(drops, sunCost) {
     sunScore -= actualSunCost;
     score += drops;
     
-    // Увеличиваем цену на 10%
+    // Увеличиваем цену на 10% и СОХРАНЯЕМ
     priceMultipliers.sunExchanges[exchangeKey] = currentMultiplier * 1.1;
     
     updateDisplay();
-    checkUpgradesAvailability();
+    checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ СРАЗУ ПОСЛЕ ПОКУПКИ
     saveGame();
     showNotification(`Получено ${drops} капель!`);
 }
 
-// Покупка предмета (без инфляции)
+// Также добавь вызов checkUpgradesAvailability() при применении скидок:
+
+
+
+
+// Покупка предмета
 function buyItem(itemType) {
     const button = event.target.closest('.upgrade-item');
-    const price = parseInt(button.querySelector('.price-display').textContent);
+    let price = parseInt(button.querySelector('.price-display').textContent);
     const requiredLevel = parseInt(button.getAttribute('data-level'));
+    
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.itemDiscount) {
+        price = Math.round(price * (1 - powerEffects.itemDiscount));
+    }
+    if (godUpgrades.itemDiscount.bought > 0) {
+        const godDiscount = godUpgrades.itemDiscount.effect * godUpgrades.itemDiscount.bought;
+        price = Math.round(price * (1 - godDiscount));
+    }
     
     if (sunScore < price) {
         showNotification("Недостаточно солнц!");
@@ -541,12 +821,6 @@ function buyItem(itemType) {
             activeBoosts.sun = { active: true, multiplier: 3, endTime: Date.now() + (3 * 60 * 1000) };
             showNotification("×3 солнц на 3 минуты!");
             break;
-         case '???':
-            activeBoosts.sun = { active: true, multiplier: 10, endTime: Date.now() + (10 * 60 * 1000) };
-          activeBoosts.drop = { active: true, multiplier: 5, endTime: Date.now() + (10 * 60 * 1000) };
-          activeBoosts.sun = { active: true, multiplier: 6, endTime: Date.now() + (10 * 60 * 1000) };
-            showNotification("×10 солнц на 10 минут! и в 10 раз больше капель на 5 мин + в 6 раз больше опыта на 10 мин!!!!");
-            break;
     }
     
     updateDisplay();
@@ -554,16 +828,26 @@ function buyItem(itemType) {
     saveGame();
 }
 
-// Покупка кейса (без инфляции)
+// Покупка обычного кейса
 function buyCase() {
     const basePrice = 1250;
+    let actualPrice = basePrice;
     
-    if (score < basePrice) {
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.shopDiscount) {
+        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+    }
+    if (godUpgrades.shopDiscount.bought > 0) {
+        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+        actualPrice = Math.round(actualPrice * (1 - godDiscount));
+    }
+    
+    if (score < actualPrice) {
         showNotification("Недостаточно капель!");
         return;
     }
     
-    score -= basePrice;
+    score -= actualPrice;
     
     const random = Math.random();
     let rarity = '';
@@ -575,8 +859,9 @@ function buyCase() {
     else if (random < 0.40055) rarity = 'rare';
     else rarity = 'common';
     
-    const availableSkins = Object.keys(skins).filter(skinId => 
-        skins[skinId].rarity === rarity && 
+    const allSkins = {...skins, ...darkSkins};
+    const availableSkins = Object.keys(allSkins).filter(skinId => 
+        allSkins[skinId].rarity === rarity && 
         skinId !== 'default' && 
         !unlockedSkins.includes(skinId)
     );
@@ -586,9 +871,9 @@ function buyCase() {
         unlockedSkins.push(wonSkin);
         
         if (rarity === 'pea') {
-            showNotification(`🎉🎉🎉 НЕВЕРОЯТНО! ${skins[wonSkin].name} (ГОРОХНЫЙ)!!! 🎉🎉🎉`);
+            showNotification(`🎉🎉🎉 НЕВЕРОЯТНО! ${allSkins[wonSkin].name} (ГОРОХНЫЙ)!!! 🎉🎉🎉`);
         } else {
-            showNotification(`🎉 ${skins[wonSkin].name} (${rarity})!`);
+            showNotification(`🎉 ${allSkins[wonSkin].name} (${rarity})!`);
         }
         
         loadSkins();
@@ -603,231 +888,42 @@ function buyCase() {
     saveGame();
 }
 
-// Функции для ивента
-function startEvent() {
-    eventActive = true;
-    eventTimeLeft = EVENT_SETTINGS.eventDuration;
-    showEventNotification("🌑 СОЛНЕЧНОЕ ЗАТМЕНИЕ! 🌑\nЗарабатывайте осколки тёмного солнца!");
+// Покупка премиум кейса
+function buyPowerCase() {
+    const basePrice = 500000000;
+    let actualPrice = basePrice;
     
-    // Останавливаем таймер кулдауна
-    if (eventCooldownInterval) {
-        clearInterval(eventCooldownInterval);
-        eventCooldownInterval = null;
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.shopDiscount) {
+        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+    }
+    if (godUpgrades.shopDiscount.bought > 0) {
+        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+        actualPrice = Math.round(actualPrice * (1 - godDiscount));
     }
     
-    eventInterval = setInterval(() => {
-        eventTimeLeft -= 1000;
-        updateEventTimer();
-        
-        if (eventTimeLeft <= 0) {
-            endEvent();
-        }
-    }, 1000);
-    
-    updateEventButtons();
-    saveGame();
-}
-
-function endEvent() {
-    eventActive = false;
-    clearInterval(eventInterval);
-    eventCooldownTime = EVENT_SETTINGS.eventCooldown;
-    showEventNotification("Затмение закончилось! Следующее через 1 минуту.");
-    
-    // Запускаем таймер кулдауна
-    eventCooldownInterval = setInterval(() => {
-        eventCooldownTime -= 1000;
-        updateEventCooldownTimer();
-        
-        if (eventCooldownTime <= 0) {
-            clearInterval(eventCooldownInterval);
-            startEvent();
-        }
-    }, 1000);
-    
-    updateEventButtons();
-    saveGame();
-}
-
-function updateEventTimer() {
-    const minutes = Math.floor(eventTimeLeft / 60000);
-    const seconds = Math.floor((eventTimeLeft % 60000) / 1000);
-    eventTimerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function updateEventCooldownTimer() {
-    const minutes = Math.floor(eventCooldownTime / 60000);
-    const seconds = Math.floor((eventCooldownTime % 60000) / 1000);
-    eventTimerEl.textContent = `До ивента: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function updateEventDisplay() {
-    shardScoreEl.textContent = Math.floor(darkShards);
-}
-
-function showEventNotification(message) {
-    eventNotification.textContent = message;
-    eventNotification.classList.add('show');
-    
-    setTimeout(() => {
-        eventNotification.classList.remove('show');
-    }, 3000);
-}
-
-// Управление панелями ивента
-function toggleEvent() {
-    document.getElementById('event-panel').classList.toggle('active');
-    document.getElementById('overlay').classList.toggle('active');
-    mainContent.classList.toggle('event-open');
-    updateEventButtons();
-}
-
-function closeEvent() {
-    document.getElementById('event-panel').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-    mainContent.classList.remove('event-open');
-}
-
-function openEventTab(tabName) {
-    document.querySelectorAll('.shop-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    document.querySelectorAll('.shop-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    document.getElementById(`${tabName}-tab`).classList.add('active');
-    event.target.classList.add('active');
-    updateEventButtons();
-}
-
-// Покупка доступа к этапам (без инфляции)
-function buyStageAccess(stage, price) {
-    if (darkShards < price) {
-        showNotification("Недостаточно осколков!");
+    if (score < actualPrice) {
+        showNotification("Недостаточно капель!");
         return;
     }
     
-    darkShards -= price;
-    if (!unlockedStages.includes(stage)) {
-        unlockedStages.push(stage);
-    }
-    updateEventDisplay();
-    updateEventButtons();
-    saveGame();
-    showNotification(`Этап ${stage} разблокирован!`);
-}
-
-// Покупка улучшений ивента с инфляцией
-function buyEventUpgrade(type, basePrice, requiredStage) {
-    const eventKey = `event_${type}_${basePrice}`;
-    const currentMultiplier = priceMultipliers.eventUpgrades[eventKey] || 1;
-    const actualPrice = Math.round(basePrice * currentMultiplier);
-    
-    if (darkShards < actualPrice) {
-        showNotification("Недостаточно осколков!");
-        return;
-    }
-  
-   if (requiredStage > 1 && !unlockedStages.includes(requiredStage)) {
-        showNotification(`Сначала разблокируйте этап ${requiredStage}!`);
-        return;
-    }
-  
-    if (requiredStage === 2 && !unlockedStages.includes(2)) {
-        showNotification("Сначала разблокируйте 2 этап ");
-        return;
-    }
-    if (requiredStage === 4 && !unlockedStages.includes(4)) {
-        showNotification("Сначала разблокируйте 4 этап ");
-        return;
-    }
-    
-   
-    darkShards -= actualPrice;
-    
-    switch(type) {
-        case 'shard1':
-            shardsPerClick += 1;
-            showNotification("+1 осколок на клик!");
-            break;
-        case 'shard2':
-            shardsPerClick += 5;
-            showNotification("+5 осколков на клик!");
-            break;
-        case 'shard3':
-            shardsPerClick += 15;
-            showNotification("+15 осколков на клик!");
-            break;
-        case 'drop1':
-            addPerClick += 45;
-            showNotification("+45 капель на клик!");
-            break;
-        case 'drop2':
-            addPerClick += 250;
-            showNotification("+250 капель на клик!");
-            break;
-        case 'drop3':
-            addPerClick += 1000;
-            showNotification("+1000 капель на клик!");
-            break;
-        case 'drop4':
-            addPerClick += 3500;
-            showNotification("+3500 капель на клик!");
-            break;
-        case 'sun1':
-            sunPerClick += 0.002;
-            showNotification("+0.002 солнца на клик!");
-            break;
-        case 'level':
-            level += 3;
-            exp = 0;
-            maxExp = Math.round(maxExp * 1.04 * 1.04 * 1.04);
-            updateLevelDisplay();
-            showNotification("+3 уровня!");
-            break;
-        case 'megaDrop':
-            score += 1000000000;
-            showNotification("+1,000,000,000 капель!");
-            break;
-    }
-    
-    priceMultipliers.eventUpgrades[eventKey] = currentMultiplier * 1.1;
-    
-    updateEventDisplay();
-    updateDisplay();
-    updateEventButtons();
-    saveGame();
-}
-
-// Покупка кейса ивента (без инфляции)
-function buyEventCase() {
-    const basePrice = 666;
-    
-    if (darkShards < basePrice) {
-        showNotification("Недостаточно осколков!");
-        return;
-    }
-    
-    if (!unlockedStages.includes(3)) {
-        showNotification("Сначала разблокируйте 3 этап!");
-        return;
-    }
-    
-    darkShards -= basePrice;
+    score -= actualPrice;
     
     const random = Math.random();
     let rarity = '';
     
-    if (random < 0.001) rarity = 'dark';
-    else if (random < 0.006) rarity = 'mythic';
-    else if (random < 0.03) rarity = 'legendary';
-    else if (random < 0.08) rarity = 'epic';
-    else if (random < 0.3) rarity = 'rare';
+    // Шансы для премиум кейса
+    if (random < 0.00003) rarity = 'pea';
+    else if (random < 0.01003) rarity = 'mythic';
+    else if (random < 0.02503) rarity = 'legendary';
+    else if (random < 0.10003) rarity = 'epic';
+    else if (random < 0.30003) rarity = 'rare';
     else rarity = 'common';
     
-    const availableSkins = Object.keys(darkSkins).filter(skinId => 
-        darkSkins[skinId].rarity === rarity && 
+    // Ищем доступные скины из премиум коллекции
+    const allPremiumSkins = {...premiumSkins};
+    const availableSkins = Object.keys(allPremiumSkins).filter(skinId => 
+        allPremiumSkins[skinId].rarity === rarity && 
         !unlockedSkins.includes(skinId)
     );
     
@@ -835,87 +931,307 @@ function buyEventCase() {
         const wonSkin = availableSkins[Math.floor(Math.random() * availableSkins.length)];
         unlockedSkins.push(wonSkin);
         
-        if (rarity === 'dark') {
-            showNotification(`🎉🌑 НЕВЕРОЯТНО! ${darkSkins[wonSkin].name} (ТЁМНЫЙ)!!! 🌑🎉`);
+        if (rarity === 'pea') {
+            showNotification(`🎉🎉🎉 НЕВЕРОЯТНО! ${allPremiumSkins[wonSkin].name} (ГОРОХНЫЙ)!!! 🎉🎉🎉`);
         } else {
-            showNotification(`🎉 ${darkSkins[wonSkin].name} (${rarity})!`);
+            showNotification(`🎉 Премиум скин: ${allPremiumSkins[wonSkin].name} (${rarity})!`);
         }
         
         loadSkins();
     } else {
-        const compensation = Math.round(basePrice * (rarity === 'dark' ? 10 : 0.5));
-        darkShards += compensation;
-        showNotification(`Все ${rarity} скины есть! +${compensation} осколков`);
+        const compensation = Math.round(basePrice * 0.3);
+        score += compensation;
+        showNotification(`Все премиум скины ${rarity} есть! +${compensation} капель`);
     }
     
-    updateEventDisplay();
-    updateEventButtons();
+    updateDisplay();
     saveGame();
 }
 
-// Обновление кнопок ивента
-function updateEventButtons() {
-    // Обновляем видимость кнопок этапов
-    for (let stage = 2; stage <= 4; stage++) {
-        const lockBtn = document.getElementById(`stage${stage}-lock`);
-        const stageUnlocked = unlockedStages.includes(stage);
-        
-        if (lockBtn) {
-            lockBtn.style.display = stageUnlocked ? 'none' : 'block';
-        }
-        
-        // Показываем/скрываем улучшения в зависимости от разблокировки этапа
-        document.querySelectorAll(`.upgrade-item[data-stage="${stage}"]`).forEach(btn => {
-            if (!btn.classList.contains('stage-locked')) {
-                btn.style.display = stageUnlocked ? 'block' : 'none';
-            }
-        });
+// Покупка амулета для СИЛ
+function buyAmulet() {
+    if (score < amuletPrice) {
+        showNotification("Недостаточно капель!");
+        return;
     }
     
-    // Обновляем доступность кнопок улучшений
-    document.querySelectorAll('#event-panel .upgrade-item').forEach(btn => {
-        const priceElement = btn.querySelector('span');
-        if (priceElement) {
-            const price = parseInt(priceElement.textContent) || 0;
-            
-            if (darkShards >= price) {
-                btn.disabled = false;
-                btn.style.background = eventActive ? '#9b59b6' : 'lightblue';
-                btn.style.cursor = 'pointer';
-            } else {
-                btn.disabled = true;
-                btn.style.background = '#7f8c8d';
-                btn.style.cursor = 'not-allowed';
-            }
-        }
-    });
+    score -= amuletPrice;
     
-    // Обновляем кнопку ивента
-    const eventBtn = document.getElementById('event-btn');
-    if (eventActive) {
-        eventBtn.textContent = 'Ивент 🔥';
-        eventBtn.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+    const random = Math.random();
+    let rarity = '';
+    
+    if (random < 0.00005) rarity = 'pea';
+    else if (random < 0.00255) rarity = 'mythic';
+    else if (random < 0.00755) rarity = 'legendary';
+    else if (random < 0.03255) rarity = 'epic';
+    else if (random < 0.21255) rarity = 'rare';
+    else rarity = 'common';
+    
+    const availablePowers = Object.keys(powers).filter(powerId => 
+        powers[powerId].rarity === rarity && 
+        !unlockedPowers.includes(powerId)
+    );
+    
+    if (availablePowers.length > 0) {
+        const wonPower = availablePowers[Math.floor(Math.random() * availablePowers.length)];
+        unlockedPowers.push(wonPower);
+        
+        if (rarity === 'pea') {
+            showNotification(`🎉🎉🎉 НЕВЕРОЯТНО! ${powers[wonPower].name} (ГОРОХНЫЙ)!!! 🎉🎉🎉`);
+        } else {
+            showNotification(`🎉 Получена сила: ${powers[wonPower].name} (${rarity})!`);
+        }
+        
+        loadPowers();
     } else {
-        eventBtn.textContent = 'Ивент';
-        eventBtn.style.background = 'linear-gradient(45deg, #95a5a6, #7f8c8d)';
+        const compensation = Math.round(amuletPrice * 0.5);
+        score += compensation;
+        showNotification(`Все силы ${rarity} есть! +${compensation} капель`);
     }
     
-    // Обновляем таймер
-    if (!eventActive && eventCooldownTime > 0) {
-        updateEventCooldownTimer();
+    // Увеличиваем цену на 25% (максимум 1 триллион)
+    amuletPrice = Math.min(Math.round(amuletPrice * 1.25), 1000000000000);
+    updateAmuletPrice();
+    
+    updateDisplay();
+    saveGame();
+}
+
+// Обновление цены амулета
+function updateAmuletPrice() {
+    if (amuletPriceEl) {
+        amuletPriceEl.textContent = amuletPrice.toLocaleString();
     }
 }
 
-// Проверка доступности улучшений с учетом инфляции
+// Загрузка Сил
+function loadPowers() {
+    if (!powersContainer) return;
+    
+    powersContainer.innerHTML = '';
+    
+    unlockedPowers.forEach(powerId => {
+        if (powers[powerId]) {
+            const power = powers[powerId];
+            const powerItem = document.createElement('button');
+            powerItem.className = `power-item ${equippedPower === powerId ? 'active' : ''}`;
+            powerItem.onclick = () => togglePower(powerId);
+            
+            powerItem.innerHTML = `
+                <img src="${power.image}" alt="${power.name}" onerror="this.style.display='none'">
+                <div>${power.name}</div>
+                <small>${power.rarity}</small>
+            `;
+            
+            powersContainer.appendChild(powerItem);
+        }
+    });
+}
+
+// Переключение Силы
+function togglePower(powerId) {
+    if (equippedPower === powerId) {
+        unequipPower();
+    } else {
+        if (equippedPower) {
+            unequipPower();
+        }
+        equipPower(powerId);
+    }
+    
+    loadPowers();
+    saveGame();
+}
+
+// Экипировка Силы
+function equipPower(powerId) {
+    equippedPower = powerId;
+    const power = powers[powerId];
+    
+    // Обновляем отображение экипированной силы
+    if (equippedPowerEl) {
+        equippedPowerEl.style.backgroundImage = `url(${power.image})`;
+    }
+    
+    // Применяем эффекты силы
+    applyPowerEffect(powerId);
+    
+    showNotification(`Сила "${power.name}" экипирована!`);
+}
+
+// Снятие Силы
+function unequipPower() {
+    if (equippedPower) {
+        const power = powers[equippedPower];
+        
+        // Убираем эффекты силы
+        removePowerEffect(equippedPower);
+        
+        // Обновляем отображение
+        if (equippedPowerEl) {
+            equippedPowerEl.style.backgroundImage = 'none';
+        }
+        
+        showNotification(`Сила "${power.name}" снята!`);
+        equippedPower = null;
+    }
+}
+
+// Применение эффектов Силы
+function applyPowerEffect(powerId) {
+    const power = powers[powerId];
+    
+    switch(power.effect) {
+        case 'sunPerClick':
+            powerEffects.sunPerClick = power.value;
+            break;
+        case 'dropPerSecond':
+            powerEffects.dropPerSecond = power.value;
+            break;
+        case 'dropPerClick':
+            powerEffects.dropPerClick = power.value;
+            break;
+        case 'periodicDrops':
+            startPeriodicDrops(power);
+            break;
+        case 'shopDiscount':
+            powerEffects.shopDiscount = power.value;
+            break;
+        case 'itemDiscount':
+            powerEffects.itemDiscount = power.value;
+            break;
+        case 'combo':
+            powerEffects.combo = power.value;
+            startAutoBuy(power);
+            break;
+        case 'comboAdvanced':
+            powerEffects.comboAdvanced = power.value;
+            startAdvancedAutoBuy(power);
+            break;
+        case 'ultimate':
+            powerEffects.ultimate = power.value;
+            startUltimateEffects(power);
+            break;
+    }
+    
+    updatePowerEffects();
+}
+
+// Удаление эффектов Силы
+function removePowerEffect(powerId) {
+    const power = powers[powerId];
+    
+    switch(power.effect) {
+        case 'sunPerClick':
+            delete powerEffects.sunPerClick;
+            break;
+        case 'dropPerSecond':
+            delete powerEffects.dropPerSecond;
+            break;
+        case 'dropPerClick':
+            delete powerEffects.dropPerClick;
+            break;
+        case 'periodicDrops':
+            if (powerIntervals.periodicDrops) {
+                clearInterval(powerIntervals.periodicDrops);
+                delete powerIntervals.periodicDrops;
+            }
+            break;
+        case 'shopDiscount':
+            delete powerEffects.shopDiscount;
+            break;
+        case 'itemDiscount':
+            delete powerEffects.itemDiscount;
+            break;
+        case 'combo':
+            delete powerEffects.combo;
+            if (powerIntervals.autoBuy) {
+                clearInterval(powerIntervals.autoBuy);
+                delete powerIntervals.autoBuy;
+            }
+            break;
+        case 'comboAdvanced':
+            delete powerEffects.comboAdvanced;
+            if (powerIntervals.advancedAutoBuy) {
+                clearInterval(powerIntervals.advancedAutoBuy);
+                delete powerIntervals.advancedAutoBuy;
+            }
+            break;
+        case 'ultimate':
+            delete powerEffects.ultimate;
+            if (powerIntervals.ultimate) {
+                clearInterval(powerIntervals.ultimate);
+                delete powerIntervals.ultimate;
+            }
+            break;
+    }
+    
+    updatePowerEffects();
+}
+
+// Периодические бонусы от Сил
+function startPeriodicDrops(power) {
+    powerIntervals.periodicDrops = setInterval(() => {
+        const bonus = Math.round(score * power.value);
+        score += bonus;
+        showNotification(`Картошка-мина дала +${bonus} капель!`);
+        updateDisplay();
+        saveGame();
+    }, power.interval);
+}
+
+function startAutoBuy(power) {
+    powerIntervals.autoBuy = setInterval(() => {
+        addPerClick += power.autoBuyAmount;
+        showNotification(`Чеснок автоматически купил +${power.autoBuyAmount} на клик!`);
+        updateDisplay();
+        saveGame();
+    }, power.autoBuyInterval);
+}
+
+function startAdvancedAutoBuy(power) {
+    powerIntervals.advancedAutoBuy = setInterval(() => {
+        const amount = score < 1000000000000 ? 500000 : 1000000;
+        addPerClick += amount;
+        showNotification(`Мрачная роза купила +${amount} на клик!`);
+        updateDisplay();
+        saveGame();
+    }, power.autoBuyInterval);
+}
+
+function startUltimateEffects(power) {
+    powerIntervals.ultimate = setInterval(() => {
+        const sunBonus = sunScore < 100 ? 10 : 50;
+        sunScore += sunBonus;
+        showNotification(`Первобытный подсолнух дал +${sunBonus} солнц!`);
+        updateDisplay();
+        saveGame();
+    }, power.sunInterval);
+}
+
+// Обновление эффектов Сил
+function updatePowerEffects() {
+    updateDisplay();
+    checkUpgradesAvailability();
+}
+
+// Проверка доступности улучшений
 function checkUpgradesAvailability() {
     const upgradeButtons = document.querySelectorAll('.upgrade-item');
     
     upgradeButtons.forEach(button => {
-        const priceElement = button.querySelector('span');
+        const priceElement = button.querySelector('.price-display') || button.querySelector('span');
         let basePrice = 0;
         
         if (priceElement) {
-            basePrice = parseInt(priceElement.textContent) || 0;
+            // Получаем базовую цену из data-атрибута или из текста
+            basePrice = parseInt(button.getAttribute('data-base-price')) || 
+                       parseInt(priceElement.textContent.replace(/,/g, '')) || 0;
+            
+            // Сохраняем базовую цену в data-атрибут для будущего использования
+            if (!button.getAttribute('data-base-price')) {
+                button.setAttribute('data-base-price', basePrice);
+            }
         }
         
         let actualPrice = basePrice;
@@ -930,6 +1246,15 @@ function checkUpgradesAvailability() {
                     const upgradeKey = `upgrade_${power}_${basePrice}`;
                     const multiplier = priceMultipliers.upgrades[upgradeKey] || 1;
                     actualPrice = Math.round(basePrice * multiplier);
+                    
+                    // Применяем скидку
+                    if (powerEffects.shopDiscount) {
+                        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+                    }
+                    if (godUpgrades.shopDiscount.bought > 0) {
+                        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+                        actualPrice = Math.round(actualPrice * (1 - godDiscount));
+                    }
                 }
             }
             else if (onclick.includes('buyAutoClicker')) {
@@ -940,6 +1265,15 @@ function checkUpgradesAvailability() {
                     const autoClickerKey = `autoclicker_${power}_${basePrice}`;
                     const multiplier = priceMultipliers.autoClickers[autoClickerKey] || 1;
                     actualPrice = Math.round(basePrice * multiplier);
+                    
+                    // Применяем скидку
+                    if (powerEffects.shopDiscount) {
+                        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+                    }
+                    if (godUpgrades.shopDiscount.bought > 0) {
+                        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+                        actualPrice = Math.round(actualPrice * (1 - godDiscount));
+                    }
                 }
             }
             else if (onclick.includes('buySunExchange')) {
@@ -952,19 +1286,54 @@ function checkUpgradesAvailability() {
                     actualPrice = Math.round(sunCost * multiplier);
                 }
             }
-            else if (onclick.includes('buyEventUpgrade')) {
-                const match = onclick.match(/buyEventUpgrade\('([^']+)',\s*(\d+)/);
-                if (match) {
-                    const type = match[1];
-                    const basePrice = parseInt(match[2]);
-                    const eventKey = `event_${type}_${basePrice}`;
-                    const multiplier = priceMultipliers.eventUpgrades[eventKey] || 1;
-                    actualPrice = Math.round(basePrice * multiplier);
+            else if (onclick.includes('buyItem')) {
+                const priceElement = button.querySelector('.price-display');
+                if (priceElement) {
+                    let price = parseInt(button.getAttribute('data-base-price')) || 
+                               parseInt(priceElement.textContent.replace(/,/g, '')) || 0;
+                    
+                    // Сохраняем базовую цену
+                    if (!button.getAttribute('data-base-price')) {
+                        button.setAttribute('data-base-price', price);
+                    }
+                    
+                    // Применяем скидку
+                    if (powerEffects.itemDiscount) {
+                        price = Math.round(price * (1 - powerEffects.itemDiscount));
+                    }
+                    if (godUpgrades.itemDiscount.bought > 0) {
+                        const godDiscount = godUpgrades.itemDiscount.effect * godUpgrades.itemDiscount.bought;
+                        price = Math.round(price * (1 - godDiscount));
+                    }
+                    actualPrice = price;
+                }
+            }
+            else if (onclick.includes('buyCase') || onclick.includes('buyPowerCase')) {
+                const priceElement = button.querySelector('.price-display');
+                if (priceElement) {
+                    let price = parseInt(button.getAttribute('data-base-price')) || 
+                               parseInt(priceElement.textContent.replace(/,/g, '')) || 0;
+                    
+                    // Сохраняем базовую цену
+                    if (!button.getAttribute('data-base-price')) {
+                        button.setAttribute('data-base-price', price);
+                    }
+                    
+                    // Применяем скидку
+                    if (powerEffects.shopDiscount) {
+                        price = Math.round(price * (1 - powerEffects.shopDiscount));
+                    }
+                    if (godUpgrades.shopDiscount.bought > 0) {
+                        const godDiscount = godUpgrades.shopDiscount.effect * godUpgrades.shopDiscount.bought;
+                        price = Math.round(price * (1 - godDiscount));
+                    }
+                    actualPrice = price;
                 }
             }
         }
         
-        if (priceElement && actualPrice !== basePrice) {
+        // Обновляем отображение цены - ВСЕГДА показываем актуальную цену
+        if (priceElement) {
             priceElement.textContent = actualPrice.toLocaleString();
         }
         
@@ -973,9 +1342,7 @@ function checkUpgradesAvailability() {
         let canAfford = false;
         if (onclick && onclick.includes('buySunExchange')) {
             canAfford = sunScore >= actualPrice;
-        } else if (onclick && onclick.includes('buyEventUpgrade')) {
-            canAfford = darkShards >= actualPrice;
-        } else if (onclick && (onclick.includes('buyUpgrade') || onclick.includes('buyAutoClicker') || onclick.includes('buyCase'))) {
+        } else if (onclick && (onclick.includes('buyUpgrade') || onclick.includes('buyAutoClicker') || onclick.includes('buyCase') || onclick.includes('buyPowerCase'))) {
             canAfford = score >= actualPrice;
         } else if (onclick && onclick.includes('buyItem')) {
             canAfford = sunScore >= actualPrice;
@@ -987,26 +1354,26 @@ function checkUpgradesAvailability() {
             button.disabled = false;
             button.style.background = 'lightblue';
             button.style.cursor = 'pointer';
+            button.style.opacity = '1';
         } else {
             button.disabled = true;
             button.style.background = '#7f8c8d';
             button.style.cursor = 'not-allowed';
+            button.style.opacity = '0.6';
         }
     });
 }
 
 // Проверка разблокировки скинов
 function checkSkinUnlocks() {
-    const allSkins = {...skins, ...clickSkins, ...darkSkins};
+    const allSkins = {...skins, ...clickSkins, ...darkSkins, ...premiumSkins};
     let unlockedNew = false;
     
-    for (const skinId in allSkins) {
-        if (skinId === 'default') continue;
-        
+    // Проверяем скины за клики (ПУТЬ)
+    for (const skinId in clickSkins) {
         if (!unlockedSkins.includes(skinId)) {
-            const skin = allSkins[skinId];
-            
-            if (skin.rarity === 'path' && skin.requiredClicks && totalClicks >= skin.requiredClicks) {
+            const skin = clickSkins[skinId];
+            if (totalClicks >= skin.requiredClicks) {
                 unlockedSkins.push(skinId);
                 showNotification(`🎉 Разблокирован скин: ${skin.name}!`);
                 unlockedNew = true;
@@ -1022,8 +1389,10 @@ function checkSkinUnlocks() {
 
 // Загрузка скинов
 function loadSkins() {
+    if (!skinsContainer) return;
+    
     skinsContainer.innerHTML = '';
-    const allSkins = {...skins, ...clickSkins, ...darkSkins};
+    const allSkins = {...skins, ...clickSkins, ...darkSkins, ...premiumSkins};
     
     unlockedSkins.forEach(skinId => {
         if (allSkins[skinId]) {
@@ -1045,7 +1414,7 @@ function loadSkins() {
 
 // Выбор скина
 function selectSkin(skinId) {
-    const allSkins = {...skins, ...clickSkins, ...darkSkins};
+    const allSkins = {...skins, ...clickSkins, ...darkSkins, ...premiumSkins};
     if (allSkins[skinId]) {
         currentSkin = skinId;
         buttonEl.style.backgroundImage = `url(${allSkins[skinId].url})`;
@@ -1056,6 +1425,8 @@ function selectSkin(skinId) {
 
 // Показать уведомление
 function showNotification(message) {
+    if (!notification) return;
+    
     notification.textContent = message;
     notification.classList.add('show');
     
@@ -1077,48 +1448,400 @@ function checkLevelUp() {
 
 // Обновление отображения
 function updateDisplay() {
-    scoreEl.textContent = Math.floor(score);
-    addEl.textContent = addPerClick;
-    sunScoreEl.textContent = sunScore.toFixed(2);
+    if (scoreEl) scoreEl.textContent = Math.floor(score).toLocaleString();
+    if (addEl) addEl.textContent = addPerClick.toLocaleString();
+    if (sunScoreEl) sunScoreEl.textContent = sunScore.toFixed(2);
 }
 
 // Обновление уровня
 function updateLevelDisplay() {
-    levelEl.textContent = level;
-    expEl.textContent = Math.floor(exp);
-    maxExpEl.textContent = maxExp;
+    if (levelEl) levelEl.textContent = level;
+    if (expEl) expEl.textContent = Math.floor(exp);
+    if (maxExpEl) maxExpEl.textContent = maxExp;
     const progressPercent = (exp / maxExp) * 100;
-    progressBar.style.width = `${progressPercent}%`;
+    if (progressBar) progressBar.style.width = `${progressPercent}%`;
+}
+
+// Система перерождения
+function getCurrentRebirthRequirements() {
+    if (rebirthCount < rebirthRequirements.length) {
+        return rebirthRequirements[rebirthCount];
+    } else {
+        // После 5-го перерождения требования увеличиваются
+        const lastReq = rebirthRequirements[rebirthRequirements.length - 1];
+        const multiplier = Math.pow(5, rebirthCount - rebirthRequirements.length + 1);
+        const sunMultiplier = Math.pow(1.5, rebirthCount - rebirthRequirements.length + 1);
+        
+        return {
+            drops: lastReq.drops * multiplier,
+            suns: Math.round(lastReq.suns * sunMultiplier),
+            skins: []
+        };
+    }
+}
+
+// Проверка выполнения требований перерождения
+function checkRebirthRequirements() {
+    const requirements = getCurrentRebirthRequirements();
+    const metRequirements = [];
+    
+    // Проверка капель
+    metRequirements.push({
+        type: 'drops',
+        met: score >= requirements.drops,
+        text: `Капли: ${formatNumber(requirements.drops)}`,
+        current: formatNumber(score)
+    });
+    
+    // Проверка солнц
+    metRequirements.push({
+        type: 'suns',
+        met: sunScore >= requirements.suns,
+        text: `Солнца: ${formatNumber(requirements.suns)}`,
+        current: formatNumber(sunScore)
+    });
+    
+    // Проверка скинов
+    if (requirements.skins.length > 0) {
+        const missingSkins = requirements.skins.filter(skin => !unlockedSkins.includes(skin));
+        metRequirements.push({
+            type: 'skins',
+            met: missingSkins.length === 0,
+            text: `Скины: ${missingSkins.length} осталось`,
+            current: `${requirements.skins.length - missingSkins.length}/${requirements.skins.length}`
+        });
+    }
+    
+    return metRequirements;
+}
+
+// Форматирование больших чисел
+function formatNumber(num) {
+    if (num >= 1e18) return (num / 1e18).toFixed(2) + 'Qi';
+    if (num >= 1e15) return (num / 1e15).toFixed(2) + 'Qd';
+    if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+    if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+    if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+    if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+    return Math.floor(num).toString();
+}
+
+// Перерождение
+function performRebirth() {
+    const requirements = checkRebirthRequirements();
+    const allMet = requirements.every(req => req.met);
+    
+    if (!allMet) {
+        showNotification("Не выполнены все требования для перерождения!");
+        return;
+    }
+    
+    // Анимация перерождения
+    const overlay = document.getElementById('rebirth-overlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        overlay.textContent = 'ПЕРЕРОЖДЕНИЕ...';
+    }
+    
+    setTimeout(() => {
+        // Сброс прогресса
+        resetProgressForRebirth();
+        
+        // Награда за перерождение
+        divineSunScore += 1;
+        rebirthCount++;
+        
+        // Обновление интерфейса
+        updateDivineSunDisplay();
+        updateRebirthDisplay();
+        
+        // Убираем анимацию
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+        
+        showNotification(`Успешное перерождение! Получено 1 Божественное Солнце!`);
+        closeRebirth();
+        saveGame();
+    }, 3000);
+}
+
+// Сброс прогресса при перерождении
+function resetProgressForRebirth() {
+    // Сохраняем только нужные данные
+    const savedPowers = {
+        unlockedPowers: [...unlockedPowers],
+        equippedPower: equippedPower,
+        powerEffects: {...powerEffects}
+    };
+    
+    const savedDivineData = {
+        divineSunScore: divineSunScore,
+        rebirthCount: rebirthCount,
+        godUpgrades: {...godUpgrades}
+    };
+    
+    // Полный сброс
+    score = 0;
+    addPerClick = 1;
+    addPerSecond = 0;
+    level = 1;
+    exp = 0;
+    maxExp = 100;
+    totalClicks = 0;
+    sunScore = 0;
+    
+    // Сбрасываем инфляцию цен
+    priceMultipliers = {
+        upgrades: {},
+        autoClickers: {},
+        sunExchanges: {},
+        powers: {}
+    };
+    
+    // Сбрасываем бусты
+    activeBoosts = {
+        exp: { active: false, multiplier: 1, endTime: 0 },
+        sun: { active: false, multiplier: 1, endTime: 0 },
+        drop: { active: false, multiplier: 1, endTime: 0 }
+    };
+    
+    // Сбрасываем скины (кроме темных)
+    const darkSkinIds = Object.keys(darkSkins);
+    unlockedSkins = ['default', ...unlockedSkins.filter(skin => darkSkinIds.includes(skin))];
+    currentSkin = 'default';
+    
+    // Восстанавливаем силы
+    unlockedPowers = savedPowers.unlockedPowers;
+    equippedPower = savedPowers.equippedPower;
+    powerEffects = savedPowers.powerEffects;
+    
+    // Восстанавливаем божественные данные
+    divineSunScore = savedDivineData.divineSunScore;
+    rebirthCount = savedDivineData.rebirthCount;
+    godUpgrades = savedDivineData.godUpgrades;
+    
+    // Обновляем интерфейс
+    updateDisplay();
+    updateLevelDisplay();
+    loadSkins();
+    loadPowers();
+    applyGodUpgrades();
+}
+
+// Покупка улучшений Бога
+function buyGodUpgrade(upgradeType) {
+    const upgrade = godUpgrades[upgradeType];
+    const price = upgrade.basePrice + upgrade.bought;
+    
+    if (divineSunScore < price) {
+        showNotification("Недостаточно Божественных Солнц!");
+        return;
+    }
+    
+    if (upgrade.bought >= upgrade.max) {
+        showNotification("Достигнут максимум улучшений этого типа!");
+        return;
+    }
+    
+    divineSunScore -= price;
+    upgrade.bought++;
+    
+    // Применяем эффект улучшения
+    applyGodUpgrades();
+    
+    updateDivineSunDisplay();
+    loadGodUpgrades();
+    saveGame();
+    
+    showNotification(`Улучшение "${getGodUpgradeName(upgradeType)}" куплено!`);
+}
+
+// Применение улучшений Бога
+function applyGodUpgrades() {
+    updateDisplay();
+    checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ ПРИ ИЗМЕНЕНИИ СКИДОК
+}
+
+// Получение имени улучшения
+function getGodUpgradeName(type) {
+    const names = {
+        shopDiscount: "Скидка в магазине",
+        itemDiscount: "Скидка на предметы",
+        dropPerClick: "Бонус за клик",
+        autoClick: "Усиление авто-клика",
+        expBoost: "Ускорение опыта"
+    };
+    return names[type] || type;
+}
+
+// Загрузка улучшений Бога
+function loadGodUpgrades() {
+    const container = document.getElementById('god-upgrades-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    for (const [type, upgrade] of Object.entries(godUpgrades)) {
+        const price = upgrade.basePrice + upgrade.bought;
+        const upgradeItem = document.createElement('button');
+        upgradeItem.className = 'god-upgrade-item';
+        upgradeItem.onclick = () => buyGodUpgrade(type);
+        upgradeItem.disabled = divineSunScore < price || upgrade.bought >= upgrade.max;
+        
+        upgradeItem.innerHTML = `
+            <div class="god-upgrade-name">${getGodUpgradeName(type)}</div>
+            <div class="god-upgrade-description">${getGodUpgradeDescription(type, upgrade)}</div>
+            <div class="god-upgrade-stats">
+                <span>${upgrade.bought}/${upgrade.max}</span>
+                <span>Цена: ${price} БС</span>
+            </div>
+        `;
+        
+        container.appendChild(upgradeItem);
+    }
+}
+
+// Описание улучшений Бога
+function getGodUpgradeDescription(type, upgrade) {
+    const descriptions = {
+        shopDiscount: `-${(upgrade.effect * 100).toFixed(1)}% к ценам улучшений`,
+        itemDiscount: `-${(upgrade.effect * 100).toFixed(1)}% к ценам предметов`,
+        dropPerClick: `+${(upgrade.effect * 100).toFixed(1)}% капель за клик`,
+        autoClick: `+${(upgrade.effect * 100).toFixed(1)}% эффективности авто-клика`,
+        expBoost: `+${(upgrade.effect * 100).toFixed(1)}% получаемого опыта`
+    };
+    return descriptions[type] || '';
+}
+
+// Обновление отображения божественных солнц
+function updateDivineSunDisplay() {
+    const divineSunEl = document.getElementById('divine-sun-score');
+    const rebirthCountEl = document.getElementById('current-rebirth-count');
+    
+    if (divineSunEl) divineSunEl.textContent = divineSunScore;
+    if (rebirthCountEl) rebirthCountEl.textContent = rebirthCount;
+}
+
+// Обновление требований перерождения
+function updateRebirthDisplay() {
+    const requirementsList = document.getElementById('rebirth-requirements-list');
+    if (!requirementsList) return;
+    
+    requirementsList.innerHTML = '';
+    const requirements = checkRebirthRequirements();
+    
+    requirements.forEach(req => {
+        const reqElement = document.createElement('div');
+        reqElement.className = `rebirth-requirement ${req.met ? 'met' : 'not-met'}`;
+        reqElement.innerHTML = `
+            <span>${req.text}</span>
+            <span>${req.current}</span>
+        `;
+        requirementsList.appendChild(reqElement);
+    });
+    
+    // Обновляем кнопку перерождения
+    const rebirthBtn = document.getElementById('rebirth-btn');
+    const allMet = requirements.every(req => req.met);
+    if (rebirthBtn) {
+        rebirthBtn.disabled = !allMet;
+    }
+}
+
+// Управление панелью перерождения
+function toggleRebirth() {
+    const rebirthPanel = document.getElementById('rebirth-panel');
+    const overlay = document.getElementById('overlay');
+    
+    if (rebirthPanel && overlay) {
+        rebirthPanel.classList.toggle('active');
+        overlay.classList.toggle('active');
+        mainContent.classList.toggle('rebirth-open');
+        
+        if (rebirthPanel.classList.contains('active')) {
+            updateRebirthDisplay();
+            loadGodUpgrades();
+        }
+    }
+}
+
+function closeRebirth() {
+    const rebirthPanel = document.getElementById('rebirth-panel');
+    const overlay = document.getElementById('overlay');
+    
+    if (rebirthPanel && overlay) {
+        rebirthPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        mainContent.classList.remove('rebirth-open');
+    }
 }
 
 // Управление панелями
 function toggleShop() {
-    document.getElementById('shop-panel').classList.toggle('active');
-    document.getElementById('overlay').classList.toggle('active');
-    mainContent.classList.toggle('shop-open');
-    checkUpgradesAvailability();
+    const shopPanel = document.getElementById('shop-panel');
+    const overlay = document.getElementById('overlay');
+    if (shopPanel && overlay) {
+        shopPanel.classList.toggle('active');
+        overlay.classList.toggle('active');
+        mainContent.classList.toggle('shop-open');
+        checkUpgradesAvailability();
+    }
 }
 
 function closeShop() {
-    document.getElementById('shop-panel').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-    mainContent.classList.remove('shop-open');
+    const shopPanel = document.getElementById('shop-panel');
+    const overlay = document.getElementById('overlay');
+    if (shopPanel && overlay) {
+        shopPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        mainContent.classList.remove('shop-open');
+    }
 }
 
 function toggleInventory() {
-    document.getElementById('inventory-panel').classList.toggle('active');
-    document.getElementById('overlay').classList.toggle('active');
+    const inventoryPanel = document.getElementById('inventory-panel');
+    const overlay = document.getElementById('overlay');
+    if (inventoryPanel && overlay) {
+        inventoryPanel.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
 }
 
 function closeInventory() {
-    document.getElementById('inventory-panel').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
+    const inventoryPanel = document.getElementById('inventory-panel');
+    const overlay = document.getElementById('overlay');
+    if (inventoryPanel && overlay) {
+        inventoryPanel.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+}
+
+function togglePowers() {
+    const powersPanel = document.getElementById('powers-panel');
+    const overlay = document.getElementById('overlay');
+    if (powersPanel && overlay) {
+        powersPanel.classList.toggle('active');
+        overlay.classList.toggle('active');
+        mainContent.classList.toggle('powers-open');
+    }
+}
+
+function closePowers() {
+    const powersPanel = document.getElementById('powers-panel');
+    const overlay = document.getElementById('overlay');
+    if (powersPanel && overlay) {
+        powersPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        mainContent.classList.remove('powers-open');
+    }
 }
 
 function closeAllPanels() {
     closeShop();
     closeInventory();
-    closeEvent();
+    closePowers();
+    closeRebirth();
 }
 
 function openShopTab(tabName) {
@@ -1129,9 +1852,31 @@ function openShopTab(tabName) {
         tab.classList.remove('active');
     });
     
-    document.getElementById(`${tabName}-tab`).classList.add('active');
+    const tabElement = document.getElementById(`${tabName}-tab`);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
     event.target.classList.add('active');
     checkUpgradesAvailability();
+}
+
+function openPowersTab(tabName) {
+    document.querySelectorAll('.powers-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.powers-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    const tabElement = document.getElementById(`${tabName}-tab`);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
+    event.target.classList.add('active');
+    
+    if (tabName === 'amulet') {
+        updateAmuletPrice();
+    }
 }
 
 // Проверка бустов
@@ -1152,70 +1897,40 @@ function startBoostChecker() {
     }, 1000);
 }
 
-// Авто-кликер
+// Автосохранение
 setInterval(() => {
-    if (addPerSecond > 0) {
-        score += addPerSecond;
-        updateDisplay();
-        saveGame();
-    }
-}, 1000);
+    saveGame();
+}, 30000);
 
 // Инициализация игры
 function initGame() {
     loadGame();
     updateDisplay();
     updateLevelDisplay();
-    updateEventDisplay();
+    updateAmuletPrice();
+    updateDivineSunDisplay();
     loadSkins();
+    loadPowers();
+    setupButton();
     startChangingText();
+    initChangingTextClick();
     checkSkinUnlocks();
     checkUpgradesAvailability();
-    updateEventButtons();
     startBoostChecker();
+    applyGodUpgrades();
     
-    if (eventActive && eventTimeLeft > 0) {
-        // Ивент активен
-        eventInterval = setInterval(() => {
-            eventTimeLeft -= 1000;
-            updateEventTimer();
-            
-            if (eventTimeLeft <= 0) {
-                endEvent();
-            }
-        }, 1000);
-    } else if (!eventActive && eventCooldownTime > 0) {
-        // Ивент на кулдауне
-        eventCooldownInterval = setInterval(() => {
-            eventCooldownTime -= 1000;
-            updateEventCooldownTimer();
-            
-            if (eventCooldownTime <= 0) {
-                clearInterval(eventCooldownInterval);
-                startEvent();
-            }
-        }, 1000);
-    } else if (!eventActive) {
-        // Первый запуск - начинаем кулдаун
-        eventCooldownTime = EVENT_SETTINGS.firstEventDelay;
-        eventCooldownInterval = setInterval(() => {
-            eventCooldownTime -= 1000;
-            updateEventCooldownTimer();
-            
-            if (eventCooldownTime <= 0) {
-                clearInterval(eventCooldownInterval);
-                startEvent();
-            }
-        }, 1000);
+    // Восстанавливаем экипированную силу
+    if (equippedPower && powers[equippedPower]) {
+        if (equippedPowerEl) {
+            equippedPowerEl.style.backgroundImage = `url(${powers[equippedPower].image})`;
+        }
+        applyPowerEffect(equippedPower);
     }
     
-    const allSkins = {...skins, ...clickSkins, ...darkSkins};
+    const allSkins = {...skins, ...clickSkins, ...darkSkins, ...premiumSkins};
     if (currentSkin && allSkins[currentSkin]) {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
-}
-function startTime (){
-  Data.Time = 1000;
 }
 
 // Запуск игры
