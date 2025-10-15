@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>грохострел кликер: ПУТЬ! v:1.0.5</title>
+    <title>грохострел кликер: ПУТЬ! v:1.0.7</title>
     <meta name="description" content="грохострел">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
@@ -23,18 +23,20 @@
         </header>
 
         <main>
+            <div class="power-slot">
+                <div id="equipped-power" class="equipped-power"></div>
+            </div>
             <div id="button"></div>
         </main>
 
         <div class="update-section">
             <div class="update-content">
-                <h1>ОБНОВЛЕНИЕ 1.0.5 - СОЛНЕЧНОЕ ЗАТМЕНИЕ</h1>
-                <p>- событие: Солнечное затмение! </p>
-                <p>- новые 2 улучшения ( +1 )</p>
-              <p>- новые 10 фраз</p>
-               <p>- новый предмет!</p>
-                
-                <p>- Исправление ошибок и баланс</p>
+                <h1>ОБНОВЛЕНИЕ 1.0.7 - СИЛЫ РАСТЕНИЙ</h1>
+                <p>- Добавлена система Сил</p>
+                <p>- 30 новых фраз</p>
+                <p>- Новый кейс в магазине</p>
+                <p>- добавлено ещё улучшений ,но я непомню сколько...</p>
+               <p>- система перерождений!</p>
                 
                 <div class="interface-container">
                     <div class="level-info">
@@ -48,7 +50,8 @@
                     <div class="interface-buttons">
                         <button id="inventory-btn" class="interface-btn" onclick="toggleInventory()">Инвентарь</button>
                         <button id="shop-btn" class="interface-btn" onclick="toggleShop()">Магазин</button>
-                        <button id="event-btn" class="interface-btn event-btn" onclick="toggleEvent()">Ивент</button>
+                        <button id="powers-btn" class="interface-btn powers-btn" onclick="togglePowers()">Силы</button>
+                        <button id="rebirth-interface-btn" class="interface-btn rebirth-interface-btn" onclick="toggleRebirth()">Перерождение</button>
                     </div>
                 </div>
             </div>
@@ -58,7 +61,7 @@
             <div class="info-content">
                 <h1>ИНФО ЛИСТ</h1>
                 <p>Телеграм: t.me/grohostrelclicker</p>
-                <p>в версии 1.0.7 добавят силы! которые бафают любое значение!</p>
+                <p>в версии 1.0.7 добавлены силы! которые бафают любое значение!</p>
             </div>
         </div>
     </div>
@@ -148,11 +151,43 @@
                 Цена: <span>20000000000</span> капель<br>
                 <span class="level-requirement">Требуется уровень: 64</span>
             </button>
-          
-            <button class="upgrade-item" onclick="buyUpgrade(50000, 100000000000, 76)" data-level="76">
+        
+            <button class="upgrade-item" onclick="buyUpgrade(50000, 27500000000, 70)" data-level="70">
                 <strong>+50000 на клик</strong><br>
-                Цена: <span>100000000000</span> капель<br>
-                <span class="level-requirement">Требуется уровень: 76</span>
+                Цена: <span>27500000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 70</span>
+            </button>
+           <button class="upgrade-item" onclick="buyUpgrade(100000, 900000000000, 82)" data-level="82">
+                <strong>+100000 на клик</strong><br>
+                Цена: <span>900000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 82</span>
+            </button>
+           <button class="upgrade-item" onclick="buyUpgrade(175000, 354500000005, 86)" data-level="86">
+                <strong>+175000 на клик</strong><br>
+                Цена: <span>354500000005</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 86</span>
+            </button>
+           <button class="upgrade-item" onclick="buyUpgrade(500000, 1000000000000, 93)" data-level="93">
+                <strong>+500000 на клик</strong><br>
+                Цена: <span>1000000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 93</span>
+            </button>
+           <button class="upgrade-item" onclick="buyUpgrade(1000000, 3250000000000, 101)" data-level="101">
+                <strong>+1000000 на клик</strong><br>
+                Цена: <span>3250000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 101</span>
+            </button>
+          
+           <button class="upgrade-item" onclick="buyUpgrade(2500000, 10000000000000, 111)" data-level="111">
+                <strong>+2500000 на клик</strong><br>
+                Цена: <span>10000000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 111</span>
+            </button>
+          
+           <button class="upgrade-item" onclick="buyUpgrade(4500000, 21000000000000, 125)" data-level="125">
+                <strong>+4500000 на клик</strong><br>
+                Цена: <span>21000000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 125</span>
             </button>
 
             <!-- Авто-кликеры -->
@@ -227,6 +262,12 @@
                 Цена: <span>2500000000000</span> капель<br>
                 <span class="level-requirement">Требуется уровень: 80</span>
             </button>
+          
+            <button class="upgrade-item" onclick="buyAutoClicker(10000000,13500000000000, 120)" data-level="120">
+                <strong>+10000000/сек авто-клик</strong><br>
+                Цена: <span>13500000000000</span> капель<br>
+                <span class="level-requirement">Требуется уровень: 120</span>
+            </button>
 
             <!-- Обмен солнц -->
             <button class="upgrade-item" onclick="buySunExchange(100, 1)" data-level="3">
@@ -265,6 +306,16 @@
                 Цена: 500 солнц<br>
                 <span class="level-requirement">Требуется уровень: 61</span>
             </button>
+              <button class="upgrade-item" onclick="buySunExchange(10000000000, 1000)" data-level="88">
+                <strong>10000000000 капель</strong><br>
+                Цена: 1000 солнц<br>
+                <span class="level-requirement">Требуется уровень: 88</span>
+            </button>
+             <button class="upgrade-item" onclick="buySunExchange(8500000000000, 2000)" data-level="99">
+                <strong>8500000000000 капель</strong><br>
+                Цена: 2000 солнц<br>
+                <span class="level-requirement">Требуется уровень: 99</span>
+            </button>
         </div>
 
         <div id="cases-tab" class="shop-content">
@@ -279,6 +330,20 @@
                     <span style="color: #f39c12">1% - Легендарный</span><br>
                     <span style="color: #e74c3c">0.4% - Мифический</span><br>
                     <span style="color: #ff00ff">0.055% - ГОРОХНЫЙ</span>
+                </div>
+            </button>
+            
+            <button class="upgrade-item" onclick="buyPowerCase()" data-price="500000000" data-currency="drops">
+                <strong>Кейс 2.0</strong><br>
+                Цена: <span class="price-display">500000000</span> капель<br>
+                <div style="font-size: 12px; margin-top: 5px;">
+                    Шансы:<br>
+                    <span style="color: #27ae60">70% - Обычный</span><br>
+                    <span style="color: #3498db">20% - Редкий</span><br>
+                    <span style="color: #9b59b6">7.5% - Эпический</span><br>
+                    <span style="color: #f39c12">1.5% - Легендарный</span><br>
+                    <span style="color: #e74c3c">0.997% - Мифический</span><br>
+                    <span style="color: #ff00ff">0.003% - ГОРОХНЫЙ</span>
                 </div>
             </button>
         </div>
@@ -343,113 +408,71 @@
         <div id="skins-container" class="skins-grid"></div>
     </div>
 
-    <!-- Ивент панель -->
-    <div id="event-panel" class="event-panel">
+    <!-- Панель Сил -->
+    <div id="powers-panel" class="powers-panel">
         <div class="shop-header">
-            <h2>Солнечное затмение</h2>
-            <button class="close-btn" onclick="closeEvent()">×</button>
+            <h2>Силы Растений</h2>
+            <button class="close-btn" onclick="closePowers()">×</button>
         </div>
         
-        <div class="event-timer">
-            До конца затмения: <span id="event-timer">05:00</span>
+        <div class="powers-tabs">
+            <button class="powers-tab active" onclick="openPowersTab('amulet')">Амулет</button>
+            <button class="powers-tab" onclick="openPowersTab('inventory')">Инвентарь</button>
+        </div>
+
+        <div id="amulet-tab" class="powers-content active">
+            <div class="amulet-info">
+                <p>Открой амулет, чтобы получить случайную силу!</p>
+                <p>Цена: <span id="amulet-price">1000000</span> капель</p>
+                <button class="amulet-btn" onclick="buyAmulet()">Открыть Амулет</button>
+            </div>
+        </div>
+
+        <div id="inventory-tab" class="powers-content">
+            <div id="powers-container" class="powers-grid"></div>
+        </div>
+    </div>
+
+    <!-- Панель перерождения -->
+    <div id="rebirth-panel" class="rebirth-panel">
+        <div class="shop-header">
+            <h2>Система Перерождения</h2>
+            <button class="close-btn" onclick="closeRebirth()">×</button>
         </div>
         
-        <div class="event-currency">
-            Осколки тёмного солнца: <span id="shard-score">0</span>
+        <div class="rebirth-info">
+            <div class="divine-sun-counter">
+                Божественных солнц: <b id="divine-sun-score">0</b>
+            </div>
+            
+            <div class="current-rebirth">
+                Текущее перерождение: <b id="current-rebirth-count">0</b>
+            </div>
+            
+            <div class="rebirth-requirements">
+                <h3>Требования для перерождения:</h3>
+                <div id="rebirth-requirements-list"></div>
+            </div>
+            
+            <button id="rebirth-btn" class="rebirth-btn" onclick="performRebirth()">
+                ПЕРЕРОДИТЬСЯ
+            </button>
+            
+            <div class="rebirth-warning">
+                ⚠️ При перерождении сбрасывается весь прогресс (кроме Сил и Божественных солнц)
+            </div>
         </div>
-        
-        <div class="shop-tabs">
-            <button class="shop-tab active" onclick="openEventTab('stage1')">1 Этап</button>
-            <button class="shop-tab" onclick="openEventTab('stage2')">2 Этап</button>
-            <button class="shop-tab" onclick="openEventTab('stage3')">3 Этап</button>
-            <button class="shop-tab" onclick="openEventTab('stage4')">4 Этап</button>
+
+        <!-- Улучшения Бога -->
+        <div class="god-upgrades">
+            <h3>Улучшения Бога</h3>
+            <div id="god-upgrades-container" class="god-upgrades-grid"></div>
         </div>
-
-    <!-- 1 ЭТАП -->
-<div id="stage1-tab" class="shop-content active">
-    <button class="upgrade-item" onclick="buyEventUpgrade('shard1', 250, 1)" data-stage="1">
-        <strong>+1 осколок на клик</strong><br>
-        Цена: <span>250</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('shard2', 3000, 1)" data-stage="1">
-        <strong>+5 осколков на клик</strong><br>
-        Цена: <span>3000</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('shard3', 6500, 1)" data-stage="1">
-        <strong>+15 осколков на клик</strong><br>
-        Цена: <span>6500</span> осколков<br>
-    </button>
-</div>
-
-<!-- 2 ЭТАП -->
-<div id="stage2-tab" class="shop-content">
-    <button class="upgrade-item stage-locked" id="stage2-lock" onclick="buyStageAccess(2, 1500)">
-        <strong>🔒 Разблокировать 2 Этап</strong><br>
-        Цена: <span>1500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('drop1', 500, 2)" data-stage="2">
-        <strong>+45 капель на клик</strong><br>
-        Цена: <span>500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('drop2', 2500, 2)" data-stage="2">
-        <strong>+250 капель на клик</strong><br>
-        Цена: <span>2500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('drop3', 7500, 2)" data-stage="2">
-        <strong>+1000 капель на клик</strong><br>
-        Цена: <span>7500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('drop4', 25000, 2)" data-stage="2">
-        <strong>+3500 капель на клик</strong><br>
-        Цена: <span>25000</span> осколков<br>
-    </button>
-</div>
-
-<!-- 3 ЭТАП -->
-<div id="stage3-tab" class="shop-content">
-    <button class="upgrade-item stage-locked" id="stage3-lock" onclick="buyStageAccess(3, 3250)">
-        <strong>🔒 Разблокировать 3 Этап</strong><br>
-        Цена: <span>3250</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventCase()" data-stage="3">
-        <strong>Кейс тёмного солнца</strong><br>
-        Цена: <span>666</span> осколков<br>
-        <div style="font-size: 12px; margin-top: 5px;">
-            Шансы:<br>
-            <span style="color: #27ae60">65% - Обычный</span><br>
-            <span style="color: #3498db">22% - Редкий</span><br>
-            <span style="color: #9b59b6">5% - Эпический</span><br>
-            <span style="color: #f39c12">2.4% - Легендарный</span><br>
-            <span style="color: #e74c3c">0.5% - Мифический</span><br>
-            <span style="color: #000000">0.1% - ТЁМНЫЙ</span>
-        </div>
-    </button>
-</div>
-
-<!-- 4 ЭТАП -->
-<div id="stage4-tab" class="shop-content">
-    <button class="upgrade-item stage-locked" id="stage4-lock" onclick="buyStageAccess(4, 17500)">
-        <strong>🔒 Разблокировать 4 Этап</strong><br>
-        Цена: <span>17500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('sun1', 5000, 4)" data-stage="4">
-        <strong>+0.002 солнца на клик</strong><br>
-        Цена: <span>5000</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('level', 12500, 4)" data-stage="4">
-        <strong>+3 уровня</strong><br>
-        Цена: <span>12500</span> осколков<br>
-    </button>
-    <button class="upgrade-item" onclick="buyEventUpgrade('megaDrop', 100000, 4)" data-stage="4">
-        <strong>+1,000,000,000 капель</strong><br>
-        Цена: <span>100000</span> осколков<br>
-    </button>
-</div>
     </div>
 
     <div id="notification" class="notification"></div>
-    <div id="event-notification" class="event-notification"></div>
     <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
+    <div id="rebirth-overlay" class="rebirth-overlay"></div>
 
     <script src="main.js"></script>
 </body>
