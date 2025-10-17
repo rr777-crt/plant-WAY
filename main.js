@@ -2,7 +2,7 @@
 
 // Переменные игры
 let score = 0;
-let addPerClick = 1;
+let addPerClick = 0;
 let addPerSecond = 0;
 let level = 1;
 let exp = 0;
@@ -140,6 +140,12 @@ const clickSkins = {
         url: 'https://pvsz2.ru/statics/plants-big/127.png',
         rarity: 'path',
         requiredClicks: 333000000000000
+    },
+   'path9': { 
+       name: 'ПУТЬ: spooky', 
+        url: 'https://preview.redd.it/injured-peashooter-v0-le1sg6cjj1wd1.gif?width=640&crop=smart&auto=webp&s=9e04d13269ca86d3adf016d51bdb3e43dd9b4945',
+        rarity: 'path',
+        requiredClicks: 5000
     }
 };
 
@@ -374,7 +380,17 @@ const changingTexts = [
       "привет",
       "НЕТ ИДЕЙ ДЛЯ ЭТИХ СЛОВ!!",
       "туг тунг тунг сахур та та та сахур, у дин дин дин дун мадиндиндиндун, лирири ларира оркалеро оркала балерина капучина лилири лалира брр брр патапим тралалело тралала брр брр патапим трелалело тралала лилири лалира",
-      "СПАСИБО! эта песня 10 из 10! - не так ли?"
+      "СПАСИБО! эта песня 10 из 10! - не так ли?",
+     "ААААААААААААААААААААААА",
+      "хочешь конфетку?",
+     "ДААА ХОЧЕШЬ!!",
+     "ААА БУГА БУГА",
+     "НЕ СИДИ В ТУАЛЕТЕ!!! В 3 ЧАСА НОЧИ!!!!",
+     "СТРАШНО?!",
+     "ЩАС ИПУГАЮ!",
+     "А4 стал адыкватным",
+     "СТРАШНО БЫЛО?!",
+     "тода иди в туалет >:("
 ];
 
 // Элементы DOM
@@ -821,6 +837,15 @@ function buyItem(itemType) {
             activeBoosts.sun = { active: true, multiplier: 3, endTime: Date.now() + (3 * 60 * 1000) };
             showNotification("×3 солнц на 3 минуты!");
             break;
+          case '???':
+            activeBoosts.sun = { active: true, multiplier: 5, endTime: Date.now() + (5 * 60 * 1000) };
+        activeBoosts.drop = { active: true, multiplier: 5, endTime: Date.now() + (5 * 60 * 1000) };
+            showNotification("×5 на 5 минут!");
+            break;
+          case 'spooky':
+            activeBoosts.drop = { active: true, multiplier: 2, endTime: Date.now() + boostDuration };
+            showNotification("×2 на 2 мин капель!!");
+       
     }
     
     updateDisplay();
@@ -1932,6 +1957,15 @@ function initGame() {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
 }
-
+const audio = new Audio('music.mp3');
+  audio.loop = true;
+  
+  function playMusic() {
+    audio.play();
+  }
+  
+  function pauseMusic() {
+    audio.pause();
+  }
 // Запуск игры
 initGame();
