@@ -1957,15 +1957,14 @@ function initGame() {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
 }
-const audio = new Audio('music.mp3');
-  audio.loop = true;
-  
-  function playMusic() {
-    audio.play();
-  }
-  
-  function pauseMusic() {
-    audio.pause();
-  }
+const audio = new Audio('audio/music.mp3');
+audio.loop = true; // бесконечное повторение
+
+// Функция для запуска музыки
+function playBackgroundMusic() {
+    audio.play().catch(error => {
+        console.log('Автоплей заблокирован:', error);
+    });
+}
 // Запуск игры
 initGame();
