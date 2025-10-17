@@ -1957,7 +1957,7 @@ function initGame() {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
 }
-const audio = new Audio('audio/music.mp3');
+const audio = new Audio('audio/this-is-halloween-172354.mp3');
 audio.loop = true; // бесконечное повторение
 
 // Функция для запуска музыки
