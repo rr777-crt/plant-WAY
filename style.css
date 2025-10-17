@@ -31,7 +31,7 @@ body {
 }
 
 header {
-    background-color: white;
+    background-color: orange;
     height: 50px;
     text-align: center;
     font-size: 18px;
@@ -75,23 +75,28 @@ main {
     border-radius: 91%;
     background-image: url(https://pvsz2.ru/statics/plants-big/68.png);
     background-position: center;
-    background-size: 82%;
+    background-size: 87%;
     background-repeat: no-repeat;
-    filter: hue-rotate(10deg);
-    border: 12px solid rgb(170, 233, 0);
-    box-shadow: 0 12px 12px black;
+    filter: hue-rotate(20deg);
+   border: 12px solid rgb(255, 120, 0);
+    box-shadow: 0 22px 12px black;
     cursor: pointer;
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
 #button:active {
-    filter: hue-rotate(49deg);
+    filter: hue-rotate(35deg);
+    transform: translateY(-200px) scale(0.76);
+}
+
+#button:hover {
+    
     transform: translateY(-7px) scale(0.95);
 }
 
 .update-section {
-    background-color: green;
+    background-color: orange;
     padding: 20px 0;
     text-align: center;
     position: relative;
@@ -101,7 +106,7 @@ main {
     max-width: 600px;
     margin: 0 auto;
     font-size: 16px;
-    color: white;
+    color: black;
 }
 
 .update-content h1 {
@@ -138,7 +143,7 @@ main {
 
 #level-progress {
     height: 100%;
-    background: lightgreen;
+    background: yellow;
     border-radius: 10px;
     width: 0%;
     transition: width 0.3s ease;
@@ -193,12 +198,12 @@ main {
     right: -400px;
     width: 300px;
     height: 100vh;
-    background: #0a3d0a;
+    background: #000000;
     transition: right 0.3s ease-in-out;
     z-index: 1000;
     overflow-y: auto;
     padding: 20px;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.9);
 }
 
 #shop-panel.active {
@@ -270,7 +275,7 @@ main {
 }
 
 .shop-tab {
-    background: #2ecc71;
+    background:  #ae2710;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
@@ -280,7 +285,7 @@ main {
 }
 
 .shop-tab.active {
-    background: #27ae60;
+    background: #ae9710;
 }
 
 .shop-content {
@@ -292,12 +297,12 @@ main {
 }
 
 .upgrade-item {
-    background: lightblue;
+    background: orange;
     border: none;
     padding: 15px;
     margin: 10px 0;
     border-radius: 25px;
-    color: black;
+    color: white;
     cursor: pointer;
     width: 100%;
     text-align: center;
@@ -306,13 +311,13 @@ main {
 }
 
 .upgrade-item:disabled {
-    background: #7f8c8d;
+    background:  #ae2710;
     cursor: not-allowed;
     opacity: 0.6;
 }
 
 .stage-locked {
-    background: #7f8c8d !important;
+    background: # #ae0700 !important;
     opacity: 0.7;
 }
 
@@ -400,7 +405,7 @@ main {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: gold;
+    background: yellow;
     color: black;
     padding: 15px;
     border-radius: 10px;
@@ -543,7 +548,7 @@ main {
 }
 
 .powers-tab {
-    background: #2c3e50;
+    background:  #000000;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
