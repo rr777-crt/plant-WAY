@@ -1958,13 +1958,16 @@ function initGame() {
     }
 }
 const audio = new Audio('audio/this-is-halloween-172354.mp3');
-audio.loop = true; // бесконечное повторение
+audio.loop = true;
 
-// Функция для запуска музыки
-function playBackgroundMusic() {
-    audio.play().catch(error => {
-        console.log('Автоплей заблокирован:', error);
-    });
-}
+// Пытаемся запустить автоматически
+audio.play().catch(error => {
+    console.log('Автоплей заблокирован, нужен клик пользователя');
+});
+
+// Запускаем при любом клике на странице
+document.addEventListener('click', function() {
+    audio.play();
+});
 // Запуск игры
 initGame();
