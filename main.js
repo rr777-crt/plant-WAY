@@ -2002,7 +2002,7 @@ function initGame() {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
 }
-const audio = new Audio('music.mp3');
+const audio = new Audio('plants_vs_zombies_04 - Grasswalk.mp3');
   audio.loop = true;
   
   function playMusic() {
