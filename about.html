@@ -1,0 +1,47 @@
+<html>
+  <body>
+    <button id = "b">ТЕСТОВАЯ КНОПКА</button>
+    <p id = "p">0</p>
+    <script>
+     const button = document.getElementById('b');
+const text = document.getElementById('p');
+
+let score = 0;
+let addClick = 1;
+
+button.addEventListener('click', function() {
+    score += addClick;
+    text.textContent = "0" + score;
+});
+     if (score < 100) {
+    score += 2;
+}
+      if (score < 1000) {
+    score += 4;
+}
+      if (score < 5000) {
+    score += 6;
+}
+      if (score < 10000) {
+    score += 8;
+}
+      if (score < 20000) {
+        text.TextContent = "ты видишь этот мир?" + score;
+      }
+        if (score < 22000) {
+        text.TextContent = "это всё.... 25000? то-есть это ты?" + score;
+      }
+       if (score < 25000) {
+        text.TextContent = " 28000? ты помнишь меня? ты знаешь меня?" + score;
+      }
+        if (score < 28000) {
+        text.TextContent = " 30000? ты забыл меня... я уверен" + score;
+      }
+        if (score < 30000) {
+        text.TextContent = " разве этот мир ты познал? ладно... запомн: 1057" + score;
+      }
+      
+        
+    </script>
+  </body>
+</html>
