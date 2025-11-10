@@ -31,7 +31,7 @@ body {
 }
 
 header {
-    background-color: orange;
+    background-color: green;
     height: 50px;
     text-align: center;
     font-size: 18px;
@@ -72,13 +72,13 @@ main {
 #button {
     width: 250px;
     height: 250px;
-    border-radius: 91%;
+    border-radius: 85%;
     background-image: url(https://pvsz2.ru/statics/plants-big/68.png);
     background-position: center;
     background-size: 87%;
     background-repeat: no-repeat;
     filter: hue-rotate(20deg);
-   border: 12px solid rgb(255, 120, 0);
+   border: 12px solid rgb(0, 225, 0);
     box-shadow: 0 22px 12px black;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -96,7 +96,7 @@ main {
 }
 
 .update-section {
-    background-color: orange;
+    background-color: green;
     padding: 20px 0;
     text-align: center;
     position: relative;
@@ -126,7 +126,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgba(255,255,255,0.2);
+    background: rgba(0,255,255,0.2);
     padding: 10px;
     border-radius: 10px;
     min-width: 150px;
@@ -135,7 +135,7 @@ main {
 #level-bar {
     width: 150px;
     height: 15px;
-    background: #ddd;
+    background: #059910;
     border-radius: 10px;
     margin: 5px 0;
     overflow: hidden;
@@ -143,7 +143,7 @@ main {
 
 #level-progress {
     height: 100%;
-    background: yellow;
+    background: green;
     border-radius: 10px;
     width: 0%;
     transition: width 0.3s ease;
@@ -198,7 +198,7 @@ main {
     right: -400px;
     width: 300px;
     height: 100vh;
-    background: #000000;
+    background: #147523;
     transition: right 0.3s ease-in-out;
     z-index: 1000;
     overflow-y: auto;
@@ -285,7 +285,7 @@ main {
 }
 
 .shop-tab.active {
-    background: #ae9710;
+    background: #907010;
 }
 
 .shop-content {
@@ -297,7 +297,7 @@ main {
 }
 
 .upgrade-item {
-    background: orange;
+    background: lightblue;
     border: none;
     padding: 15px;
     margin: 10px 0;
