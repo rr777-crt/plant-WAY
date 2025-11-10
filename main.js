@@ -2,7 +2,7 @@
 
 // Переменные игры
 let score = 0;
-let addPerClick = 0;
+let addPerClick = 1;
 let addPerSecond = 0;
 let level = 1;
 let exp = 0;
@@ -13,6 +13,7 @@ let casePrice = 1250;
 // Новая валюта - Солнце
 let sunScore = 0;
 let sunPerClick = 0.01;
+
 
 // Система перерождения
 let divineSunScore = 0;
@@ -145,7 +146,7 @@ const clickSkins = {
        name: 'ПУТЬ: spooky', 
         url: 'https://preview.redd.it/injured-peashooter-v0-le1sg6cjj1wd1.gif?width=640&crop=smart&auto=webp&s=9e04d13269ca86d3adf016d51bdb3e43dd9b4945',
         rarity: 'path',
-        requiredClicks: 5000
+        requiredClicks: 50000000000000000000000000000000000000000000000000000
     }
 };
 
@@ -390,7 +391,13 @@ const changingTexts = [
      "ЩАС ИПУГАЮ!",
      "А4 стал адыкватным",
      "СТРАШНО БЫЛО?!",
-     "тода иди в туалет >:("
+     "тода иди в туалет >:(",
+   "ВОЗРОЩЕНИЕ!",
+   "любишь золото? не дам!",
+   "что ещё сдесь может быть?",
+   "а ты нашёл тестовое измерение?",
+   "if click = 10000000 then click = 0",
+   "я знаю... ты ничего не понял",
 ];
 
 // Элементы DOM
@@ -456,6 +463,7 @@ function saveGame() {
         casePrice: casePrice,
         sunScore: sunScore,
         sunPerClick: sunPerClick,
+     
         activeBoosts: activeBoosts,
         priceMultipliers: priceMultipliers,
         // Силы
@@ -554,6 +562,7 @@ function setupButton() {
         let dropMultiplier = activeBoosts.drop.active ? activeBoosts.drop.multiplier : 1;
         let expMultiplier = activeBoosts.exp.active ? activeBoosts.exp.multiplier : 1;
         let sunMultiplier = activeBoosts.sun.active ? activeBoosts.sun.multiplier : 1;
+       
         
         // Бонус от улучшений Бога
         if (godUpgrades.dropPerClick.bought > 0) {
@@ -568,6 +577,7 @@ function setupButton() {
         let dropBonus = addPerClick * dropMultiplier;
         let expBonus = 1 * expMultiplier;
         let sunBonus = sunPerClick * sunMultiplier;
+       
         
         // Эффекты от Сил
         if (powerEffects.dropPerClick) {
@@ -576,6 +586,9 @@ function setupButton() {
         
         if (powerEffects.sunPerClick) {
             sunBonus += powerEffects.sunPerClick;
+        }
+        if (powerEffects.candyPerClick) {
+            candyBonus += powerEffects.candyPerClick;
         }
         
         if (powerEffects.combo) {
@@ -708,6 +721,38 @@ function buyUpgrade(power, basePrice, requiredLevel = 1) {
     saveGame();
     showNotification(`Улучшение куплено! +${power} на клик`);
 }
+function buyCandyUpgrade(power, basePrice, requiredLevel = 1) {
+    const upgradeKey = `upgrade_${power}_${basePrice}`;
+    const currentMultiplier = priceMultipliers.upgrades[upgradeKey] || 1;
+    let actualPrice = Math.round(basePrice * currentMultiplier);
+    
+    // Применяем скидку от силы и улучшений Бога
+    if (powerEffects.shopDiscount) {
+        actualPrice = Math.round(actualPrice * (1 - powerEffects.shopDiscount));
+    }
+   
+    
+    if (candy < actualPrice) {
+        showNotification("Недостаточно конфеток!!");
+        return;
+    }
+    
+    if (level < requiredLevel) {
+        showNotification(`Требуется уровень стра!!!! ${requiredLevel}!`);
+        return;
+    }
+    
+    candy -= actualPrice;
+  
+    
+    // Увеличиваем цену на 10% и СОХРАНЯЕМ
+    priceMultipliers.upgrades[upgradeKey] = currentMultiplier * 1.1;
+    
+    updateDisplay();
+    checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ СРАЗУ ПОСЛЕ ПОКУПКИ
+    saveGame();
+    showNotification(`Улучшение куплено! +${power} на клик`);
+}
 
 // Аналогично в buyAutoClicker:
 function buyAutoClicker(power, basePrice, requiredLevel = 1) {
@@ -767,7 +812,7 @@ function buySunExchange(drops, sunCost) {
     score += drops;
     
     // Увеличиваем цену на 10% и СОХРАНЯЕМ
-    priceMultipliers.sunExchanges[exchangeKey] = currentMultiplier * 1.1;
+    priceMultipliers.sunExchanges[exchangeKey] = currentMultiplier * 1.01;
     
     updateDisplay();
     checkUpgradesAvailability(); // ОБНОВЛЯЕМ ЦЕНЫ СРАЗУ ПОСЛЕ ПОКУПКИ
@@ -1957,17 +2002,18 @@ function initGame() {
         buttonEl.style.backgroundImage = `url(${allSkins[currentSkin].url})`;
     }
 }
-const audio = new Audio('audio/this-is-halloween-172354.mp3');
-audio.loop = true;
-
-// Пытаемся запустить автоматически
-audio.play().catch(error => {
-    console.log('Автоплей заблокирован, нужен клик пользователя');
-});
-
-// Запускаем при любом клике на странице
-document.addEventListener('click', function() {
+const audio = new Audio('music.mp3');
+  audio.loop = true;
+  
+  function playMusic() {
     audio.play();
-});
+  }
+  
+  function pauseMusic() {
+    audio.pause();
+  }
 // Запуск игры
+
+
+
 initGame();
