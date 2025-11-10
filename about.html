@@ -5,19 +5,23 @@
     <p id="p">0</p>
     <button id="upgrade">250 = +2 клик</button>
     <button id="upgrade2">2000 = +10 клик</button>
+     <button id="upgrade3">2350 = +100 клик</button>
     <p>ПОЖАЛУЕСТА! не вытайтесь добиться 20000</p>
     <script>
       const button = document.getElementById('b');
       const text = document.getElementById('p');
       const up = document.getElementById('upgrade');
       const up2 = document.getElementById('upgrade2');
+      const up3 = document.getElementById('upgrade3');
 
       let score = 0;
       let addClick = 1;
       let constup = 250;
       let constup2 = 2000;
+      let constup3 = 2350;
       let give = 2;
       let give2 = 10;
+      let give3 = 100;
 
       // Основная функция клика
       function handleClick() {
@@ -61,11 +65,22 @@
           up2.disabled = true;
         }
       }
+         function addclickuog3() {
+        if (score >= constup3) {
+          addClick += give3;
+          score -= constup3;
+          constup2 = Math.floor(constup3 * 1.5);
+          text.textContent = "Счёт: " + score;
+          up2.textContent = Math.floor(constup3) + " = +100 клик";
+          up2.disabled = true;
+        }
+      }
 
       // Назначаем обработчики событий ПРАВИЛЬНО
       button.addEventListener('click', handleClick);
       up.addEventListener('click', addclickuog);
       up2.addEventListener('click', addclickuog2);
+        up3.addEventListener('click', addclickuog3);
     </script>
   </body>
 </html>
